@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Posture Play · ขยับกาย สบายสมอง</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Mitr:wght@500;600&family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: cheerful community-centre coach; warm, bright, very readable for older adults
+   IDEA: a Thai temple-fair activity board: colourful day cards, a year of dots, a dancing coach figure
+   PICTURE: animated coach figure for every move, live mirror camera with skeleton in game
+   COLOUR and TYPE: sunshine yellow, coral, sky blue, grape, pink, teal on white; Mitr headings + Sarabun body (Thai + Latin)
+   LAYOUT: yellow hero with age picker; today's plan in two parts (stretch then cardio); year ribbon; benefits; game = mirror + coach panel */
+:root{color-scheme:light dark;--sun:#FFC83D;--coral:#FF5A5F;--sky:#2F80ED;--grape:#8B5CF6;--pink:#F0468C;--teal:#0EA5B7;--orange:#FF8A1F;
+--bg:light-dark(#FFFFFF,#14162B);--ink:light-dark(#1B1F3B,#F2F3FA);--mute:light-dark(#555B7A,#B6BBD6);--soft:light-dark(#FFF6DC,#22254A);--line:light-dark(#E7E9F3,#363A63);--card:light-dark(#FFFFFF,#1C1F3D)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.6 Sarabun,"Noto Sans Thai",system-ui,sans-serif;overflow-x:clip}
+body.big{font-size:21px}
+h1,h2,h3{font-family:Mitr,Sarabun,sans-serif;font-weight:600;line-height:1.15;text-wrap:balance;margin:0}
+h1{font-size:clamp(36px,6vw,54px)}h2{font-size:clamp(26px,3.4vw,36px)}h3{font-size:21px}
+.wrap{max-width:1240px;margin:0 auto;padding:clamp(24px,4vw,52px) max(4vw,16px)}
+.hide{display:none!important}
+button,input{font:inherit;color:inherit}
+button{min-height:48px;border-radius:14px;border:2px solid var(--line);background:var(--card);padding:8px 18px;cursor:pointer;font-weight:600}
+button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-offset:2px}
+.primary{background:var(--coral);border-color:var(--coral);color:#fff;font-size:21px;padding:12px 32px}
+.primary:disabled{opacity:.45;cursor:not-allowed}
+.chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:3px 12px;font-size:15px;font-weight:700;color:#fff;background:var(--c,var(--grape));white-space:nowrap}
+.chip.soft{background:color-mix(in srgb,var(--c) 16%,transparent);color:var(--ink)}
+/* header + hero */
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px max(4vw,16px);background:var(--sun);color:#1B1F3B}
+.logo{font-family:Mitr,sans-serif;font-size:20px;display:flex;align-items:center;gap:10px}
+.logo i{width:30px;height:30px;border-radius:50%;background:conic-gradient(var(--coral) 0 25%,var(--sky) 0 50%,var(--grape) 0 75%,var(--pink) 0)}
+.lang{display:flex;gap:6px}.lang button{min-height:44px;background:#fff;border-color:#fff;color:#1B1F3B}.lang button[aria-pressed=true]{background:#1B1F3B;color:#fff;border-color:#1B1F3B}
+.hero{background:var(--sun);color:#1B1F3B}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:clamp(20px,4vw,48px);align-items:center;padding-top:16px}
+.hero p{font-size:19px;max-width:56ch;margin:14px 0 0}
+.agebox{background:#fff;border-radius:24px;padding:20px;box-shadow:0 10px 0 rgba(27,31,59,.12)}
+.agebox label{display:block;font-weight:700;margin-bottom:8px;color:#1B1F3B}
+.agebox input{width:100%;font-size:28px;padding:8px 14px;border-radius:14px;border:2px solid #E7E9F3;background:#fff;color:#1B1F3B}
+.tiers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
+.tier{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:12px;border-radius:16px;border:3px solid var(--c);background:#fff;color:#1B1F3B;text-align:left;min-height:84px}
+.tier b{font-family:Mitr,sans-serif;font-size:20px;color:var(--c)}.tier span{font-size:15px}
+.tier[aria-pressed=true]{background:var(--c);color:#fff}.tier[aria-pressed=true] b{color:#fff}
+.heroFig{display:flex;gap:8px;margin-top:18px}.heroFig canvas{width:92px;height:110px;background:rgba(255,255,255,.55);border-radius:16px}
+/* today */
+.dayhead{display:flex;justify-content:space-between;gap:16px;align-items:flex-end;flex-wrap:wrap}
+.meta{color:var(--mute);margin:6px 0 0}
+.daynav{display:flex;gap:8px;flex-wrap:wrap}
+.parts{display:grid;gap:14px;margin-top:22px}
+.part{border-radius:24px;padding:16px;background:color-mix(in srgb,var(--c) 10%,var(--card));border:2px solid color-mix(in srgb,var(--c) 35%,transparent)}
+.part h3{color:var(--c);margin:2px 4px 10px}
+.moves{list-style:none;margin:0;padding:0;display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(min(100%,430px),1fr))}
+.mv{display:grid;grid-template-columns:84px minmax(0,1fr) auto;gap:12px;align-items:center;background:var(--card);border-radius:18px;padding:8px 10px;border-left:8px solid var(--c)}
+.mv canvas{width:84px;height:96px;border-radius:12px;background:var(--soft)}
+.mv b{display:block;font-size:18px;line-height:1.3}.mv small{display:block;color:var(--mute);font-size:15px}
+.mv button{min-height:44px;padding:6px 12px;font-size:15px}
+.arrow{text-align:center;color:var(--coral);font-family:Mitr,sans-serif;font-size:26px;line-height:1}
+.setup{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:22px}
+.check{display:flex;gap:12px;align-items:flex-start;padding:14px;border-radius:16px;background:var(--soft);cursor:pointer}
+.check input{width:26px;height:26px;flex:none;margin-top:2px;accent-color:var(--coral)}
+.safety{margin:18px 0 0;padding:14px 18px;border-left:6px solid var(--coral);background:var(--soft);border-radius:0 16px 16px 0;font-size:16px}
+.go{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:20px}
+.err{color:#C0392B;font-weight:600}
+/* plan */
+.plan{background:var(--soft)}
+.phasebar{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;margin:20px 0 10px}
+.phasebar div{background:var(--c);color:#fff;border-radius:12px;padding:8px 10px;font-size:15px;line-height:1.3}.phasebar b{display:block;font-family:Mitr,sans-serif;font-weight:500}
+.phasebar div.now{outline:4px solid var(--ink);outline-offset:2px}
+.year{display:grid;gap:6px;margin-top:8px}
+.mrow{display:grid;grid-template-columns:64px minmax(0,1fr);gap:8px;align-items:center}
+.mrow span{font-size:14px;color:var(--mute);font-weight:600}
+.dots{display:flex;flex-wrap:wrap;gap:4px}
+.dot{width:20px;height:20px;min-height:0;padding:0;border-radius:50%;border:2px solid var(--c);background:transparent}
+.dot.done{background:var(--c)}.dot.today{box-shadow:0 0 0 3px var(--ink)}.dot.view{transform:scale(1.35)}.dot.easy{border-style:dashed}
+.week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;margin-top:12px}
+.week div{background:var(--c);color:#fff;border-radius:14px;padding:10px;font-size:15px;line-height:1.3;font-weight:600}
+.week small{display:block;opacity:.9;font-weight:400}
+/* benefits */
+.bens{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:18px}
+.ben{background:var(--c);color:#fff;border-radius:22px;padding:18px}.ben h3{margin-bottom:6px}.ben p{margin:0;font-size:16px}
+.who{color:var(--mute);margin-top:16px;font-size:16px}
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(20,22,43,.55);display:flex;align-items:center;justify-content:center;padding:16px;z-index:10}
+.sheet{background:var(--card);border-radius:26px;max-width:960px;width:100%;max-height:92vh;overflow:auto;padding:22px;position:relative}
+.mgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:22px}
+.mgrid canvas{width:100%;aspect-ratio:5/6;border-radius:20px;background:var(--soft)}
+.sheet ol{padding-left:1.3em;margin:8px 0}.sheet li{margin-bottom:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 12px}
+.legend{font-size:14px;color:var(--mute);margin-top:8px}
+.xbtn{position:absolute;top:12px;right:12px}
+/* game */
+.game{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(320px,1fr);gap:18px;padding:14px max(2vw,12px);max-width:1500px;margin:0 auto;align-items:start}
+.stage{position:relative;border-radius:24px;overflow:hidden;background:#0b0f1c;aspect-ratio:16/9}
+.stage>canvas{position:absolute;inset:0;width:100%;height:100%}
+.overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fff;background:rgba(20,22,43,.66);padding:20px;gap:8px}
+#ovDemo{width:min(34vh,240px);height:min(40vh,280px);background:rgba(255,255,255,.92);border-radius:20px}
+.ovbig{font-family:Mitr,sans-serif;font-size:clamp(44px,8vw,100px);line-height:1;color:var(--sun)}
+.ovmsg{font-family:Mitr,sans-serif;font-size:clamp(22px,2.8vw,32px);max-width:26ch}
+.ovsub{font-size:18px;opacity:.9;max-width:46ch}
+.cue{position:absolute;left:50%;top:10%;transform:translateX(-50%);background:rgba(255,255,255,.95);color:#1B1F3B;border-radius:24px;padding:14px 26px;text-align:center;min-width:240px}
+.cueword{font-family:Mitr,sans-serif;font-size:clamp(54px,9vw,110px);line-height:1}
+.cue canvas{width:150px;height:170px}
+.hud{position:absolute;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;gap:8px;pointer-events:none}
+.pill{background:rgba(20,22,43,.75);color:#fff;border-radius:999px;padding:5px 14px;font-weight:600;font-size:16px}
+.panel{display:flex;flex-direction:column;gap:12px}
+.card{border:2px solid var(--line);border-radius:22px;padding:16px;background:var(--card)}
+.coach{display:grid;grid-template-columns:130px minmax(0,1fr);gap:14px;align-items:start}
+.coach canvas{width:130px;height:150px;border-radius:16px;background:var(--soft)}
+.step{font-size:15px;color:var(--mute);font-weight:600}
+.count{font-family:Mitr,sans-serif;font-size:clamp(54px,6.5vw,84px);line-height:1;color:var(--c,var(--coral));font-variant-numeric:tabular-nums}
+.count small{font-size:.38em;color:var(--mute)}
+.count.pulse{animation:pulse .35s ease-out}@keyframes pulse{from{transform:scale(1.12)}to{transform:scale(1)}}
+.bar{height:16px;border-radius:99px;background:var(--soft);overflow:hidden;margin-top:12px}.bar i{display:block;height:100%;width:0;background:var(--c,var(--coral));transition:width .25s}
+.fb{font-size:20px;font-weight:600;padding:14px 16px;border-radius:16px;background:var(--soft);min-height:62px}
+.fb.good{background:#DDF7EA;color:#0B5B3B}.fb.warn{background:#FFE6DA;color:#8A2D0A}
+.btns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.queue{list-style:none;margin:0;padding:0;display:grid;gap:4px;font-size:15px}
+.queue li{display:flex;justify-content:space-between;gap:8px;padding:6px 10px;border-radius:10px;border-left:6px solid var(--c)}
+.queue li.now{background:var(--soft);font-weight:700}.queue li.did{opacity:.55;text-decoration:line-through}
+/* summary */
+.sumtop{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin:22px 0}
+.stat{border-radius:22px;padding:16px;background:var(--c);color:#fff}.stat b{display:block;font-family:Mitr,sans-serif;font-size:44px;line-height:1.1}
+.stars{font-size:40px;letter-spacing:4px;color:#fff}
+table{width:100%;border-collapse:collapse}th,td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+@media(max-width:980px){.game{grid-template-columns:minmax(0,1fr)}.bens{grid-template-columns:repeat(2,minmax(0,1fr))}.parts{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:760px){.hero .wrap{grid-template-columns:minmax(0,1fr)}.week{grid-template-columns:repeat(2,minmax(0,1fr))}.phasebar{grid-template-columns:repeat(2,minmax(0,1fr))}.mgrid{grid-template-columns:minmax(0,1fr)}.mgrid canvas{max-width:320px;margin:0 auto}}
+@media(max-width:600px){.tiers{grid-template-columns:minmax(0,1fr)}.tier{min-height:0}.bens{grid-template-columns:minmax(0,1fr)}.stage{aspect-ratio:3/4}.mv{grid-template-columns:64px minmax(0,1fr)}.mv canvas{width:64px;height:76px}.mv button{grid-column:1/-1}.coach{grid-template-columns:96px minmax(0,1fr)}.coach canvas{width:96px;height:112px}table{font-size:14px}.mrow{grid-template-columns:minmax(0,1fr)}.dot{width:18px;height:18px}}
+@media(prefers-reduced-motion:reduce){.bar i{transition:none}.count.pulse{animation:none}}
+</style>
+</head>
+<body>
+<header class="top"><span class="logo"><i></i><span id="brand">Posture Play</span></span>
+ <div class="lang" role="group" aria-label="Language"><button data-lang="th">ไทย</button><button data-lang="en">EN</button></div></header>
+
+<main id="home">
+ <section class="hero"><div class="wrap">
+  <div><h1 data-t="title"></h1><p data-t="lede"></p><div class="heroFig"><canvas data-pose="t7"></canvas><canvas data-pose="crosscrawl"></canvas><canvas data-pose="t5"></canvas><canvas data-pose="sidereach"></canvas></div></div>
+  <div class="agebox"><label for="age" data-t="ageLabel"></label><input id="age" type="number" inputmode="numeric" min="10" max="110"><div class="tiers" id="tiers"></div></div>
+ </div></section>
+
+ <section class="wrap" id="today">
+  <div class="dayhead">
+   <div><span class="chip" id="dayChip"></span> <span class="chip" id="phaseChip"></span> <span class="chip hide" id="easyChip" style="--c:#0EA5B7"></span><h2 id="dayTitle" style="margin-top:10px"></h2><p class="meta" id="dayMeta"></p></div>
+   <div class="daynav"><button id="prevDay" data-t="prev"></button><button id="todayBtn" data-t="backToday"></button><button id="nextDay" data-t="next"></button></div>
+  </div>
+  <div class="parts">
+   <div class="part" style="--c:var(--teal)"><h3 data-t="part1"></h3><ol class="moves" id="list1"></ol></div>
+   <div class="arrow" aria-hidden="true">▼</div>
+   <div class="part" style="--c:var(--coral)"><h3 data-t="part2"></h3><ol class="moves" id="list2"></ol></div>
+  </div>
+  <div class="setup">
+   <label class="check"><input type="checkbox" id="c1"><span data-t="c1"></span></label>
+   <label class="check"><input type="checkbox" id="c2"><span data-t="c2"></span></label>
+   <label class="check"><input type="checkbox" id="c3"><span data-t="c3"></span></label>
+  </div>
+  <p class="safety" data-th="safety"></p>
+  <div class="go"><button class="primary" id="startBtn" data-t="start" disabled></button><span class="meta" id="doneLine"></span></div>
+  <p class="err" id="err"></p>
+ </section>
+
+ <section class="plan"><div class="wrap">
+  <h2 data-t="planTitle"></h2><p class="meta" data-t="planLede"></p>
+  <div class="phasebar" id="phaseBar"></div>
+  <div class="year" id="year"></div>
+  <h3 data-t="weekTitle" style="margin-top:26px"></h3>
+  <div class="week" id="week"></div>
+  <div class="go"><button id="restartBtn" data-t="restart"></button></div>
+ </div></section>
+
+ <section class="wrap">
+  <h2 data-t="benefitsTitle"></h2>
+  <div class="bens" id="bens"></div>
+  <p class="who" data-t="who"></p>
+ </section>
+</main>
+
+<div class="modal hide" id="modal" role="dialog" aria-modal="true" aria-labelledby="mName"><div class="sheet">
+ <button class="xbtn" id="mClose" data-t="close"></button>
+ <div class="mgrid"><div><canvas id="mFig"></canvas><p class="legend" data-t="legend"></p></div>
+ <div><div class="chips" id="mChips"></div><h2 id="mName"></h2><h3 style="margin-top:14px" data-t="steps"></h3><ol id="mSteps"></ol>
+ <h3 data-t="muscles"></h3><div class="chips" id="mMus"></div><h3 data-t="benefit"></h3><p id="mBen"></p></div></div>
+</div></div>
+
+<section id="game" class="game hide">
+ <div class="stage" id="stage">
+  <canvas id="cv"></canvas><video id="vid" playsinline muted class="hide"></video>
+  <div class="hud"><span class="pill" id="hudTier"></span><span class="pill" id="hudScore">0</span></div>
+  <div class="cue hide" id="cue"></div>
+  <div class="overlay" id="ov"><canvas id="ovDemo" class="hide"></canvas><div class="ovbig" id="ovBig"></div><div class="ovmsg" id="ovMsg"></div><div class="ovsub" id="ovSub"></div></div>
+ </div>
+ <aside class="panel">
+  <div class="card coach"><canvas id="demo"></canvas><div><div class="step" id="step"></div><h3 id="exName"></h3><p id="exHow" style="margin:6px 0 0;font-size:16px"></p></div></div>
+  <div class="card"><div class="count" id="count">–</div><div class="bar"><i id="barFill"></i></div><div class="chips" id="exMus" style="margin:10px 0 0"></div></div>
+  <div class="fb" id="fb" aria-live="polite"></div>
+  <div class="btns"><button id="pauseBtn" data-t="pause"></button><button id="skipBtn" data-t="skip"></button><button id="soundBtn"></button><button id="endBtn" data-t="end"></button></div>
+  <ol class="queue" id="queue"></ol>
+ </aside>
+</section>
+
+<section id="done" class="wrap hide">
+ <h2 id="doneTitle"></h2>
+ <div class="sumtop">
+  <div class="stat" style="--c:var(--coral)"><span data-t="totalScore"></span><b id="sScore">0</b></div>
+  <div class="stat" style="--c:var(--orange)"><span data-t="rating"></span><div class="stars" id="sStars"></div></div>
+  <div class="stat" style="--c:var(--sky)"><span data-t="posture"></span><b id="sPosture">–</b></div>
+  <div class="stat" style="--c:var(--teal)"><span data-t="goodForm"></span><b id="sForm">–</b></div>
+  <div class="stat" style="--c:var(--grape)"><span data-t="reaction"></span><b id="sRt">–</b></div>
+ </div>
+ <table><thead><tr><th data-t="exercise"></th><th class="n" data-t="doneCol"></th><th class="n" data-t="target"></th><th class="n" data-t="formCol"></th></tr></thead><tbody id="sRows"></tbody></table>
+ <h3 style="margin-top:24px" data-t="musclesToday"></h3><div class="chips" id="sMus"></div>
+ <h3 style="margin-top:12px" data-t="benefitsToday"></h3><div class="bens" id="sBens"></div>
+ <p class="meta" id="sTips"></p>
+ <div class="go"><button class="primary" id="againBtn" data-t="again"></button><button id="homeBtn" data-t="home"></button></div>
+</section>
+
+<script>/* ===== DATA: i18n, tiers, phases, themes, poses ===== */
+const U={
+ brand:{th:'Posture Play',en:'Posture Play'},
+ title:{th:'ขยับกาย สบายสมอง',en:'Move body, bright mind'},
+ lede:{th:'เกมออกกำลังกายผ่านกล้อง แผน 365 วัน ท่าเปลี่ยนทุกวัน เริ่มด้วยการยืดเหยียด ต่อด้วยคาร์ดิโอ รำไทยบนเก้าอี้ และเกมบริหารสมอง',en:'A camera exercise game with a 365-day plan that changes every day. Stretch first, then cardio, Thai dance on a chair and brain games.'},
+ ageLabel:{th:'กรอกอายุเพื่อเลือกกลุ่ม',en:'Enter age to pick a group'},
+ agePh:{th:'เช่น 62',en:'e.g. 62'},
+ dayOf:{th:'วันที่ {d} จาก 365',en:'Day {d} of 365'},
+ year:{th:'ปีที่ {y}',en:'Year {y}'},
+ todayTag:{th:'วันนี้',en:'Today'},
+ phase:{th:'ช่วง',en:'Phase'},
+ recovery:{th:'สัปดาห์ผ่อนเบา',en:'Easy week'},
+ part1:{th:'ส่วนที่ 1 · ยืดเหยียด',en:'Part 1 · Stretch'},
+ part2:{th:'ส่วนที่ 2 · คาร์ดิโอ',en:'Part 2 · Cardio'},
+ mins:{th:'ประมาณ {m} นาที',en:'About {m} min'},
+ reps:{th:'ครั้ง',en:'reps'}, sec:{th:'วินาที',en:'s'}, trials:{th:'ข้อ',en:'cues'}, rounds:{th:'รอบ',en:'rounds'},
+ view:{th:'ดูท่า',en:'See move'},
+ start:{th:'เริ่มเล่นด้วยกล้อง',en:'Start with camera'},
+ prev:{th:'‹ วันก่อน',en:'‹ Previous'}, next:{th:'วันถัดไป ›',en:'Next ›'}, backToday:{th:'กลับวันนี้',en:'Back to today'},
+ c1:{th:'วางมือถือหรือโน้ตบุ๊กห่าง 2–3 เมตร เห็นทั้งตัว แสงสว่างพอ',en:'Device 2–3 m away, whole body visible, good light'},
+ c2:{th:'พื้นโล่ง ไม่มีพรมหรือของที่ทำให้สะดุด',en:'Clear floor, no rugs or trip hazards'},
+ c3:{th:'มีเก้าอี้มั่นคง ไม่มีล้อ วางชิดผนัง',en:'Sturdy chair without wheels, against a wall'},
+ safety:{th:'<b>ความปลอดภัย</b> หยุดทันทีหากเจ็บ เวียนศีรษะ แน่นหน้าอก หรือหายใจไม่ทัน ผู้มีโรคหัวใจ ปัญหาข้อ หรือการทรงตัว ควรปรึกษาแพทย์ก่อน เกมนี้เป็นการออกกำลังกายทั่วไป ไม่ใช่การรักษา',en:'<b>Safety.</b> Stop right away if you feel pain, dizziness, chest pressure or shortness of breath. People with heart, joint or balance conditions should ask their doctor first. This game is general exercise, not medical treatment.'},
+ planTitle:{th:'แผนออกกำลังกาย 1 ปี',en:'One-year plan'},
+ planLede:{th:'6 ช่วง ช่วงละ 2 เดือน จำนวนครั้งค่อยๆ เพิ่มขึ้น ทุกสัปดาห์ที่ 4 เป็นสัปดาห์ผ่อนเบา ธีมเปลี่ยนทุกวัน และท่าสุ่มใหม่ทุกวัน แตะจุดเพื่อดูแผนวันนั้น',en:'Six 2-month phases with reps rising step by step. Every 4th week is an easy week. The theme rotates daily and moves are re-drawn every day. Tap a dot to see that day.'},
+ weekTitle:{th:'ธีมประจำวันในแต่ละสัปดาห์',en:'Daily themes each week'},
+ restart:{th:'เริ่มแผนใหม่นับจากวันนี้',en:'Restart plan from today'},
+ doneDays:{th:'เล่นแล้ว {n} วัน · ต่อเนื่อง {s} วัน',en:'{n} days done · {s}-day streak'},
+ benefitsTitle:{th:'ประโยชน์โดยรวมของโปรแกรม',en:'Overall benefits of the programme'},
+ who:{th:'องค์การอนามัยโลก (WHO, 2020) แนะนำให้ผู้ใหญ่ขยับร่างกายระดับปานกลาง 150–300 นาทีต่อสัปดาห์ และผู้สูงอายุควรฝึกการทรงตัวร่วมกับความแข็งแรงอย่างน้อย 3 วันต่อสัปดาห์',en:'WHO (2020) recommends 150–300 minutes of moderate activity a week for adults, and balance plus strength training on at least 3 days a week for older adults.'},
+ loading:{th:'กำลังโหลดโมเดลท่าทาง…',en:'Loading pose model…'}, loadingSub:{th:'ครั้งแรกต้องใช้อินเทอร์เน็ต ประมาณ 5 MB',en:'First load needs internet, about 5 MB'},
+ stepIn:{th:'เข้ามาในกรอบกล้อง',en:'Step into view'}, faceCam:{th:'หันหน้าเข้ากล้อง ให้เห็นตั้งแต่ศีรษะถึงสะโพก',en:'Face the camera, head to hips in view'},
+ postureCheck:{th:'ตรวจท่าทาง',en:'Posture check'}, postureHow:{th:'นั่งหรือยืนตัวตรง หันหน้าเข้ากล้อง วางแขนสบายๆ',en:'Sit or stand tall facing the camera, arms relaxed.'},
+ setup:{th:'เตรียมพร้อม',en:'Setup'}, holdStill:{th:'อยู่นิ่งๆ ตัวตรง',en:'Hold still, sit or stand tall'}, measuring:{th:'กำลังวัดท่าทาง…',en:'Measuring posture…'},
+ straight:{th:'นั่งหรือยืนให้ตัวตรง',en:'Sit or stand up straight'},
+ postureScore:{th:'คะแนนท่าทาง',en:'Posture score'}, postureGood:{th:'ไหล่ ลำตัว และศีรษะอยู่ในแนวดี',en:'Shoulders, trunk and head are well aligned.'},
+ watch:{th:'ระวัง: ',en:'Watch out: '}, tipTilt:{th:'ไหล่สองข้างสูงไม่เท่ากัน',en:'one shoulder sits higher'}, tipLean:{th:'ลำตัวเอียงไปข้างหนึ่ง',en:'your trunk leans to one side'}, tipHead:{th:'ศีรษะเอียงออกจากแนวกลาง',en:'your head is off center'},
+ standEven:{th:'พยายามนั่ง/ยืนให้สมดุลตลอดเกม',en:'Try to stay even through the game'}, niceAlign:{th:'แนวลำตัวดีมาก!',en:'Nice alignment!'},
+ getReady:{th:'เตรียมตัว',en:'Get ready'}, go:{th:'เริ่ม!',en:'Go!'}, rest:{th:'พัก',en:'Rest'}, restHow:{th:'หายใจเข้าออกช้าๆ สะบัดมือเบาๆ',en:'Breathe slowly, shake out your hands'},
+ nextUp:{th:'ถัดไป: ',en:'Next: '}, paused:{th:'หยุดชั่วคราว',en:'Paused'}, resumeHint:{th:'กด "เล่นต่อ" เมื่อพร้อม',en:'Press Resume when ready'},
+ pause:{th:'หยุด',en:'Pause'}, resume:{th:'เล่นต่อ',en:'Resume'}, skip:{th:'ข้ามท่า',en:'Skip'}, voiceOn:{th:'เสียง: เปิด',en:'Voice: on'}, voiceOff:{th:'เสียง: ปิด',en:'Voice: off'}, end:{th:'จบเกม',en:'End game'},
+ noPerson:{th:'ยังไม่พบผู้เล่น',en:'No person detected'}, lost:{th:'มองไม่เห็นตัว ขยับเข้ามาในกรอบ',en:'Lost you, step back into view'},
+ needUpper:{th:'ขยับให้กล้องเห็นไหล่และสะโพก',en:'Move so shoulders and hips are in view'}, needLegs:{th:'ถอยออกไปให้เห็นขาและเท้า',en:'Step back so legs and feet are in view'},
+ returnStart:{th:'กลับสู่ท่าเริ่มต้น',en:'Return to the start position'}, goodReturn:{th:'ดีมาก กลับท่าเดิม',en:'Good, now return'}, goodRep:{th:'ดีมาก!',en:'Good rep!'}, perfect:{th:'ท่าสวย ×{n}',en:'Perfect form ×{n}'}, repWarn:{th:'นับแล้ว ระวังท่าทาง',en:'Counted, watch your form'},
+ holding:{th:'ค้างไว้ ดีมาก!',en:'Holding, great!'}, switchSide:{th:'เปลี่ยนข้าง',en:'Switch sides'}, follow:{th:'ทำตามตัวอย่างให้ตรงจังหวะ',en:'Follow the example on the beat'}, beatOk:{th:'ตรงจังหวะ!',en:'On the beat!'}, beatMiss:{th:'ทำตามท่าตัวอย่าง',en:'Copy the example move'},
+ holdFor:{th:'ค้างไว้ {s}…',en:'Hold {s}…'},
+ welldone:{th:'เก่งมาก',en:'Well done'}, exOf:{th:'ท่าที่ {i} จาก {n}',en:'Move {i} of {n}'},
+ ruleFollow:{th:'ยกมือตาม "คำ" ที่เห็น ไม่ใช่ตามสี',en:'Raise the hand the WORD says, not the colour'},
+ ruleOpp:{th:'ยกมือ "ตรงข้าม" กับคำที่เห็น',en:'Raise the OPPOSITE hand to the word'},
+ wL:{th:'ซ้าย',en:'LEFT'}, wR:{th:'ขวา',en:'RIGHT'},
+ correct:{th:'ถูกต้อง!',en:'Correct!'}, wrong:{th:'ยังไม่ถูก',en:'Not quite'}, tooSlow:{th:'ช้าไปนิด ข้อต่อไป',en:'Too slow, next one'}, handsDown:{th:'ลดมือลงทั้งสองข้าง',en:'Lower both hands'},
+ memWatch:{th:'จำลำดับท่านี้',en:'Remember this order'}, memYour:{th:'ถึงตาคุณ! ทำตามลำดับ',en:'Your turn! Repeat the order'}, memOk:{th:'จำได้ครบ!',en:'All correct!'}, memFail:{th:'ลำดับที่ถูก: ',en:'Correct order: '},
+ mvL:{th:'ยกมือซ้าย',en:'Left hand up'}, mvR:{th:'ยกมือขวา',en:'Right hand up'}, mvB:{th:'ยกสองมือ',en:'Both hands up'}, mvT:{th:'กางแขน',en:'Arms out'},
+ great:{th:'ยอดเยี่ยม!',en:'Excellent session'}, greatS:{th:'เก่งมาก!',en:'Great session'}, goodStart:{th:'เริ่มต้นได้ดี',en:'Good start'},
+ totalScore:{th:'คะแนนรวม',en:'Total score'}, rating:{th:'ระดับดาว',en:'Rating'}, posture:{th:'ท่าทาง',en:'Posture check'}, goodForm:{th:'ท่าถูกต้อง',en:'Good-form reps'}, reaction:{th:'เวลาตอบสนองเฉลี่ย',en:'Avg reaction time'},
+ musclesToday:{th:'กล้ามเนื้อที่ใช้วันนี้',en:'Muscles worked today'}, benefitsToday:{th:'ประโยชน์ของเซสชันวันนี้',en:"Today's benefits"},
+ exercise:{th:'ท่า',en:'Move'}, doneCol:{th:'ทำได้',en:'Done'}, target:{th:'เป้าหมาย',en:'Target'}, formCol:{th:'ท่าถูก',en:'Good form'},
+ again:{th:'เล่นอีกครั้ง',en:'Play again'}, home:{th:'กลับหน้าหลัก',en:'Back home'},
+ steps:{th:'วิธีทำ',en:'How to'}, muscles:{th:'กล้ามเนื้อที่ใช้',en:'Muscles used'}, benefit:{th:'ประโยชน์',en:'Benefit'}, close:{th:'ปิด',en:'Close'},
+ legend:{th:'สีแดง = ข้างขวา · สีน้ำเงิน = ข้างซ้าย · จุดเหลือง = จีบ · ฝ่ามือกรอบเหลือง = ตั้งวง',en:'Red = right side · Blue = left side · Yellow dot = jeeb (pinch) · Palm with yellow rim = wong (flat hand)'},
+ mode_reps:{th:'กล้องนับครั้ง',en:'Camera counts reps'}, mode_hold:{th:'กล้องจับเวลาค้าง',en:'Camera times the hold'}, mode_holdreps:{th:'ค้าง + นับครั้ง',en:'Hold + count'}, mode_follow:{th:'ทำตามจังหวะ',en:'Follow the beat'}, mode_stroop:{th:'เกมสมอง',en:'Brain game'}, mode_memory:{th:'เกมสมอง',en:'Brain game'},
+ cat_stretch:{th:'ยืดเหยียด',en:'Stretch'}, cat_cardio:{th:'คาร์ดิโอ',en:'Cardio'}, cat_thai:{th:'รำไทยบนเก้าอี้',en:'Thai chair dance'}, cat_brain:{th:'บริหารสมอง',en:'Brain'},
+ camErr:{th:'เปิดกล้องไม่ได้: {e} กรุณาอนุญาตกล้องในเบราว์เซอร์ ถ้าเปิดไฟล์โดยตรงแล้วกล้องถูกบล็อก ให้เปิดด้วย Chrome หรือรันเว็บเซิร์ฟเวอร์ในเครื่อง (python3 -m http.server) แล้วเข้า http://localhost:8000',en:'Camera not available: {e}. Allow camera access. If the file was opened directly and the camera is blocked, use Chrome or serve the folder locally (python3 -m http.server) and open http://localhost:8000.'},
+ modelErr:{th:'โหลดโมเดลท่าทางไม่สำเร็จ ตรวจสอบอินเทอร์เน็ตแล้วลองใหม่',en:'Could not load the pose model. Check the internet connection and try again.'},
+ sessionDone:{th:'จบเซสชัน ได้ {s} คะแนน',en:'Session complete. You scored {s} points.'},
+ tipForm:{th:'ครั้งหน้าลองเน้นท่าให้ถูกใน {x}',en:'Next time focus on form in {x}.'},
+ tipOk:{th:'ทำได้ดีมาก มาเล่นต่อพรุ่งนี้ ท่าจะเปลี่ยนใหม่',en:'Solid session. Come back tomorrow for a new set of moves.'},
+ sideR:{th:'ขวา',en:'Right'}, sideL:{th:'ซ้าย',en:'Left'}
+};
+
+const TIERS={
+ a:{i:0,age:{th:'ต่ำกว่า 55 ปี',en:'Under 55'},name:{th:'แอคทีฟ',en:'Active'},rest:10,rate:1,slow:1,big:false,c:'#FF5A5F'},
+ b:{i:1,age:{th:'55–65 ปี',en:'55–65'},name:{th:'สมดุล',en:'Balanced'},rest:15,rate:.92,slow:1.12,big:false,c:'#2F80ED'},
+ c:{i:2,age:{th:'65 ปีขึ้นไป',en:'65+'},name:{th:'อ่อนโยน',en:'Gentle'},rest:20,rate:.85,slow:1.25,big:true,c:'#8B5CF6'}
+};
+const PHASES=[
+ {m:.7, c:'#FFC83D',name:{th:'เริ่มต้นขยับ',en:'Getting started'}},
+ {m:.85,c:'#FF8A1F',name:{th:'สร้างพื้นฐาน',en:'Foundation'}},
+ {m:1,  c:'#FF5A5F',name:{th:'เพิ่มความแข็งแรง',en:'Strength'}},
+ {m:1.1,c:'#F0468C',name:{th:'จังหวะสนุก',en:'Rhythm'}},
+ {m:1.2,c:'#8B5CF6',name:{th:'อึดทนนาน',en:'Endurance'}},
+ {m:1.3,c:'#2F80ED',name:{th:'เชี่ยวชาญ',en:'Mastery'}}
+];
+const THEMES=[
+ {id:'thai',   c:'#F0468C',name:{th:'รำไทยบนเก้าอี้',en:'Thai chair dance'},mix:[['thai',6],['brain',2]]},
+ {id:'legs',   c:'#FF5A5F',name:{th:'ขาแข็งแรง',en:'Strong legs'},mix:[['legs',4],['thai',2],['brain',1]]},
+ {id:'brain',  c:'#8B5CF6',name:{th:'สมองสดใส',en:'Brain boost'},mix:[['brain',4],['thai',2],['cardio',1]]},
+ {id:'balance',c:'#2F80ED',name:{th:'ทรงตัวดี',en:'Balance & posture'},mix:[['balance',4],['thai',2],['brain',1]]},
+ {id:'thaimix',c:'#FF8A1F',name:{th:'รำไทย + สมอง',en:'Thai dance + brain'},mix:[['thai',5],['brain',2]]},
+ {id:'heart',  c:'#E8364B',name:{th:'จังหวะหัวใจ',en:'Heart rhythm'},mix:[['cardio',5],['thai',1],['brain',2]]},
+ {id:'easy',   c:'#0EA5B7',name:{th:'ผ่อนคลาย',en:'Easy recovery'},mix:[['thai',3],['brain',1]],stretchN:5}
+];
+const CATC={stretch:'#0EA5B7',cardio:'#FF5A5F',thai:'#F0468C',brain:'#8B5CF6'};
+
+const BENEFITS=[
+ {cat:'stretch',t:{th:'ยืดเหยียดก่อน',en:'Stretch first'},d:{th:'เพิ่มช่วงการเคลื่อนไหวของข้อ คลายคอ บ่า ไหล่ที่ตึง เตรียมกล้ามเนื้อก่อนออกแรง ลดโอกาสบาดเจ็บ',en:'Opens up joint range, eases neck and shoulder tightness, and warms muscles before effort to lower injury risk.'}},
+ {cat:'cardio',t:{th:'คาร์ดิโอและขา',en:'Cardio and legs'},d:{th:'หัวใจและปอดทำงานดีขึ้น ช่วยคุมความดันและน้ำตาล ขาแข็งแรง ลุก-นั่ง-เดินได้คล่อง ลดความเสี่ยงหกล้ม',en:'Builds heart and lung fitness, helps control blood pressure and sugar, and strengthens legs for standing, walking and fewer falls.'}},
+ {cat:'thai',t:{th:'รำไทยบนเก้าอี้',en:'Thai chair dance'},d:{th:'ออกกำลังกายอย่างปลอดภัยบนเก้าอี้ ฝึกนิ้วมือ ข้อมือ จังหวะ และการประสานมือ-เท้า พร้อมความเพลิดเพลินกับศิลปะไทย',en:'Safe seated exercise that trains fingers, wrists, rhythm and hand-foot coordination, with the joy of Thai classical dance.'}},
+ {cat:'brain',t:{th:'บริหารสมอง',en:'Brain training'},d:{th:'ท่าที่ต้องคิดไปพร้อมขยับ (dual-task) ฝึกสมาธิ ความจำใช้งาน และการสลับความคิด การไม่ออกกำลังกายเป็นหนึ่งในปัจจัยเสี่ยงสมองเสื่อมที่ปรับเปลี่ยนได้',en:'Moving while thinking (dual-task) trains attention, working memory and switching. Physical inactivity is one of the modifiable risk factors for dementia.'}}
+];
+
+/* ---------- figure presets (x outward, y up, z forward; metres-ish) ---------- */
+const A={
+ rest:{E:[.02,-.16,.01],H:[.03,-.31,.03],h:'o'},
+ lap:{E:[.04,-.14,.06],H:[.02,-.2,.2],h:'o'},
+ up:{E:[.03,.16,0],H:[.02,.31,.01],h:'o'},
+ wongBon:{E:[.14,.09,.02],H:[.07,.23,.04],h:'w'},
+ wongNa:{E:[.12,-.06,.1],H:[.02,.03,.22],h:'w'},
+ wongHead:{E:[.13,.04,.1],H:[.07,.17,.17],h:'w'},
+ jeebX:{E:[.06,-.13,.1],H:[-.1,-.16,.22],h:'j'},
+ wongX:{E:[.06,-.12,.1],H:[-.09,-.09,.23],h:'w'},
+ side:{E:[.16,0,0],H:[.31,0,0],h:'o'},
+ lorkaew:{E:[.15,-.04,.02],H:[.3,-.08,.03],h:'j'},
+ sideW:{E:[.15,-.05,0],H:[.29,-.04,0],h:'w'},
+ palmUpSh:{E:[.12,0,.1],H:[.22,0,.22],h:'o'},
+ palmDnWaist:{E:[.12,-.1,.06],H:[.2,-.2,.14],h:'o'},
+ jeebHigh:{E:[.12,.12,.04],H:[.07,.27,.07],h:'j'},
+ jeebUnder:{E:[.04,-.06,.13],H:[-.13,.04,.18],h:'j'},
+ jeebProk:{E:[.15,.07,.03],H:[.09,.21,.05],h:'j'},
+ waistJ:{E:[.1,-.14,.02],H:[.13,-.27,.06],h:'j'},
+ openUp:{E:[.1,.13,.02],H:[.15,.27,.03],h:'o'},
+ fwdJ:{E:[.02,-.03,.16],H:[.03,-.06,.31],h:'j'},
+ fwdW:{E:[.02,-.03,.16],H:[.03,-.05,.31],h:'w'},
+ fwd:{E:[.02,-.02,.16],H:[.02,-.03,.31],h:'o'},
+ backJ:{E:[.05,-.13,-.09],H:[.07,-.22,-.21],h:'j'},
+ backW:{E:[.05,-.13,-.09],H:[.08,-.21,-.22],h:'w'},
+ crossKnee:{E:[0,-.12,.1],H:[-.15,-.22,.2],h:'o'},
+ crossSh:{E:[-.03,-.05,.13],H:[-.22,-.02,.07],h:'o'},
+ holdElbow:{E:[.06,-.1,.12],H:[-.06,-.02,.16],h:'o'},
+ hip:{E:[.13,-.1,-.03],H:[.05,-.22,.03],h:'o'},
+ overEar:{E:[.1,.13,.03],H:[-.06,.2,.02],h:'o'},
+ nose:{E:[.05,-.1,.12],H:[-.08,.06,.1],h:'o'},
+ punch:{E:[-.02,-.02,.15],H:[-.16,0,.27],h:'o'},
+ guard:{E:[.06,-.13,.06],H:[0,-.02,.14],h:'o'},
+ behind:{E:[.06,-.14,-.08],H:[-.04,-.24,-.12],h:'o'},
+ tall:{E:[.02,.16,.02],H:[-.02,.31,.02],h:'o'},
+ thighFwd:{E:[.03,-.12,.12],H:[.02,-.18,.3],h:'o'},
+ swingF:{E:[.02,-.12,.1],H:[.02,-.06,.24],h:'o'},
+ swingB:{E:[.02,-.15,-.05],H:[.03,-.29,-.09],h:'o'},
+ chairHand:{E:[.08,-.15,-.04],H:[.14,-.28,-.1],h:'o'}
+};
+const L={
+ stand:{K:[.01,-.25,0],A:[.01,-.5,0],f:0},
+ seat:{K:[.01,0,.25],A:[.02,-.25,.27],f:0},
+ seatHeel:{K:[.01,.01,.25],A:[.02,-.22,.27],f:1},
+ seatToe:{K:[.01,0,.25],A:[.02,-.25,.27],f:-1},
+ seatLift:{K:[.01,.09,.24],A:[.02,-.15,.31],f:0},
+ seatExt:{K:[.01,0,.25],A:[.02,-.03,.5],f:-1},
+ seatHam:{K:[.01,-.02,.25],A:[.02,-.2,.47],f:-1},
+ ankleUp:{K:[.01,.04,.25],A:[.02,-.14,.45],f:1},
+ ankleDn:{K:[.01,.04,.25],A:[.02,-.14,.45],f:-1},
+ seatSide:{K:[.13,.07,.2],A:[.15,-.17,.24],f:0},
+ standLift:{K:[.01,-.02,.25],A:[.02,-.27,.25],f:0},
+ standLiftLow:{K:[.01,-.12,.22],A:[.02,-.37,.17],f:0},
+ standWide:{K:[.09,-.24,0],A:[.19,-.47,0],f:0},
+ squat:{K:[.06,-.08,.23],A:[.07,-.33,.17],f:0},
+ halfSq:{K:[.04,-.17,.15],A:[.05,-.42,.1],f:0},
+ footUp:{K:[.01,-.24,.04],A:[.01,-.42,-.1],f:0}
+};
+const STAND={hipY:.5,hz:0,bend:0,lean:0,twist:0,tilt:0,shr:0,aR:A.rest,aL:A.rest,lR:L.stand,lL:L.stand};
+const SEAT={...STAND,hipY:.27,aR:A.lap,aL:A.lap,lR:L.seat,lL:L.seat};
+const K=(b,o)=>({...b,...o});
+const M=k=>({...k,aR:k.aL,aL:k.aR,lR:k.lL,lL:k.lR,lean:-(k.lean||0),twist:-(k.twist||0),tilt:-(k.tilt||0)});
+const alt=k=>[k,M(k)];
+
+/* ---------- pose detection helpers (f = features) ---------- */
+const up=(f,w)=>w.y<f.n.y, aboveSh=(f,w)=>w.y<f.sh.y, low=(f,w)=>w.y>f.sh.y+.25*f.T;
+const bothLow=f=>low(f,f.lw)&&low(f,f.rw), oneUp=f=>up(f,f.lw)||up(f,f.rw), bothUp=f=>up(f,f.lw)&&up(f,f.rw);
+const D=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
+const tposeOk=f=>f.elL>145&&f.elR>145&&Math.abs(f.lw.y-f.ls.y)<.35*f.T&&Math.abs(f.rw.y-f.rs.y)<.35*f.T&&Math.abs(f.lw.x-f.rw.x)>2.1*f.sw;
+function armState(f){
+ if(bothUp(f)) return 'B';
+ if(tposeOk(f)) return 'T';
+ if(up(f,f.lw)&&low(f,f.rw)) return 'L';
+ if(up(f,f.rw)&&low(f,f.lw)) return 'R';
+ if(bothLow(f)) return 'rest';
+ return null;
+}
+
+/* ---------- poses ---------- */
+const S2=(th,en)=>({th,en});
+const POSES=[
+/* ===== STRETCH ===== */
+{id:'neck',cat:'stretch',chair:true,mode:'hold',reps:[20,20,20],sides:1,need:'upper',
+ keys:alt(K(SEAT,{tilt:-22,aR:A.overEar})),ap:6,
+ ok:f=>Math.abs(f.earTilt-f.tilt)>11,
+ name:S2('ยืดคอด้านข้าง','Neck side stretch'),
+ steps:S2(['นั่งหรือยืนตัวตรง ไหล่ผ่อนคลาย','เอียงศีรษะให้หูเข้าหาไหล่ขวา ใช้มือขวาช่วยกดเบาๆ ค้างไว้','เปลี่ยนไปอีกข้าง หายใจสบายๆ'],['Sit or stand tall, shoulders relaxed.','Tilt your ear toward your right shoulder, rest the right hand lightly on your head and hold.','Switch sides and keep breathing easily.']),
+ mus:S2(['กล้ามเนื้อคอด้านข้าง','กล้ามเนื้อบ่า (ทราพีเซียส)'],['Side neck muscles','Upper trapezius']),
+ ben:S2('คลายคอบ่าที่ตึงจากการก้มมองจอ เพิ่มการเคลื่อนไหวของคอ','Eases neck and shoulder tightness from screen time and improves neck mobility.')},
+{id:'rolls',cat:'stretch',chair:true,mode:'follow',reps:[10,10,8],per:3,need:'upper',
+ keys:[K(SEAT,{shr:0}),K(SEAT,{shr:.045,bend:-3}),K(SEAT,{shr:.01,bend:-7}),K(SEAT,{shr:-.01,bend:3})],ap:3,
+ check:f=>bothLow(f),
+ name:S2('หมุนไหล่','Shoulder rolls'),
+ steps:S2(['วางแขนข้างลำตัวหรือบนต้นขา','ยกไหล่ขึ้นหาหู หมุนไปด้านหลัง แล้วลดลง','หมุนช้าๆ ตามจังหวะ'],['Rest your arms at your sides or on your thighs.','Lift shoulders toward your ears, roll them back and down.','Keep rolling slowly on the beat.']),
+ mus:S2(['กล้ามเนื้อบ่า','กล้ามเนื้อสะบัก','กล้ามเนื้อไหล่'],['Trapezius','Shoulder-blade muscles','Deltoids']),
+ ben:S2('กระตุ้นการไหลเวียนเลือด คลายไหล่ตึง และช่วยแก้ไหล่ห่อ','Boosts circulation, loosens tight shoulders and counters rounded shoulders.')},
+{id:'sidereach',cat:'stretch',chair:true,mode:'hold',reps:[20,20,16],sides:1,need:'upper',
+ keys:alt(K(SEAT,{aL:A.tall,lean:-14})),ap:6,
+ ok:f=>oneUp(f)&&Math.abs(f.lean)>7,
+ name:S2('เอื้อมแขนเอียงตัว','Overhead side reach'),
+ steps:S2(['ยกแขนซ้ายขึ้นเหนือศีรษะ','เอียงลำตัวไปทางขวาช้าๆ จนรู้สึกตึงข้างลำตัว ค้างไว้','สลับข้าง'],['Raise your left arm overhead.','Lean slowly to the right until you feel the side stretch, and hold.','Switch sides.']),
+ mus:S2(['กล้ามเนื้อข้างลำตัว','กล้ามเนื้อหลังส่วนกว้าง'],['Obliques','Latissimus dorsi']),
+ ben:S2('ยืดข้างลำตัว หายใจได้ลึกขึ้น กระดูกสันหลังยืดหยุ่น','Lengthens the side body, deepens breathing and keeps the spine supple.')},
+{id:'crossarm',cat:'stretch',chair:true,mode:'hold',reps:[20,20,16],sides:1,need:'upper',
+ keys:alt(K(SEAT,{aR:A.crossSh,aL:A.holdElbow})),ap:6,
+ ok:f=>(f.lw.x<f.rs.x+.15*f.sw&&Math.abs(f.lw.y-f.sh.y)<.45*f.T)||(f.rw.x>f.ls.x-.15*f.sw&&Math.abs(f.rw.y-f.sh.y)<.45*f.T),
+ name:S2('ยืดไหล่ไขว้หน้าอก','Cross-body shoulder stretch'),
+ steps:S2(['ยื่นแขนขวาไขว้หน้าอกไปทางซ้าย','ใช้มือซ้ายประคองที่ข้อศอก ดึงเข้าหาตัวเบาๆ ค้างไว้','สลับข้าง'],['Bring your right arm across your chest.','Hold it at the elbow with your left hand, draw it in gently and hold.','Switch sides.']),
+ mus:S2(['ไหล่ด้านหลัง','กล้ามเนื้อสะบัก'],['Rear deltoid','Shoulder-blade muscles']),
+ ben:S2('คลายไหล่ด้านหลังและสะบัก เพิ่มช่วงการเคลื่อนไหวของไหล่','Releases the back of the shoulder and widens shoulder range.')},
+{id:'chest',cat:'stretch',chair:true,mode:'hold',reps:[20,20,15],need:'upper',
+ keys:[K(SEAT,{aR:A.behind,aL:A.behind,bend:-8,shr:-.01}),K(SEAT,{aR:A.behind,aL:A.behind,bend:-11,shr:-.015})],ap:4,
+ ok:f=>f.lw.y>f.hp.y-.2*f.T&&f.rw.y>f.hp.y-.2*f.T&&Math.abs(f.lw.x-f.rw.x)<1.1*f.sw,
+ name:S2('เปิดอก','Chest opener'),
+ steps:S2(['นั่งค่อนมาด้านหน้าเก้าอี้','ประสานมือไว้ด้านหลัง หรือจับขอบเก้าอี้','บีบสะบักเข้าหากัน ยกอก ค้างไว้'],['Sit toward the front of the chair.','Clasp your hands behind you or hold the chair edge.','Squeeze shoulder blades together, lift the chest and hold.']),
+ mus:S2(['กล้ามเนื้อหน้าอก','ไหล่ด้านหน้า'],['Pectorals','Front deltoids']),
+ ben:S2('แก้ไหล่ห่อหลังค่อม ช่วยให้นั่งตัวตรงและหายใจได้เต็มปอด','Counters slouching so you sit taller and breathe more fully.')},
+{id:'tall',cat:'stretch',chair:true,mode:'hold',reps:[15,15,12],need:'upper',
+ keys:[K(SEAT,{aR:A.tall,aL:A.tall}),K(SEAT,{aR:A.tall,aL:A.tall,shr:.025})],ap:4,
+ ok:f=>bothUp(f),
+ name:S2('ยืดตัวสูง','Tall reach'),
+ steps:S2(['ประสานมือ หรือยกสองแขนขึ้นเหนือศีรษะ','ยืดตัวให้สูงเหมือนมีเชือกดึงศีรษะ ค้างไว้','หายใจเข้าลึกๆ'],['Raise both arms overhead, hands together or apart.','Grow tall as if a string pulls your head up, and hold.','Breathe in deeply.']),
+ mus:S2(['กล้ามเนื้อหลัง','ไหล่','ลำตัว'],['Back extensors','Shoulders','Trunk']),
+ ben:S2('ยืดกระดูกสันหลัง ปรับท่าทางให้ตรง','Lengthens the spine and resets posture.')},
+{id:'wrist',cat:'stretch',chair:true,mode:'follow',reps:[8,8,8],per:3,need:'upper',
+ keys:[K(SEAT,{aR:A.fwdW,aL:A.fwdW}),K(SEAT,{aR:A.fwdJ,aL:A.fwdJ})],ap:3,
+ check:f=>Math.abs(f.lw.y-f.sh.y)<.55*f.T&&Math.abs(f.rw.y-f.sh.y)<.55*f.T,
+ name:S2('ดัดมือ ดัดนิ้ว (เตรียมรำ)','Finger & wrist stretch (dance prep)'),
+ steps:S2(['เหยียดแขนสองข้างไปด้านหน้าระดับอก','ตั้งวง: แบมือ ดัดปลายนิ้วไปด้านหลัง','จีบ: นิ้วโป้งแตะข้อแรกของนิ้วชี้ นิ้วอื่นกรีดออก สลับตั้งวง-จีบช้าๆ'],['Reach both arms forward at chest height.','Wong: open the hand and bend the fingertips back.','Jeeb: touch thumb to index finger, other fingers fanned. Alternate slowly.']),
+ mus:S2(['กล้ามเนื้อข้อมือ','กล้ามเนื้อนิ้วมือ','แขนท่อนล่าง'],['Wrist flexors and extensors','Finger muscles','Forearms']),
+ ben:S2('ข้อนิ้วยืดหยุ่น หยิบจับของได้คล่อง และเตรียมมือสำหรับท่ารำไทย','Keeps finger joints supple for gripping and prepares the hands for Thai dance.')},
+{id:'hamstring',cat:'stretch',chair:true,mode:'follow',reps:[6,6,6],per:5,need:'upper',
+ keys:alt(K(SEAT,{lR:L.seatHam,bend:16,aR:A.thighFwd,aL:A.thighFwd})),ap:10,
+ check:f=>f.vUpper>.5,
+ name:S2('ยืดต้นขาด้านหลัง','Seated hamstring stretch'),
+ steps:S2(['นั่งค่อนหน้าเก้าอี้ เหยียดขาขวาไปข้างหน้า ส้นเท้าแตะพื้น','หลังตรง โน้มตัวจากสะโพกมาด้านหน้า มือวางบนต้นขา','หายใจเข้า-ออกช้าๆ ตามจังหวะ แล้วสลับขา'],['Sit near the front of the chair, right leg straight, heel down.','Keep your back straight and hinge forward from the hips, hands on thigh.','Breathe slowly with the beat, then switch legs.']),
+ mus:S2(['ต้นขาด้านหลัง','น่อง','หลังส่วนล่าง'],['Hamstrings','Calves','Lower back']),
+ ben:S2('ลดความตึงหลังขาและหลังล่าง ช่วยก้าวเดินได้ยาวและมั่นคง','Relieves tight hamstrings and lower back for longer, steadier steps.')},
+{id:'twisthold',cat:'stretch',chair:true,mode:'hold',reps:[20,20,16],sides:1,need:'upper',
+ keys:alt(K(SEAT,{twist:28,aR:A.crossKnee,aL:A.backW})),ap:6,
+ ok:f=>Math.abs(f.twist)>18,
+ name:S2('บิดลำตัวค้าง','Seated twist hold'),
+ steps:S2(['นั่งตัวตรง เท้าวางราบ','วางมือขวาที่เข่าซ้าย บิดลำตัวไปทางซ้ายช้าๆ ค้างไว้','กลับกลาง แล้วสลับข้าง'],['Sit tall, feet flat.','Place your right hand on your left knee and twist slowly left; hold.','Return to center and switch sides.']),
+ mus:S2(['กล้ามเนื้อหน้าท้องด้านข้าง','กล้ามเนื้อหลัง'],['Obliques','Back muscles']),
+ ben:S2('เพิ่มการหมุนของกระดูกสันหลัง หันมองด้านหลังได้ง่ายขึ้น','Improves spinal rotation for turning to look behind you.')},
+{id:'ankle',cat:'stretch',chair:true,mode:'follow',reps:[10,10,10],per:2.5,need:'upper',
+ keys:[K(SEAT,{lR:L.ankleUp}),K(SEAT,{lR:L.ankleDn}),K(SEAT,{lL:L.ankleUp}),K(SEAT,{lL:L.ankleDn})],ap:5,
+ check:f=>f.vUpper>.5,
+ name:S2('หมุนข้อเท้า','Ankle circles'),
+ steps:S2(['นั่ง ยกเท้าขวาขึ้นเล็กน้อย','กระดกปลายเท้าขึ้น-ลง หรือหมุนเป็นวงกลม','สลับเท้าตามจังหวะ'],['Sit and lift your right foot a little.','Point and flex the foot, or draw circles.','Switch feet on the beat.']),
+ mus:S2(['น่อง','กล้ามเนื้อหน้าแข้ง','ข้อเท้า'],['Calves','Shin muscles','Ankle stabilisers']),
+ ben:S2('ข้อเท้าคล่อง ลดอาการบวม ช่วยการทรงตัวเวลาเดิน','Keeps ankles mobile, reduces swelling and supports balance when walking.')},
+{id:'sidebend',cat:'stretch',chair:true,mode:'reps',reps:[12,10,8],th:[18,14,10],need:'upper',
+ keys:[K(SEAT,{aR:A.hip,aL:A.hip}),K(SEAT,{aR:A.hip,aL:A.hip,lean:-16}),K(SEAT,{aR:A.hip,aL:A.hip}),K(SEAT,{aR:A.hip,aL:A.hip,lean:16})],ap:6,
+ on:(f,p)=>Math.abs(f.lean)>p.th, off:f=>Math.abs(f.lean)<5,
+ name:S2('เอียงตัวซ้าย-ขวา','Side bend'),
+ steps:S2(['มือเท้าเอว นั่งหรือยืนตัวตรง','เอียงตัวไปด้านหนึ่งช้าๆ แล้วกลับกลาง','สลับอีกข้าง'],['Hands on hips, sit or stand tall.','Lean slowly to one side, then back to center.','Then the other side.']),
+ mus:S2(['กล้ามเนื้อหน้าท้องด้านข้าง','กล้ามเนื้อหลังส่วนล่าง'],['Obliques','Quadratus lumborum']),
+ ben:S2('ลำตัวยืดหยุ่น เอื้อมหยิบของด้านข้างได้ง่ายขึ้น','Keeps the trunk flexible for side reaching.')},
+
+/* ===== THAI CHAIR DANCE (from attached sheet) ===== */
+{id:'t1',cat:'thai',grp:['thai'],chair:true,mode:'follow',reps:[10,10,8],per:2.6,need:'upper',
+ keys:[K(SEAT,{aR:A.jeebX,aL:{...A.jeebX,H:[-.08,-.19,.21]},lR:L.seatHeel,lL:L.seatHeel}),K(SEAT,{aR:A.wongX,aL:{...A.wongX,H:[-.07,-.12,.22]},lR:L.seatToe,lL:L.seatToe})],ap:2.6,
+ check:f=>f.lw.x<f.rw.x+.05&&f.lw.y>f.sh.y&&f.rw.y>f.sh.y,
+ name:S2('ยกส้น-กระดกปลายเท้า ท่าขัดจางนาง','Heel & toe raises · Khad Jang Nang'),
+ steps:S2(['มือทั้งสองจีบคว่ำ พลิกข้อมือเป็นจีบหงายไขว้กัน มือขวาทับซ้ายอยู่ระดับวงล่าง พร้อมกับเขย่งปลายเท้า','สลัดจีบเป็นมือแบหงายปลายนิ้วตก พลิกมือขึ้นตั้งวงล่าง มือยังไขว้กันอยู่ พร้อมกับกระดกปลายเท้า','ทำสลับต่อเนื่อง 10 ครั้ง'],['Both hands in jeeb facing down, then turn the wrists to jeeb facing up, crossed, right over left at low level, while rising onto your toes.','Flick the jeeb open, palms up with fingertips dropping, then turn up into low wong, hands still crossed, while lifting your toes.','Alternate continuously 10 times.']),
+ mus:S2(['น่อง','กล้ามเนื้อหน้าแข้ง','ข้อมือและนิ้วมือ'],['Calves','Shin muscles (tibialis)','Wrists and fingers']),
+ ben:S2('กระตุ้นการไหลเวียนเลือดที่ขา ลดตะคริว ข้อเท้าแข็งแรงช่วยการทรงตัว และฝึกนิ้วมือจีบ-ตั้งวง','Pumps blood from the legs, reduces cramps, strengthens ankles for balance and trains the jeeb and wong hand shapes.')},
+{id:'t2',cat:'thai',grp:['thai','legs'],chair:true,mode:'reps',reps:[10,10,8],need:'legs',
+ keys:alt(K(SEAT,{aL:A.wongBon,aR:A.lorkaew,lR:L.seatExt})),ap:4,
+ on:f=>oneUp(f)&&Math.min(f.ankL,f.ankR)<.45, off:f=>Math.min(f.ankL,f.ankR)>.62,
+ guide:f=>({y:Math.max(f.lk.y,f.rk.y)+.45*f.T,label:{th:'ยกเท้าสูงกว่าเส้น',en:'Foot above line'}}),
+ form:f=>oneUp(f)?null:{th:'ยกมือตั้งวงบนข้างหู',en:'Raise one hand in wong beside your ear'},
+ name:S2('เหยียดเข่า ท่าล่อแก้ว','Knee extension · Lor Kaew'),
+ steps:S2(['มือซ้ายเลื่อนขึ้นไปตั้งวงบนข้างหู มือขวาจีบล่อแก้วหงาย หักข้อมือเข้าลำแขน แขนตึงต่ำกว่าไหล่เล็กน้อย พร้อมกับเหยียดเข่าขวาขึ้น','มือขวาเลื่อนขึ้นไปตั้งวงบนข้างหู มือซ้ายจีบล่อแก้วหงาย หักข้อมือเข้าลำแขน แขนตึงต่ำกว่าไหล่เล็กน้อย พร้อมกับเหยียดเข่าซ้ายขึ้น','ทำสลับข้างต่อเนื่อง 10 ครั้ง'],['Slide the left hand up into high wong beside the ear. Right hand in lor kaew jeeb facing up, wrist bent in, arm straight just below shoulder height, while straightening the right knee.','Right hand up into high wong beside the ear, left hand in lor kaew jeeb, while straightening the left knee.','Alternate sides 10 times.']),
+ mus:S2(['ต้นขาด้านหน้า (ควอดริเซปส์)','ไหล่','แขน'],['Quadriceps','Shoulders','Arms']),
+ ben:S2('เข่าแข็งแรง ลุกจากเก้าอี้และขึ้นบันไดได้ง่ายขึ้น','Strengthens the knees for getting up from chairs and climbing stairs.')},
+{id:'t3',cat:'thai',grp:['thai'],chair:true,mode:'reps',reps:[10,10,8],need:'upper',
+ keys:alt(K(SEAT,{twist:24,aR:A.wongNa,aL:A.backJ})),ap:4,
+ on:f=>Math.abs(f.twist)>20, off:f=>Math.abs(f.twist)<8,
+ name:S2('บิดลำตัว ท่ารำยั่ว','Torso twist · Ram Yua'),
+ steps:S2(['มือขวาตั้งวงบริเวณหน้าอก มือซ้ายจีบส่งหลัง พร้อมกับหมุนลำตัวไปทางซ้าย','เปลี่ยนเป็นมือซ้ายตั้งวงบริเวณหน้าอก มือขวาจีบส่งหลัง พร้อมกับหมุนลำตัวไปทางขวา','ทำสลับข้างต่อเนื่อง 10 ครั้ง'],['Right hand in wong at the chest, left hand jeeb sent behind, turning the trunk to the left.','Switch: left hand wong at the chest, right hand jeeb behind, turning to the right.','Alternate sides 10 times.']),
+ mus:S2(['กล้ามเนื้อหน้าท้องด้านข้าง','กล้ามเนื้อหลัง','ไหล่'],['Obliques','Back muscles','Shoulders']),
+ ben:S2('กระดูกสันหลังหมุนได้ดี ลำตัวมั่นคง ช่วยการทรงตัว','Keeps the spine rotating freely and the trunk stable for balance.')},
+{id:'t4',cat:'thai',grp:['thai','cardio'],chair:true,mode:'reps',reps:[10,10,8],th:[.18,.14,.1],need:'legs',
+ keys:alt(K(SEAT,{aR:A.palmUpSh,aL:A.palmDnWaist,lR:L.seatLift})),ap:2.4,
+ on:(f,p)=>Math.abs(f.kneeDiff)>p.th, off:f=>Math.abs(f.kneeDiff)<.05,
+ form:f=>Math.abs(f.lw.y-f.rw.y)>.2*f.T?null:{th:'มือหนึ่งระดับไหล่ อีกมือระดับเอว',en:'One hand at shoulder, one at waist'},
+ name:S2('ย่ำเท้าบนเก้าอี้ ท่ารำส่าย','Seated marching · Ram Sai'),
+ steps:S2(['แขนทั้งสองตึง มือขวาหงายระดับไหล่ มือซ้ายคว่ำอยู่ระดับเอว พร้อมกับยกขาขวา','มือขวาวาดแขนลงระดับเอว พร้อมกับพลิกมือซ้ายหงายขึ้นระดับไหล่ พร้อมกับยกขาซ้าย ทำต่อเนื่องกัน','ทำสลับข้างต่อเนื่อง 10 ครั้ง'],['Both arms straight: right palm up at shoulder height, left palm down at waist, lifting the right leg.','Sweep the right arm down to the waist as the left palm turns up to shoulder height, lifting the left leg. Keep it flowing.','Alternate sides 10 times.']),
+ mus:S2(['กล้ามเนื้องอสะโพก','หน้าท้อง','ไหล่'],['Hip flexors','Abdominals','Shoulders']),
+ ben:S2('คาร์ดิโอบนเก้าอี้ เพิ่มอัตราการเต้นหัวใจอย่างปลอดภัย ฝึกจังหวะมือ-เท้า','Seated cardio that safely raises the heart rate and trains arm-leg timing.')},
+{id:'t5',cat:'thai',grp:['thai','balance'],chair:true,mode:'reps',reps:[10,10,8],th:[.14,.11,.08],need:'legs',
+ keys:alt(K(SEAT,{aL:A.wongBon,aR:A.jeebHigh,lR:L.seatSide})),ap:4,
+ on:(f,p)=>Math.abs(f.kneeDiff)>p.th&&oneUp(f), off:f=>Math.abs(f.kneeDiff)<.05,
+ name:S2('ยกเข่าออกด้านข้าง ท่าจ่อเพลิงกาฬ','Side knee raise · Jor Pleangkul'),
+ steps:S2(['มือซ้ายตั้งวงบน มือขวาจีบหงายระดับสูงกว่าวงซ้ายเล็กน้อย และงอแขนเล็กน้อย พร้อมกับยกขาขวาออกไปด้านข้าง','มือขวาตั้งวงบน มือซ้ายจีบหงายระดับสูงกว่าวงขวาเล็กน้อย และงอแขนเล็กน้อย พร้อมกับยกขาซ้ายออกไปด้านข้าง','ทำสลับข้างต่อเนื่อง 10 ครั้ง'],['Left hand in high wong, right hand jeeb facing up a little higher, elbow softly bent, lifting the right leg out to the side.','Right hand in high wong, left hand jeeb slightly higher, lifting the left leg out to the side.','Alternate sides 10 times.']),
+ mus:S2(['กล้ามเนื้อสะโพกด้านข้าง','กล้ามเนื้องอสะโพก','ไหล่'],['Hip abductors','Hip flexors','Shoulders']),
+ ben:S2('สะโพกมั่นคง ทรงตัวด้านข้างดีขึ้น ลดความเสี่ยงหกล้ม','Stabilises the hips and side-to-side balance to lower fall risk.')},
+{id:'t6',cat:'thai',grp:['thai','balance'],chair:true,mode:'holdreps',reps:[10,10,8],hold:[5,5,4],th:[.14,.11,.08],need:'legs',
+ keys:[K(SEAT,{aR:A.jeebHigh,aL:A.jeebUnder,lL:L.seatLift}),K(SEAT,{aR:A.jeebHigh,aL:A.jeebUnder,lL:L.seatLift}),M(K(SEAT,{aR:A.jeebHigh,aL:A.jeebUnder,lL:L.seatLift})),M(K(SEAT,{aR:A.jeebHigh,aL:A.jeebUnder,lL:L.seatLift}))],ap:8,
+ ok:(f,p)=>Math.abs(f.kneeDiff)>p.th&&oneUp(f), off:f=>Math.abs(f.kneeDiff)<.05,
+ name:S2('ยกเข่าค้าง ท่าแขกเต้าเข้ารัง','Knee lift hold · Kaek Tao Kao Rung'),
+ steps:S2(['มือขวาจีบสูง มือซ้ายจีบอยู่ใต้ศอกขวา ยกขาซ้ายขึ้นค้างไว้ 5 วินาที','มือซ้ายจีบสูง มือขวาจีบอยู่ใต้ศอกซ้าย ยกขาขวาขึ้นค้างไว้ 5 วินาที','ทำสลับข้างต่อเนื่อง 10 ครั้ง'],['Right hand jeeb high, left hand jeeb under the right elbow; lift the left leg and hold 5 seconds.','Left hand jeeb high, right hand jeeb under the left elbow; lift the right leg and hold 5 seconds.','Alternate sides 10 times.']),
+ mus:S2(['กล้ามเนื้องอสะโพก','หน้าท้อง (แกนกลาง)','ไหล่'],['Hip flexors','Core','Shoulders']),
+ ben:S2('แกนกลางลำตัวอึดขึ้น ควบคุมขาข้างเดียวได้ดี','Builds core endurance and single-leg control.')},
+{id:'t7',cat:'thai',grp:['thai','cardio'],chair:true,mode:'reps',reps:[10,10,8],need:'upper',
+ keys:[K(SEAT,{aR:A.waistJ,aL:A.waistJ}),K(SEAT,{aR:A.openUp,aL:A.openUp}),K(SEAT,{aR:A.wongHead,aL:A.wongHead}),K(SEAT,{aR:A.sideW,aL:A.sideW})],ap:6,
+ on:f=>bothUp(f), off:f=>bothLow(f),
+ guide:f=>({y:f.n.y,label:{th:'มือสูงกว่าเส้น',en:'Hands above line'}}),
+ name:S2('ยกแขน ท่าพรหมสี่หน้า และจันทร์ทรงกลด','Arm raises · Prom Si Na & Chan Chong Klod'),
+ steps:S2(['จีบคว่ำสองมือข้างตัวระดับเอว','หมุนจีบขึ้น แล้วปล่อยจีบเป็นแบมือ','หงายทั้งสองมือสูงระดับศีรษะ หันปลายนิ้วออกข้างศีรษะ','พลิกข้อมือทั้งสองขึ้นเป็นตั้งวงหน้า หย่อนข้อศอกเล็กน้อย แล้วค่อยๆ วาดแขนลงด้านข้าง','ทำต่อเนื่อง 10 ครั้ง'],['Both hands jeeb facing down at your sides, waist level.','Turn the jeeb up and release into open hands.','Palms up at head height, fingertips pointing out beside the head.','Turn both wrists into front wong, soften the elbows, then sweep the arms slowly down to the sides.','Repeat 10 times.']),
+ mus:S2(['ไหล่','หลังส่วนบน','ข้อมือ'],['Deltoids','Upper back','Wrists']),
+ ben:S2('ไหล่ยกได้สุด ปรับท่าทาง และช่วยให้หายใจลึก','Opens full shoulder range, improves posture and deepens breathing.')},
+{id:'t8',cat:'thai',grp:['thai','balance'],chair:true,mode:'reps',reps:[10,10,8],th:[.14,.11,.08],need:'legs',
+ keys:alt(K(SEAT,{aR:A.wongBon,aL:A.fwdJ,lR:L.seatLift})),ap:4,
+ on:(f,p)=>Math.abs(f.kneeDiff)>p.th&&oneUp(f), off:f=>Math.abs(f.kneeDiff)<.05,
+ form:f=>(f.kneeDiff>0&&up(f,f.rw)&&!up(f,f.lw))||(f.kneeDiff<0&&up(f,f.lw)&&!up(f,f.rw))?{th:'ยกมือข้างเดียวกับขาที่ยก',en:'Raise the hand on the same side as the leg'}:null,
+ name:S2('ท่าแมลง ท่าสอดสร้อยมาลาแปลง','Bug · Sod Soi Ma La Plaeng'),
+ steps:S2(['มือขวาตั้งวงบนเหนือศีรษะ มือซ้ายจีบหงายส่งไปด้านหน้า พร้อมกับยกขาขวาขึ้น','มือซ้ายตั้งวงบนเหนือศีรษะ มือขวาจีบหงายส่งไปด้านหน้า พร้อมกับยกขาซ้ายขึ้น','ทำสลับข้างต่อเนื่อง 10 ครั้ง'],['Right hand in high wong above the head, left hand jeeb facing up reaching forward, lifting the right leg.','Left hand high wong, right hand jeeb forward, lifting the left leg.','Alternate sides 10 times.']),
+ mus:S2(['หน้าท้อง','กล้ามเนื้องอสะโพก','ไหล่'],['Abdominals','Hip flexors','Shoulders']),
+ ben:S2('แกนกลางแข็งแรง ฝึกสมาธิและการประสานมือ-ขาข้างเดียวกัน','Strengthens the core and trains focus and same-side coordination.')},
+{id:'t9',cat:'thai',grp:['thai'],chair:true,mode:'reps',reps:[10,10,8],need:'upper',
+ keys:[K(SEAT,{aR:A.fwdJ,aL:A.fwdJ,bend:6}),K(SEAT,{aR:A.fwdW,aL:A.fwdW,bend:3}),K(SEAT,{aR:A.backW,aL:A.backW,bend:-9})],ap:5,
+ on:f=>Math.abs(f.lw.y-f.sh.y)<.45*f.T&&Math.abs(f.rw.y-f.sh.y)<.45*f.T&&Math.abs(f.lw.x-f.rw.x)<1.4*f.sw,
+ off:f=>(f.lw.y>f.sh.y+.6*f.T||f.lw.v<.4)&&(f.rw.y>f.sh.y+.6*f.T||f.rw.v<.4),
+ name:S2('เหยียดหลัง ท่าช้างประสานงา และนกยูงฟ้อนหาง','Seated back bend · Chang Pra San Nga & Nok Yoong Fon Hang'),
+ steps:S2(['จีบมือหงายทั้งสองข้าง เหยียดแขนตึงไปข้างหน้าต่ำกว่าไหล่เล็กน้อย พร้อมเหยียดสะบัก','เปลี่ยนจีบเป็นตั้งวง','ส่งมือไปข้างหลัง แขนตึง ฝ่ามือคว่ำ ปลายนิ้วเชิดขึ้น','ทำต่อเนื่อง 10 ครั้ง'],['Both hands jeeb facing up, arms straight forward just below shoulder height, shoulder blades spread.','Change the jeeb into wong.','Send the hands behind you, arms straight, palms down, fingertips lifted.','Repeat 10 times.']),
+ mus:S2(['กล้ามเนื้อสะบัก','หลังส่วนบน','หน้าอก'],['Shoulder-blade muscles','Upper back','Chest']),
+ ben:S2('เปิดอก แก้ไหล่ห่อ และช่วยให้หายใจได้ลึก','Opens the chest, counters rounded shoulders and deepens breathing.')},
+{id:'t10',cat:'thai',grp:['thai','legs'],chair:true,mode:'reps',reps:[10,10,6],need:'legs',
+ keys:[SEAT,K(STAND,{hz:.12,aR:A.jeebProk,aL:A.wongNa}),SEAT,M(K(STAND,{hz:.12,aR:A.jeebProk,aL:A.wongNa}))],ap:9,
+ on:f=>f.seatR>.68, off:f=>f.seatR<.4,
+ form:f=>oneUp(f)?null:{th:'ยกมือจีบปรกข้างระดับศีรษะ',en:'Raise one hand in jeeb beside your head'},
+ name:S2('ลุก-นั่ง ท่าชักแป้งผัดหน้า','Sit & stand · Chuk Pang Pud Hna'),
+ steps:S2(['ลุกยืนขึ้นพร้อมกับจีบมือขวาลักษณะจีบปรกข้างระดับศีรษะ มือซ้ายวงหน้าอยู่ระดับหน้า','ลดแขนลงพร้อมกับนั่ง','ลุกยืนขึ้นพร้อมกับจีบมือซ้ายลักษณะจีบปรกข้างระดับศีรษะ มือขวาวงหน้าอยู่ระดับหน้า','ลดแขนลงพร้อมกับนั่ง','ทำสลับข้างต่อเนื่อง 10 ครั้ง'],['Stand up with the right hand in jeeb prok beside the head and the left hand in front wong at face level.','Lower the arms as you sit.','Stand with the left hand in jeeb prok beside the head, right hand front wong at face level.','Lower the arms as you sit.','Alternate sides 10 times.']),
+ mus:S2(['ต้นขาด้านหน้า','สะโพก (กลูเตียส)','น่อง','ไหล่'],['Quadriceps','Glutes','Calves','Shoulders']),
+ ben:S2('ขาแข็งแรงสำหรับการลุกยืนในชีวิตประจำวัน ลดความเสี่ยงหกล้ม','Builds the leg strength for everyday standing up and helps prevent falls.')},
+
+/* ===== CARDIO / STRENGTH / BALANCE ===== */
+{id:'jacks',cat:'cardio',grp:['cardio'],mode:'reps',reps:[20,0,0],need:'feet',
+ keys:[STAND,K(STAND,{aR:A.up,aL:A.up,lR:L.standWide,lL:L.standWide})],ap:1.4,
+ on:f=>bothUp(f)&&f.ankDist>1.5*f.sw, off:f=>bothLow(f)&&f.ankDist<1.1*f.sw,
+ form:f=>Math.min(f.elL,f.elR)<120?{th:'เหยียดแขนให้ตรงเหนือศีรษะ',en:'Straighten your arms overhead'}:null,
+ name:S2('กระโดดตบ','Jumping jacks'),
+ steps:S2(['ยืนตรง เท้าชิด','กระโดดแยกเท้ากว้าง พร้อมยกมือตบเหนือศีรษะ','กระโดดกลับท่าเดิม'],['Stand tall, feet together.','Jump feet wide while bringing hands together overhead.','Jump back to start.']),
+ mus:S2(['น่อง','ต้นขา','สะโพก','ไหล่'],['Calves','Thighs','Glutes','Shoulders']),
+ ben:S2('เพิ่มอัตราการเต้นหัวใจอย่างรวดเร็ว เผาผลาญพลังงาน และกระดูกแข็งแรงจากแรงกระแทกเบาๆ','Raises the heart rate quickly, burns energy and loads bones lightly to keep them strong.')},
+{id:'squat',cat:'cardio',grp:['legs'],mode:'reps',reps:[12,0,0],th:[.45],need:'legs',
+ keys:[STAND,K(STAND,{hipY:.33,lR:L.squat,lL:L.squat,aR:A.fwd,aL:A.fwd,bend:22})],ap:3,
+ on:(f,p)=>f.seatR<p.th, off:f=>f.seatR>.75,
+ form:f=>f.kneeDist<.7*f.ankDist?{th:'ดันเข่าออกด้านนอก',en:'Push knees outward'}:null,
+ guide:(f,p)=>({y:(f.lk.y+f.rk.y)/2-p.th*f.T,label:{th:'สะโพกลงถึงเส้น',en:'Hips to here'}}),
+ name:S2('สควอท','Squat'),
+ steps:S2(['ยืนเท้ากว้างเท่าไหล่','ดันสะโพกไปด้านหลังและย่อลงถึงเส้น อกตั้ง','ดันส้นเท้ายืนขึ้นเต็มที่'],['Feet shoulder-width apart.','Push hips back and down to the line, chest up.','Drive through the heels to stand tall.']),
+ mus:S2(['ต้นขาด้านหน้า','สะโพก','ต้นขาด้านหลัง','แกนกลาง'],['Quadriceps','Glutes','Hamstrings','Core']),
+ ben:S2('ขาและสะโพกแข็งแรง เพิ่มมวลกล้ามเนื้อ ช่วยเผาผลาญ','Builds leg and hip strength and muscle mass that keeps metabolism up.')},
+{id:'halfsquat',cat:'cardio',grp:['legs'],mode:'reps',reps:[0,10,0],th:[.6,.6,.6],need:'legs',
+ keys:[STAND,K(STAND,{hipY:.43,lR:L.halfSq,lL:L.halfSq,aR:A.fwd,aL:A.fwd,bend:12})],ap:3.4,
+ on:(f,p)=>f.seatR<p.th, off:f=>f.seatR>.78,
+ form:f=>f.kneeDist<.7*f.ankDist?{th:'ดันเข่าออกด้านนอก',en:'Push knees outward'}:null,
+ guide:(f,p)=>({y:(f.lk.y+f.rk.y)/2-p.th*f.T,label:{th:'สะโพกลงถึงเส้น',en:'Hips to here'}}),
+ name:S2('ฮาล์ฟสควอท','Half squat'),
+ steps:S2(['ยืนเท้ากว้างเท่าไหล่ ยื่นแขนไปข้างหน้า','ย่อเข่าลงครึ่งทาง เหมือนจะนั่งเก้าอี้','ยืนขึ้นตรง'],['Feet shoulder-width apart, arms forward.','Bend halfway as if about to sit.','Stand back up tall.']),
+ mus:S2(['ต้นขาด้านหน้า','สะโพก'],['Quadriceps','Glutes']),
+ ben:S2('ขาแข็งแรง ลุก-นั่ง ขึ้นลงบันไดได้มั่นคง','Strong legs for steady sitting, standing and stairs.')},
+{id:'sitstand',cat:'cardio',grp:['legs'],chair:true,mode:'reps',reps:[0,10,6],need:'legs',
+ keys:[SEAT,K(STAND,{hz:.12})],ap:4,
+ on:f=>f.seatR>.68, off:f=>f.seatR<.4,
+ form:f=>Math.abs(f.lean)>15?{th:'ทิ้งน้ำหนักตรงกลาง',en:'Keep weight centered'}:null,
+ name:S2('ลุก-นั่งจากเก้าอี้','Chair sit-to-stand'),
+ steps:S2(['นั่งค่อนหน้าเก้าอี้ เท้าวางราบ','ยืนขึ้นเต็มที่ ใช้มือช่วยดันเข่าได้ถ้าจำเป็น','นั่งลงช้าๆ อย่างควบคุม'],['Sit near the front of the chair, feet flat.','Stand up fully; push on your knees if needed.','Sit back down slowly and with control.']),
+ mus:S2(['ต้นขาด้านหน้า','สะโพก','น่อง'],['Quadriceps','Glutes','Calves']),
+ ben:S2('ทักษะสำคัญในชีวิตประจำวัน ช่วยให้ช่วยเหลือตัวเองได้นาน','The everyday skill that keeps you independent for longer.')},
+{id:'highknees',cat:'cardio',grp:['cardio'],mode:'reps',reps:[20,0,0],th:[.45],need:'legs',
+ keys:alt(K(STAND,{lR:L.standLift,aR:A.swingB,aL:A.swingF})),ap:1.2,
+ on:(f,p)=>Math.abs(f.kneeDiff)>p.th, off:f=>Math.abs(f.kneeDiff)<.1,
+ name:S2('ยกเข่าสูง','High knees'),
+ steps:S2(['ยืนตรง','ยกเข่าขึ้นสูงระดับสะโพกสลับซ้าย-ขวา','แกว่งแขนตามจังหวะ'],['Stand tall.','Drive knees up to hip height, alternating.','Swing your arms with the rhythm.']),
+ mus:S2(['กล้ามเนื้องอสะโพก','ต้นขา','น่อง','หน้าท้อง'],['Hip flexors','Thighs','Calves','Abdominals']),
+ ben:S2('คาร์ดิโอเข้มข้น หัวใจและปอดแข็งแรง','High-energy cardio for heart and lungs.')},
+{id:'kneelift',cat:'cardio',grp:['balance','legs'],mode:'reps',reps:[0,12,8],th:[.3,.3,.2],need:'legs',
+ keys:alt(K(STAND,{lR:L.standLiftLow,aR:A.hip,aL:A.hip})),ap:3,
+ on:(f,p)=>Math.abs(f.kneeDiff)>p.th, off:f=>Math.abs(f.kneeDiff)<.08,
+ form:f=>Math.abs(f.lean)>15?{th:'ตัวตรง อย่าเอียง',en:'Stay upright, do not lean'}:null,
+ name:S2('ยกเข่า (จับเก้าอี้ได้)','Knee lift (chair support)'),
+ steps:S2(['ยืนข้างเก้าอี้ มือหนึ่งจับพนักไว้ได้','ยกเข่าขึ้นช้าๆ แล้ววางลง','สลับขา'],['Stand beside a chair; hold the back if needed.','Lift one knee slowly, then lower it.','Alternate legs.']),
+ mus:S2(['กล้ามเนื้องอสะโพก','ต้นขา','แกนกลาง'],['Hip flexors','Thighs','Core']),
+ ben:S2('ฝึกยืนขาเดียวชั่วขณะ ช่วยการก้าวเดินและข้ามสิ่งกีดขวาง','Practises brief single-leg standing for walking and stepping over things.')},
+{id:'armraise',cat:'cardio',grp:['cardio'],mode:'reps',reps:[12,12,8],need:'upper',
+ keys:[STAND,K(STAND,{aR:A.up,aL:A.up})],ap:2.6,
+ on:f=>bothUp(f), off:f=>bothLow(f),
+ form:f=>Math.abs(f.tilt)>10?{th:'ไหล่สองข้างให้เท่ากัน',en:'Keep shoulders level'}:null,
+ guide:f=>({y:f.n.y,label:{th:'มือสูงกว่าเส้น',en:'Hands above line'}}),
+ name:S2('ยกแขนเหนือศีรษะ','Overhead arm raise'),
+ steps:S2(['ยืนหรือนั่งตัวตรง แขนข้างลำตัว','ยกสองแขนขึ้นเหนือศีรษะ','ลดลงช้าๆ'],['Stand or sit tall, arms at your sides.','Raise both arms overhead.','Lower slowly.']),
+ mus:S2(['ไหล่','หลังส่วนบน'],['Deltoids','Upper back']),
+ ben:S2('ไหล่แข็งแรง หยิบของบนชั้นสูงได้ง่ายขึ้น','Stronger shoulders for reaching high shelves.')},
+{id:'altreach',cat:'cardio',grp:['cardio'],mode:'reps',reps:[14,12,10],need:'upper',
+ keys:[K(STAND,{aL:A.up,lean:-4}),STAND,K(STAND,{aR:A.up,lean:4}),STAND],ap:3,
+ on:f=>oneUp(f), off:f=>bothLow(f),
+ form:f=>Math.abs(f.lean)>12?{th:'ยืดตัวตรง อย่าเอียงมาก',en:'Stand tall, do not lean'}:null,
+ guide:f=>({y:f.n.y,label:{th:'เอื้อมสูงกว่าเส้น',en:'Reach above line'}}),
+ name:S2('เอื้อมมือสลับ','Alternating reach'),
+ steps:S2(['ยกมือหนึ่งเอื้อมสูงเหนือศีรษะ','ลดลง แล้วเปลี่ยนมือ','ทำต่อเนื่องเป็นจังหวะ'],['Reach one hand high above your head.','Lower it and switch hands.','Keep a steady rhythm.']),
+ mus:S2(['ไหล่','ข้างลำตัว'],['Shoulders','Side trunk']),
+ ben:S2('อุ่นเครื่องหัวใจเบาๆ ไหล่เคลื่อนไหวได้ดี','Gentle heart warm-up and shoulder mobility.')},
+{id:'punch',cat:'cardio',grp:['cardio'],mode:'reps',reps:[20,16,12],need:'upper',
+ keys:alt(K(STAND,{aR:A.punch,aL:A.guard,twist:16})),ap:1.6,
+ on:f=>(f.lw.x<f.sh.x&&Math.abs(f.lw.y-f.sh.y)<.4*f.T)||(f.rw.x>f.sh.x&&Math.abs(f.rw.y-f.sh.y)<.4*f.T),
+ off:f=>f.lw.x>f.sh.x&&f.rw.x<f.sh.x,
+ name:S2('ชกไขว้','Cross punches'),
+ steps:S2(['ยกกำปั้นป้องคาง','ชกมือขวาไขว้ไปทางซ้ายระดับไหล่ หมุนลำตัวตาม','ดึงกลับ แล้วชกมืออีกข้าง'],['Fists up guarding your chin.','Punch the right fist across to the left at shoulder height, turning the trunk.','Pull back and punch with the other hand.']),
+ mus:S2(['ไหล่','หน้าอก','หน้าท้องด้านข้าง'],['Shoulders','Chest','Obliques']),
+ ben:S2('คาร์ดิโอส่วนบน ทำได้ทั้งนั่งและยืน ข้ามแนวกลางลำตัว','Upper-body cardio, seated or standing, crossing the midline.')},
+{id:'balance',cat:'cardio',grp:['balance'],mode:'hold',reps:[30,20,10],need:'feet',
+ keys:[K(STAND,{lR:L.footUp,aR:A.side,aL:A.side}),K(STAND,{lR:L.footUp,aR:{...A.side,H:[.3,.03,0]},aL:{...A.side,H:[.3,-.03,0]},lean:2})],ap:3,
+ ok:f=>Math.abs(f.ankDiff)>.18,
+ name:S2('ยืนขาเดียว','Single-leg balance'),
+ steps:S2(['ยืนข้างเก้าอี้ จับพนักได้ถ้าต้องการ','ยกเท้าหนึ่งขึ้นจากพื้นเล็กน้อย ค้างไว้','สายตามองตรงไปข้างหน้า'],['Stand beside a chair; hold it if you need to.','Lift one foot a little off the floor and hold.','Keep your eyes looking straight ahead.']),
+ mus:S2(['สะโพกด้านข้าง','ข้อเท้า','แกนกลาง'],['Hip abductors','Ankle stabilisers','Core']),
+ ben:S2('ฝึกการทรงตัวโดยตรง หนึ่งในวิธีที่ดีที่สุดในการลดการหกล้ม','Direct balance training, one of the best ways to reduce falls.')},
+{id:'tpose',cat:'cardio',grp:['balance'],mode:'hold',reps:[30,20,15],need:'upper',
+ keys:[K(STAND,{aR:A.side,aL:A.side}),K(STAND,{aR:{...A.side,H:[.31,.02,0]},aL:{...A.side,H:[.31,.02,0]}})],ap:3,
+ ok:f=>tposeOk(f), hint:{th:'กางแขนตรงระดับไหล่',en:'Arms straight out at shoulder height'},
+ form:f=>Math.abs(f.tilt)>8?{th:'ไหล่สองข้างให้เท่ากัน',en:'Level your shoulders'}:null,
+ name:S2('กางแขนค้าง (ท่าเครื่องบิน)','Airplane arms hold'),
+ steps:S2(['นั่งหรือยืนตัวตรง','กางแขนสองข้างตรงระดับไหล่','ค้างไว้ หายใจสม่ำเสมอ'],['Sit or stand tall.','Stretch both arms straight out at shoulder height.','Hold and breathe steadily.']),
+ mus:S2(['ไหล่','หลังส่วนบน'],['Deltoids','Upper back']),
+ ben:S2('ไหล่อึด ปรับท่าทาง และฝึกสมาธิ','Shoulder endurance, better posture and focus.')},
+
+/* ===== BRAIN (dementia-risk focus) ===== */
+{id:'crosscrawl',cat:'brain',grp:['brain'],chair:true,mode:'reps',reps:[20,14,10],th:[.2,.15,.1],need:'legs',
+ keys:alt(K(SEAT,{aR:A.up,lL:L.seatLift})),ap:2.4,
+ on:(f,p)=>(aboveSh(f,f.rw)&&f.kneeDiff>p.th)||(aboveSh(f,f.lw)&&f.kneeDiff<-p.th), off:f=>Math.abs(f.kneeDiff)<.06,
+ form:(f,p)=>(aboveSh(f,f.lw)&&!aboveSh(f,f.rw)&&f.kneeDiff>p.th)||(aboveSh(f,f.rw)&&!aboveSh(f,f.lw)&&f.kneeDiff<-p.th)?{th:'ใช้มือกับเข่าคนละข้าง',en:'Use opposite hand and knee'}:null,
+ name:S2('มือ-เข่าตรงข้าม','Cross crawl'),
+ steps:S2(['ยกมือขวาขึ้น พร้อมยกเข่าซ้าย','ลดลง แล้วยกมือซ้ายพร้อมเข่าขวา','ทำสลับเป็นจังหวะ'],['Raise the right hand while lifting the left knee.','Lower, then left hand with right knee.','Keep alternating in rhythm.']),
+ mus:S2(['กล้ามเนื้องอสะโพก','ไหล่','แกนกลาง'],['Hip flexors','Shoulders','Core']),
+ ben:S2('การเคลื่อนไหวข้ามแนวกลางลำตัวกระตุ้นสมองซีกซ้าย-ขวาทำงานร่วมกัน ฝึกการประสานงาน','Crossing the body midline gets both sides of the brain working together and trains coordination.')},
+{id:'crosstouch',cat:'brain',grp:['brain'],chair:true,mode:'reps',reps:[16,12,10],need:'legs',
+ keys:[K(SEAT,{aR:A.crossKnee,lL:L.seatLift,twist:12}),SEAT,M(K(SEAT,{aR:A.crossKnee,lL:L.seatLift,twist:12})),SEAT],ap:4,
+ on:f=>D(f.rw,f.lk)<.38*f.T||D(f.lw,f.rk)<.38*f.T, off:f=>D(f.rw,f.lk)>.6*f.T&&D(f.lw,f.rk)>.6*f.T,
+ name:S2('มือแตะเข่าตรงข้าม','Cross-body knee touch'),
+ steps:S2(['ยกเข่าซ้ายขึ้น ใช้มือขวาแตะเข่า','กลับท่าเดิม','ยกเข่าขวา ใช้มือซ้ายแตะ ทำสลับ'],['Lift the left knee and touch it with the right hand.','Return to start.','Lift the right knee and touch with the left hand. Alternate.']),
+ mus:S2(['หน้าท้องด้านข้าง','กล้ามเนื้องอสะโพก'],['Obliques','Hip flexors']),
+ ben:S2('ฝึกแกนกลางลำตัวและการทำงานข้ามซีกสมอง','Trains the core and cross-brain coordination.')},
+{id:'nosetouch',cat:'brain',grp:['brain'],chair:true,mode:'reps',reps:[16,12,10],need:'upper',
+ keys:alt(K(SEAT,{aR:A.nose,aL:A.side})),ap:3,
+ on:f=>D(f.lw,f.n)<.32*f.T||D(f.rw,f.n)<.32*f.T, off:f=>D(f.lw,f.n)>.6*f.T&&D(f.rw,f.n)>.6*f.T,
+ name:S2('แตะจมูก-กางแขน','Nose touch & reach'),
+ steps:S2(['มือขวาแตะจมูก มือซ้ายกางออกด้านข้าง','สลับมือเร็วๆ ให้ตรงจังหวะ','ระดับยาก: หลับตาแล้วทำ'],['Right hand touches your nose, left arm reaches out to the side.','Swap hands quickly on the rhythm.','Harder: try it with eyes closed.']),
+ mus:S2(['ไหล่','แขน'],['Shoulders','Arms']),
+ ben:S2('ฝึกการรับรู้ตำแหน่งร่างกายและการสลับคำสั่งอย่างรวดเร็ว','Trains body-position sense and fast switching between commands.')},
+{id:'stroop',cat:'brain',grp:['brain'],chair:true,mode:'stroop',rule:'follow',reps:[12,10,8],tmo:[3.5,4.5,6],need:'upper',
+ keys:[K(SEAT,{aL:A.up}),SEAT,K(SEAT,{aR:A.up}),SEAT],ap:4,
+ name:S2('เกมสั่งซ้าย-ขวา','Left-right word game'),
+ steps:S2(['ลดมือลงทั้งสองข้าง รอคำบนจอ','คำว่า "ซ้าย" หรือ "ขวา" จะขึ้นในสีที่หลอกตา','ยกมือตามคำ ไม่ใช่ตามสี ให้เร็วที่สุด'],['Lower both hands and wait for the word.','LEFT or RIGHT appears in a tricky colour.','Raise the hand the word says, not the colour, as fast as you can.']),
+ mus:S2(['ไหล่','แขน'],['Shoulders','Arms']),
+ ben:S2('ฝึกสมาธิ การยับยั้งชั่งใจ และความเร็วในการตอบสนอง','Trains attention, inhibition and reaction speed.')},
+{id:'stroopOpp',cat:'brain',grp:['brain'],chair:true,mode:'stroop',rule:'opp',reps:[12,10,8],tmo:[3.5,4.5,6],need:'upper',
+ keys:[K(SEAT,{aR:A.up}),SEAT,K(SEAT,{aL:A.up}),SEAT],ap:4,
+ name:S2('เกมทำตรงข้าม','Do-the-opposite game'),
+ steps:S2(['ลดมือลงทั้งสองข้าง','เห็นคำว่า "ซ้าย" ให้ยกมือขวา เห็น "ขวา" ให้ยกมือซ้าย','ตอบให้ถูกและเร็ว'],['Lower both hands.','See LEFT, raise your right hand. See RIGHT, raise your left.','Be quick and correct.']),
+ mus:S2(['ไหล่','แขน'],['Shoulders','Arms']),
+ ben:S2('ฝึกการสลับความคิดและการยับยั้งการตอบสนองอัตโนมัติ ซึ่งเป็นทักษะสมองส่วนหน้า','Trains mental switching and holding back automatic responses, both frontal-lobe skills.')},
+{id:'memory',cat:'brain',grp:['brain'],chair:true,mode:'memory',reps:[4,4,3],len:[4,4,3],need:'upper',
+ keys:[K(SEAT,{aL:A.up}),K(SEAT,{aR:A.up}),K(SEAT,{aR:A.up,aL:A.up}),K(SEAT,{aR:A.side,aL:A.side})],ap:5,
+ name:S2('เกมจำท่า','Memory moves'),
+ steps:S2(['ดูลำดับท่าบนจอ (ยกมือซ้าย ขวา สองมือ หรือกางแขน)','เมื่อขึ้นว่า "ถึงตาคุณ" ทำตามลำดับจากความจำ','ลดมือลงระหว่างแต่ละท่า'],['Watch the sequence (left up, right up, both up, arms out).','When it says "Your turn", repeat it from memory.','Lower your hands between moves.']),
+ mus:S2(['ไหล่','แขน','หลังส่วนบน'],['Shoulders','Arms','Upper back']),
+ ben:S2('ฝึกความจำใช้งาน (working memory) และการวางแผน ร่วมกับการขยับร่างกาย','Trains working memory and planning while moving.')}
+];
+const POSE=Object.fromEntries(POSES.map(p=>[p.id,p]));
+const MOVES={L:K(SEAT,{aL:A.up}),R:K(SEAT,{aR:A.up}),B:K(SEAT,{aR:A.up,aL:A.up}),T:K(SEAT,{aR:A.side,aL:A.side})};
+
+/* ---------- annual plan ---------- */
+function rng(seed){let a=seed>>>0;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function shuffle(arr,r){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+const allowed=(p,ti)=>(p.reps[ti]||0)>0;
+function dayInfo(d){const phase=Math.min(5,Math.floor(d/61)), easyWeek=Math.floor(d/7)%4===3;
+ return {d,phase,easyWeek,theme:THEMES[d%7],mult:PHASES[phase].m*(easyWeek?.8:1)};}
+function dayPlan(d,tk){
+ const ti=TIERS[tk].i, info=dayInfo(d), r=rng(d*7919+ti*104729+17);
+ const used=new Set(), stretch=[], cardio=[];
+ const sPool=shuffle(POSES.filter(p=>p.cat==='stretch'&&allowed(p,ti)),r);
+ const sN=info.theme.stretchN||3;
+ if(info.theme.id==='thai'||info.theme.id==='thaimix'){stretch.push('wrist');used.add('wrist');}
+ for(const p of sPool){if(stretch.length>=sN)break;if(!used.has(p.id)){stretch.push(p.id);used.add(p.id);}}
+ stretch.sort((a,b)=>(a==='neck'?-1:0)-(b==='neck'?-1:0));
+ for(const [g,n] of info.theme.mix){
+  const pool=shuffle(POSES.filter(p=>p.grp&&p.grp.includes(g)&&allowed(p,ti)&&!used.has(p.id)),r);
+  for(const p of pool.slice(0,n)){cardio.push(p.id);used.add(p.id);}
+  for(const fb of ['cardio','thai']){ if(pool.length>=n) break;
+   const more=shuffle(POSES.filter(p=>p.grp&&p.grp.includes(fb)&&allowed(p,ti)&&!used.has(p.id)),r).slice(0,n-pool.length);
+   for(const p of more){cardio.push(p.id);used.add(p.id);} pool.push(...more); }
+ }
+ const tgt=(id)=>{const p=POSE[id];let v=p.reps[ti];
+  if(p.mode==='memory') return v;
+  if(p.mode==='stroop') return Math.max(6,Math.round(v*Math.min(info.mult,1.2)));
+  v=Math.round(v*info.mult); return p.mode==='hold'?Math.max(8,v):Math.max(4,v);};
+ const items=[...stretch.map(id=>({id,block:'stretch',target:tgt(id)})),...cardio.map(id=>({id,block:'cardio',target:tgt(id)}))];
+ return {...info,items};
+}
+function itemSecs(it,tk){const p=POSE[it.id], sl=TIERS[tk].slow;
+ if(p.mode==='hold') return it.target+6;
+ if(p.mode==='holdreps') return it.target*((p.hold[TIERS[tk].i])+2.5);
+ if(p.mode==='follow') return it.target*p.per*sl;
+ if(p.mode==='stroop') return it.target*4;
+ if(p.mode==='memory') return it.target*16;
+ return it.target*3.5*sl;}
+function planMinutes(plan,tk){let s=60;for(const it of plan.items) s+=itemSecs(it,tk)+(it.block==='stretch'?6:TIERS[tk].rest)+4; return Math.round(s/60);}
+if(typeof module!=='undefined'&&module.exports) module.exports={POSES,POSE,dayPlan,dayInfo,planMinutes,THEMES,PHASES,TIERS,armState,tposeOk,MOVES,SEAT,STAND};
+</script>
+<script>/* ===== animated stick-figure demo (pseudo-3D, front-left view) ===== */
+const FIG=(()=>{
+ const D2R=Math.PI/180;
+ const add=(a,b)=>[a[0]+b[0],a[1]+b[1],a[2]+b[2]], sub=(a,b)=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]], scl=(a,k)=>[a[0]*k,a[1]*k,a[2]*k];
+ const nrm=a=>{const l=Math.hypot(a[0],a[1],a[2])||1;return [a[0]/l,a[1]/l,a[2]/l];};
+ const lerp=(a,b,t)=>a+(b-a)*t, lv=(a,b,t)=>[lerp(a[0],b[0],t),lerp(a[1],b[1],t),lerp(a[2],b[2],t)];
+ function rot(v,s){let [x,y,z]=v,a=(s.twist||0)*D2R,c=Math.cos(a),n=Math.sin(a);[x,z]=[x*c+z*n,-x*n+z*c];
+  a=(s.bend||0)*D2R;c=Math.cos(a);n=Math.sin(a);[y,z]=[y*c-z*n,y*n+z*c];
+  a=(s.lean||0)*D2R;c=Math.cos(a);n=Math.sin(a);[x,y]=[x*c+y*n,-x*n+y*c];return [x,y,z];}
+ function mixL(a,b,t,ks){const o={};for(const k of ks)o[k]=lv(a[k],b[k],t);o.h=t<.5?a.h:b.h;o.f=lerp(a.f||0,b.f||0,t);return o;}
+ function specAt(keys,u){const n=keys.length;if(n===1)return keys[0];
+  const x=u*n,i=Math.floor(x)%n,j=(i+1)%n;let t=x-Math.floor(x);t=t<.4?0:(t-.4)/.6;t=t*t*(3-2*t);
+  const a=keys[i],b=keys[j],o={};for(const k of ['hipY','hz','bend','lean','twist','tilt','shr'])o[k]=lerp(a[k]||0,b[k]||0,t);
+  o.aR=mixL(a.aR,b.aR,t,['E','H']);o.aL=mixL(a.aL,b.aL,t,['E','H']);o.lR=mixL(a.lR,b.lR,t,['K','A']);o.lL=mixL(a.lL,b.lL,t,['K','A']);return o;}
+ function skel(s){const hc=[0,s.hipY,s.hz||0],neck=add(hc,rot([0,.3,0],s)),head=add(neck,rot([0,.09,0],{bend:s.bend,lean:(s.lean||0)+(s.tilt||0)}));
+  const P={hc,neck,head};
+  for(const [sd,g] of [['R',-1],['L',1]]){
+   const sh=add(hc,rot([g*.1,.28+(s.shr||0),0],s)),a=s['a'+sd];
+   const E=rot([a.E[0]*g,a.E[1],a.E[2]],s),H=rot([a.H[0]*g,a.H[1],a.H[2]],s);
+   const el=add(sh,scl(nrm(E),.16)),hd=add(el,scl(nrm(sub(H,E)),.15));
+   const hj=add(hc,[g*.06,0,0]),l=s['l'+sd],Kv=[l.K[0]*g,l.K[1],l.K[2]],Av=[l.A[0]*g,l.A[1],l.A[2]];
+   const kn=add(hj,scl(nrm(Kv),.25)),an=add(kn,scl(nrm(sub(Av,Kv)),.25)),f=l.f||0;
+   const toe=add(an,f>=0?lv([0,-.01,.08],[0,-.05,.06],f):lv([0,-.01,.08],[0,.045,.065],-f));
+   Object.assign(P,{['sh'+sd]:sh,['el'+sd]:el,['hd'+sd]:hd,['ha'+sd]:a.h,['hj'+sd]:hj,['kn'+sd]:kn,['an'+sd]:an,['to'+sd]:toe});}
+  return P;}
+ const COL={R:'#FF5A5F',L:'#2F80ED',RL:'#D63F4A',LL:'#1F5FC4',shirt:'#8B5CF6',skin:'#F6C7A1',hair:'#2A2440',gold:'#FFC83D',chair:'#C9B48F',chairD:'#A88F66'};
+ function draw(cv,keys,period,time,opt={}){
+  const dpr=Math.min(2,window.devicePixelRatio||1),W=cv.clientWidth,H=cv.clientHeight;if(!W||!H)return;
+  if(cv.width!==Math.round(W*dpr)||cv.height!==Math.round(H*dpr)){cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);}
+  const c=cv.getContext('2d');c.setTransform(dpr,0,0,dpr,0,0);c.clearRect(0,0,W,H);
+  const s=specAt(keys,(((Math.max(0,time)/1000)/period)%1+1)%1),P=skel(s);
+  const S=Math.min(H/1.22,W/.95),ya=.42,cy=Math.cos(ya),sy=Math.sin(ya);
+  const pr=p=>{const x=p[0]*cy+p[2]*sy,d=-p[0]*sy+p[2]*cy;return [W/2+x*S-.04*S,H*.95-p[1]*S+d*.16*S,d];};
+  // floor shadow
+  c.fillStyle='rgba(27,31,59,.10)';c.beginPath();const fc=pr([0,0,.12]);c.ellipse(fc[0],fc[1],.32*S,.06*S,0,0,7);c.fill();
+  const seg=(a,b,w,col)=>{const A=pr(a),B=pr(b);return {d:(A[2]+B[2])/2,f:()=>{c.strokeStyle=col;c.lineWidth=w*S;c.lineCap='round';c.beginPath();c.moveTo(A[0],A[1]);c.lineTo(B[0],B[1]);c.stroke();}};};
+  const items=[];
+  if(opt.chair){const q=(x,y,z)=>pr([x,y,z]);
+   items.push({d:-.3,f:()=>{c.fillStyle=COL.chairD;c.strokeStyle=COL.chairD;c.lineWidth=.025*S;c.lineCap='round';
+    for(const [x,z] of [[-.15,-.13],[.15,-.13],[-.15,.12],[.15,.12]]){const a=q(x,.25,z),b=q(x,0,z);c.beginPath();c.moveTo(a[0],a[1]);c.lineTo(b[0],b[1]);c.stroke();}
+    for(const x of [-.15,.15]){const a=q(x,.25,-.13),b=q(x,.62,-.15);c.beginPath();c.moveTo(a[0],a[1]);c.lineTo(b[0],b[1]);c.stroke();}
+    const bp=[q(-.15,.44,-.14),q(.15,.44,-.14),q(.15,.6,-.15),q(-.15,.6,-.15)];c.fillStyle=COL.chair;c.beginPath();bp.forEach((p,i)=>i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1]));c.closePath();c.fill();
+    const sp=[q(-.16,.25,-.14),q(.16,.25,-.14),q(.16,.25,.13),q(-.16,.25,.13)];c.fillStyle=COL.chair;c.beginPath();sp.forEach((p,i)=>i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1]));c.closePath();c.fill();}});}
+  for(const sd of ['R','L']){
+   const far=sd==='L'?.0:0;
+   items.push(seg(P['hj'+sd],P['kn'+sd],.062,COL[sd+'L']),seg(P['kn'+sd],P['an'+sd],.052,COL[sd+'L']),seg(P['an'+sd],P['to'+sd],.04,'#2A2440'));
+   items.push(seg(P['sh'+sd],P['el'+sd],.048,COL[sd]),seg(P['el'+sd],P['hd'+sd],.042,COL[sd]));
+   const hp=pr(P['hd'+sd]),ep=pr(P['el'+sd]),hs=P['ha'+sd];
+   items.push({d:hp[2]+.001+far,f:()=>{
+    if(hs==='j'){c.fillStyle=COL.gold;c.strokeStyle='#B7791F';c.lineWidth=.008*S;c.beginPath();c.arc(hp[0],hp[1],.026*S,0,7);c.fill();c.stroke();}
+    else if(hs==='w'){const ang=Math.atan2(hp[1]-ep[1],hp[0]-ep[0]);c.save();c.translate(hp[0],hp[1]);c.rotate(ang-.9);
+     c.fillStyle=COL.skin;c.strokeStyle=COL.gold;c.lineWidth=.012*S;c.beginPath();c.ellipse(.02*S,0,.042*S,.026*S,0,0,7);c.fill();c.stroke();c.restore();}
+    else{c.fillStyle=COL.skin;c.beginPath();c.arc(hp[0],hp[1],.023*S,0,7);c.fill();}}});
+  }
+  const shR=pr(P.shR),shL=pr(P.shL),hjR=pr(P.hjR),hjL=pr(P.hjL),nk=pr(P.neck),hd=pr(P.head);
+  items.push({d:Math.min(shR[2],shL[2])-.002,f:()=>{
+   c.fillStyle=COL.shirt;c.beginPath();c.moveTo(shR[0],shR[1]);c.lineTo(shL[0],shL[1]);c.lineTo(hjL[0],hjL[1]+.02*S);c.lineTo(hjR[0],hjR[1]+.02*S);c.closePath();c.fill();
+   c.strokeStyle=COL.shirt;c.lineJoin='round';c.lineWidth=.05*S;c.stroke();
+   c.strokeStyle=COL.skin;c.lineWidth=.04*S;c.lineCap='round';c.beginPath();c.moveTo(nk[0],nk[1]);c.lineTo((nk[0]+hd[0])/2,(nk[1]+hd[1])/2);c.stroke();
+   c.fillStyle=COL.skin;c.beginPath();c.arc(hd[0],hd[1],.066*S,0,7);c.fill();
+   c.fillStyle=COL.hair;c.beginPath();c.arc(hd[0],hd[1]-.008*S,.068*S,Math.PI*1.05,Math.PI*1.95);c.fill();
+   c.fillStyle=COL.hair;c.beginPath();c.arc(hd[0]+.018*S,hd[1]+.005*S,.007*S,0,7);c.arc(hd[0]+.046*S,hd[1]+.002*S,.007*S,0,7);c.fill();}});
+  items.sort((a,b)=>a.d-b.d).forEach(i=>i.f());
+ }
+ return {draw,specAt};
+})();
+</script>
+<script type="module">{
+const MP="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
+const MODEL="https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task";
+const $=id=>document.getElementById(id);
+const store={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let lang=store.get('pp2-lang')||'th', tierKey=store.get('pp2-tier'), soundOn=true, audio=null, landmarker=null, stream=null, raf=0, S=null, plan=null;
+const tx=o=>o==null?'':typeof o==='string'?o:(o[lang]??o.en);
+const t=(k,vars)=>{let s=tx(U[k]);if(vars)for(const [a,b] of Object.entries(vars))s=s.replace('{'+a+'}',b);return s;};
+const DAY=86400000, mid=()=>{const d=new Date();d.setHours(0,0,0,0);return d.getTime();};
+let start=store.get('pp2-start'); if(!start){start=mid();store.set('pp2-start',start);}
+const todayAbs=()=>Math.max(0,Math.round((mid()-start)/DAY));
+let viewAbs=todayAbs();
+const doneMap=()=>store.get('pp2-done')||{};
+const tk=()=>tierKey||'b';
+const fmtDate=abs=>new Date(start+abs*DAY).toLocaleDateString(lang==='th'?'th-TH':'en-GB',{weekday:'short',day:'numeric',month:'short'});
+const targetTxt=(p,n)=>p.mode==='hold'?`${n} ${t('sec')}`:p.mode==='stroop'?`${n} ${t('trials')}`:p.mode==='memory'?`${n} ${t('rounds')}`:`${n} ${t('reps')}`;
+
+/* ---------- static text ---------- */
+function applyLang(){
+ document.documentElement.lang=lang;
+ document.querySelectorAll('[data-t]').forEach(el=>el.textContent=t(el.dataset.t));
+ document.querySelectorAll('[data-th]').forEach(el=>el.innerHTML=t(el.dataset.th));
+ document.querySelectorAll('.lang button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.lang===lang));
+ $('age').placeholder=t('agePh'); $('soundBtn').textContent=soundOn?t('voiceOn'):t('voiceOff');
+ if(S) $('pauseBtn').textContent=S.paused?t('resume'):t('pause');
+}
+function renderAll(){applyLang();renderTiers();renderDay();renderYear();renderBens();}
+
+/* ---------- tiers ---------- */
+function renderTiers(){
+ $('tiers').innerHTML=Object.entries(TIERS).map(([k,v])=>`<button class="tier" data-k="${k}" style="--c:${v.c}" aria-pressed="${k===tierKey}"><b>${tx(v.age)}</b><span>${tx(v.name)}</span></button>`).join('');
+ document.body.classList.toggle('big',!!(tierKey&&TIERS[tierKey].big)); validate();
+}
+function pick(k){tierKey=k;store.set('pp2-tier',k);renderTiers();renderDay();}
+function validate(){$('startBtn').disabled=!(tierKey&&$('c1').checked&&$('c2').checked&&$('c3').checked);}
+
+/* ---------- today ---------- */
+function moveRow(it){const p=POSE[it.id],c=CATC[p.cat];
+ return `<li class="mv" style="--c:${c}"><canvas data-pose="${p.id}" aria-hidden="true"></canvas><div><b>${tx(p.name)}</b><small><span class="chip soft" style="--c:${c}">${t('cat_'+p.cat)}</span> ${targetTxt(p,it.target)} · ${t('mode_'+p.mode)}</small><small>${tx(p.mus).slice(0,3).join(' · ')}</small></div><button data-detail="${p.id}">${t('view')}</button></li>`;}
+function renderDay(){
+ const d=viewAbs%365; plan=dayPlan(d,tk()); const th=plan.theme, ph=PHASES[plan.phase];
+ $('dayChip').style.setProperty('--c',th.c); $('dayChip').textContent=(viewAbs===todayAbs()?t('todayTag')+' · ':'')+fmtDate(viewAbs);
+ $('phaseChip').style.setProperty('--c',ph.c); $('phaseChip').textContent=t('phase')+' '+(plan.phase+1)+' · '+tx(ph.name);
+ $('easyChip').classList.toggle('hide',!plan.easyWeek); $('easyChip').textContent=t('recovery');
+ $('dayTitle').textContent=tx(th.name); $('dayTitle').style.color=th.c;
+ $('dayMeta').textContent=t('dayOf',{d:d+1})+(viewAbs>=365?' · '+t('year',{y:Math.floor(viewAbs/365)+1}):'')+' · '+t('mins',{m:planMinutes(plan,tk())});
+ $('list1').innerHTML=plan.items.filter(i=>i.block==='stretch').map(moveRow).join('');
+ $('list2').innerHTML=plan.items.filter(i=>i.block==='cardio').map(moveRow).join('');
+ $('todayBtn').disabled=viewAbs===todayAbs(); $('prevDay').disabled=viewAbs===0;
+ const dm=doneMap(), n=Object.keys(dm).length; let s=0,a=todayAbs(); if(!dm[a]) a--; while(a>=0&&dm[a]){s++;a--;}
+ $('doneLine').textContent=t('doneDays',{n,s})+(dm[viewAbs]?' · ✓ '+dm[viewAbs]:'');
+ renderYear();
+}
+
+/* ---------- year ribbon ---------- */
+function renderYear(){
+ const base=Math.floor(viewAbs/365)*365, today=todayAbs(), dm=doneMap(), curPhase=Math.min(5,Math.floor((viewAbs%365)/61));
+ $('phaseBar').innerHTML=PHASES.map((p,i)=>`<div style="--c:${p.c}" class="${i===curPhase?'now':''}"><b>${t('phase')} ${i+1} · ×${p.m}</b>${tx(p.name)}</div>`).join('');
+ let h='';
+ for(let m=0;m<12;m++){const a=Math.floor(m*365/12),b=Math.floor((m+1)*365/12);let dots='';
+  for(let d=a;d<b;d++){const abs=base+d,inf=dayInfo(d);
+   dots+=`<button class="dot${dm[abs]?' done':''}${abs===today?' today':''}${abs===viewAbs?' view':''}${inf.easyWeek?' easy':''}" style="--c:${inf.theme.c}" data-abs="${abs}" aria-label="${t('dayOf',{d:d+1})} · ${tx(inf.theme.name)}" title="${t('dayOf',{d:d+1})} · ${tx(inf.theme.name)}"></button>`;}
+  h+=`<div class="mrow"><span>${lang==='th'?'เดือน':'Month'} ${m+1}</span><div class="dots">${dots}</div></div>`;}
+ $('year').innerHTML=h;
+ $('week').innerHTML=THEMES.map((th,i)=>`<div style="--c:${th.c}">${tx(th.name)}<small>${lang==='th'?'วันที่':'Day'} ${i+1}, ${i+8}, ${i+15}…</small></div>`).join('');
+}
+function renderBens(){$('bens').innerHTML=BENEFITS.map(b=>`<div class="ben" style="--c:${CATC[b.cat]}"><h3>${tx(b.t)}</h3><p>${tx(b.d)}</p></div>`).join('');}
+
+/* ---------- detail modal ---------- */
+function openDetail(id){const p=POSE[id],c=CATC[p.cat];
+ $('mFig').dataset.pose=id; $('mName').textContent=tx(p.name);
+ $('mChips').innerHTML=`<span class="chip" style="--c:${c}">${t('cat_'+p.cat)}</span><span class="chip soft" style="--c:${c}">${t('mode_'+p.mode)}</span>`;
+ $('mSteps').innerHTML=tx(p.steps).map(s=>`<li>${s}</li>`).join('');
+ $('mMus').innerHTML=tx(p.mus).map(m=>`<span class="chip soft" style="--c:${c}">${m}</span>`).join('');
+ $('mBen').textContent=tx(p.ben); $('modal').classList.remove('hide'); $('mClose').focus();}
+function closeDetail(){$('modal').classList.add('hide');}
+
+/* ---------- animation loop for demo figures ---------- */
+function anim(ts){requestAnimationFrame(anim);
+ for(const cv of document.querySelectorAll('canvas[data-pose]')){if(!cv.offsetParent&&cv.id!=='ovDemo')continue;if(cv.classList.contains('hide'))continue;
+  const id=cv.dataset.pose; if(!id) continue;
+  if(id.startsWith('mv:')){FIG.draw(cv,[MOVES[id.slice(3)]],1,0,{chair:true});continue;}
+  const p=POSE[id]; if(!p) continue; const t0=+(cv.dataset.t0||0);
+  FIG.draw(cv,p.keys,(p.ap||3)*TIERS[tk()].slow,ts-t0,{chair:p.chair});}}
+requestAnimationFrame(anim);
+
+/* ---------- audio ---------- */
+function beep(f=880,ms=120){if(!soundOn||!audio)return;try{const o=audio.createOscillator(),g=audio.createGain();o.frequency.value=f;g.gain.value=.12;o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+ms/1000);}catch(e){}}
+function say(text){if(!soundOn||!('speechSynthesis' in window))return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=lang==='th'?'th-TH':'en-US';
+ const v=speechSynthesis.getVoices().find(v=>v.lang&&v.lang.toLowerCase().startsWith(lang));if(v)u.voice=v;u.rate=TIERS[tk()].rate;speechSynthesis.speak(u);}catch(e){}}
+
+/* ---------- geometry / features ---------- */
+let AR=16/9;
+const deg=r=>r*180/Math.PI, n90=a=>a>90?a-180:a<-90?a+180:a;
+function ang(a,b,c){const x1=a.x-b.x,y1=a.y-b.y,x2=c.x-b.x,y2=c.y-b.y;const d=(x1*x2+y1*y2)/((Math.hypot(x1,y1)*Math.hypot(x2,y2))||1e-6);return deg(Math.acos(Math.max(-1,Math.min(1,d))));}
+function feats(lm){
+ const p=i=>({x:lm[i].x*AR,y:lm[i].y,z:(lm[i].z||0)*AR,v:lm[i].visibility??1});
+ const n=p(0),lear=p(7),rear=p(8),ls=p(11),rs=p(12),le=p(13),re=p(14),lw=p(15),rw=p(16),lh=p(23),rh=p(24),lk=p(25),rk=p(26),la=p(27),ra=p(28);
+ const sh={x:(ls.x+rs.x)/2,y:(ls.y+rs.y)/2},hp={x:(lh.x+rh.x)/2,y:(lh.y+rh.y)/2},sw=Math.hypot(ls.x-rs.x,ls.y-rs.y)||1e-3,T=Math.max(hp.y-sh.y,.02);
+ return {n,ls,rs,lw,rw,lk,rk,la,ra,sh,hp,sw,T,
+  tilt:n90(deg(Math.atan2(ls.y-rs.y,ls.x-rs.x))), earTilt:n90(deg(Math.atan2(lear.y-rear.y,lear.x-rear.x))),
+  lean:deg(Math.atan2(sh.x-hp.x,hp.y-sh.y)), twist:n90(deg(Math.atan2(ls.z-rs.z,ls.x-rs.x))),
+  elL:ang(ls,le,lw), elR:ang(rs,re,rw), kneeDiff:(rk.y-lk.y)/T, seatR:((lk.y+rk.y)/2-hp.y)/T,
+  ankL:(la.y-lk.y)/T, ankR:(ra.y-rk.y)/T, ankDiff:(ra.y-la.y)/T, ankDist:Math.abs(la.x-ra.x), kneeDist:Math.abs(lk.x-rk.x), headOff:(n.x-sh.x)/sw,
+  vUpper:Math.min(ls.v,rs.v,lh.v,rh.v), vLegs:Math.min(lk.v,rk.v), vFeet:Math.min(la.v,ra.v)};
+}
+const visible=(f,need)=>f.vUpper>.5&&(need==='upper'||f.vLegs>.5)&&(need!=='feet'||f.vFeet>.5);
+
+/* ---------- camera + model ---------- */
+async function loadModel(){if(landmarker)return;
+ if(window.__ppFake){landmarker=window.__ppFake;return;}
+ const {PoseLandmarker,FilesetResolver}=await import(MP+'/vision_bundle.mjs');
+ const fs=await FilesetResolver.forVisionTasks(MP+'/wasm');
+ const o=d=>({baseOptions:{modelAssetPath:MODEL,delegate:d},runningMode:'VIDEO',numPoses:1,minPoseDetectionConfidence:.5,minTrackingConfidence:.5});
+ try{landmarker=await PoseLandmarker.createFromOptions(fs,o('GPU'));}catch(e){landmarker=await PoseLandmarker.createFromOptions(fs,o('CPU'));}}
+const video=$('vid'),cv=$('cv'),ctx=cv.getContext('2d');
+async function startCamera(){stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:1280},height:{ideal:720}},audio:false});
+ video.srcObject=stream;await video.play();cv.width=video.videoWidth;cv.height=video.videoHeight;AR=cv.width/cv.height;$('stage').style.aspectRatio=`${cv.width}/${cv.height}`;}
+function stopCamera(){cancelAnimationFrame(raf);if(stream)stream.getTracks().forEach(x=>x.stop());stream=null;}
+
+/* ---------- game UI helpers ---------- */
+const OV={big:$('ovBig'),msg:$('ovMsg'),sub:$('ovSub'),demo:$('ovDemo')};
+function overlay(big,msg,sub,demo){
+ if(big==null&&msg==null){$('ov').classList.add('hide');return;} $('ov').classList.remove('hide');
+ const set=(el,v)=>{v=v==null?'':String(v);if(el.textContent!==v)el.textContent=v;};
+ set(OV.big,big);set(OV.msg,msg);set(OV.sub,sub);
+ if(demo){OV.demo.classList.remove('hide');if(OV.demo.dataset.pose!==demo){OV.demo.dataset.pose=demo;OV.demo.dataset.t0=performance.now();}}else OV.demo.classList.add('hide');}
+function feedback(text,kind=''){const el=$('fb');if(el.textContent!==text)el.textContent=text;el.className='fb '+kind;}
+let lastCount='';
+function setCount(main,sub,frac){const h=`${main}<small> ${sub}</small>`;const el=$('count');if(h!==lastCount){el.innerHTML=h;el.classList.remove('pulse');void el.offsetWidth;el.classList.add('pulse');lastCount=h;}$('barFill').style.width=Math.min(100,frac*100)+'%';}
+function addScore(n){S.score+=n;$('hudScore').textContent=S.score+(lang==='th'?' คะแนน':' pts');}
+function cue(html){const c=$('cue');if(html==null){c.classList.add('hide');c.innerHTML='';return;}c.classList.remove('hide');c.innerHTML=html;}
+function renderQueue(){$('queue').innerHTML=S.items.map((it,k)=>`<li style="--c:${CATC[it.p.cat]}" class="${k===S.i&&S.phase!=='calib'&&S.phase!=='posture'?'now':k<S.i?'did':''}"><span>${tx(it.p.name)}</span><span>${targetTxt(it.p,it.target)}</span></li>`).join('');}
+function setCoach(it,stepTxt){
+ const p=it?it.p:null; $('step').textContent=stepTxt;
+ $('exName').textContent=p?tx(p.name):t('postureCheck'); $('exHow').textContent=p?tx(p.steps).slice(0,-1).join(' → ')||tx(p.steps)[0]:t('postureHow');
+ const dm=$('demo'); if(p){dm.dataset.pose=p.id;dm.dataset.t0=performance.now();dm.parentElement.style.setProperty('--c',CATC[p.cat]);} else dm.dataset.pose='tall';
+ $('exMus').innerHTML=p?tx(p.mus).map(m=>`<span class="chip soft" style="--c:${CATC[p.cat]}">${m}</span>`).join(''):'';
+ document.querySelector('#count').style.setProperty('--c',p?CATC[p.cat]:'var(--coral)'); $('barFill').style.setProperty('--c',p?CATC[p.cat]:'var(--coral)');}
+
+/* ---------- session ---------- */
+function newSession(){
+ const T=TIERS[tk()], ti=T.i;
+ S={phase:'calib',i:0,score:0,streak:0,paused:false,calib:[],posture:null,phaseEnd:0,lastT:performance.now(),sm:null,rts:[],abs:viewAbs,
+  items:plan.items.map(it=>{const p=POSE[it.id];return {...it,p,prm:{th:p.th?p.th[Math.min(ti,p.th.length-1)]:null,hold:p.hold?p.hold[ti]:0,tmo:p.tmo?p.tmo[ti]:0,len:p.len?p.len[ti]+(plan.phase>=4?1:0):0,per:(p.per||3)*T.slow*1000},done:0,good:0,held:0,state:'wait',flag:false,g:null,said:false};})};
+ $('hudTier').textContent=`${tx(T.age)} · ${tx(plan.theme.name)}`; addScore(0); renderQueue(); setCoach(null,t('setup')); setCount('–','',0); cue(null);
+}
+function calibStep(f,now){
+ if(f.vUpper<.5){S.calib=[];overlay(null,t('stepIn'),t('faceCam'));feedback(t('noPerson'),'warn');return;}
+ if(Math.abs(f.lean)>10){S.calib=[];feedback(t('straight'),'warn');return;}
+ S.calib.push(f);const need=50;overlay(Math.max(1,Math.ceil((need-S.calib.length)/17)),t('holdStill'),null);feedback(t('measuring'));
+ if(S.calib.length<need)return;
+ const avg=k=>S.calib.reduce((s,c)=>s+c[k],0)/S.calib.length;
+ const tilt=Math.abs(avg('tilt')),lean=Math.abs(avg('lean')),head=Math.abs(avg('headOff'));
+ const score=Math.round(Math.max(0,100-Math.min(30,tilt*4)-Math.min(30,lean*4)-Math.min(30,head*150)));
+ const tips=[];if(tilt>3)tips.push(t('tipTilt'));if(lean>3)tips.push(t('tipLean'));if(head>.12)tips.push(t('tipHead'));
+ S.posture={score,tips};overlay(score,t('postureScore'),tips.length?t('watch')+tips.join(', '):t('postureGood'));
+ feedback(tips.length?t('standEven'):t('niceAlign'),tips.length?'warn':'good');say(t('postureScore')+' '+score);S.phase='posture';S.phaseEnd=now+4000;
+}
+function startIntro(now){
+ const it=S.items[S.i],first=S.i===0||S.items[S.i-1].block!==it.block;S.phase='intro';S.phaseEnd=now+(first?6500:4500);renderQueue();
+ const blk=it.block==='stretch'?t('part1'):t('part2');
+ setCoach(it,blk+' · '+t('exOf',{i:S.i+1,n:S.items.length}));setCount(0,'/ '+targetTxt(it.p,it.target),0);feedback(t('getReady'));cue(null);
+ it.introSub=first?blk:tx(it.p.steps)[0];
+ say((first?blk+'. ':'')+tx(it.p.name)+'. '+tx(it.p.steps)[0]);
+}
+function beginWork(now){S.phase='work';overlay(null,null);beep(990,200);const it=S.items[S.i];$('demo').dataset.t0=now;it.t0=now;}
+function finishItem(now){
+ say(t('welldone'));cue(null);S.i++;renderQueue();
+ if(S.i>=S.items.length){endGame();return;}
+ const prev=S.items[S.i-1],nx=S.items[S.i];S.phase='rest';S.phaseEnd=now+(prev.block==='stretch'&&nx.block==='stretch'?6000:TIERS[tk()].rest*1000);
+ setCoach(nx,t('rest'));setCount(0,'/ '+targetTxt(nx.p,nx.target),0);feedback(t('restHow'),'good');
+}
+function repDone(it,good){it.done++;if(good){it.good++;S.streak++;}else S.streak=0;
+ addScore(good?100+10*Math.min(S.streak,5):60);beep(good?990:440,140);
+ const left=it.target-it.done;if(left>0&&(TIERS[tk()].i>0||it.done%5===0||left<=3))say(String(it.done));}
+
+/* ---------- modes ---------- */
+function doReps(it,f,now,warn){const p=it.p,on=p.on(f,it.prm),off=p.off(f,it.prm);
+ if(it.state==='wait'){if(off){it.state='rest';feedback(t('go'),'good');}else feedback(t('returnStart'),'warn');return;}
+ if(it.state==='rest'&&on){it.state='active';it.flag=false;beep(520,60);}
+ if(it.state==='active'){if(warn){it.flag=true;feedback(tx(warn),'warn');}else feedback(t('goodReturn'),'good');
+  if(off){it.state='rest';const good=!it.flag;repDone(it,good);
+   feedback(good?(S.streak>2?t('perfect',{n:S.streak}):t('goodRep')):t('repWarn'),good?'good':'warn');
+   if(it.done>=it.target){finishItem(now);return;}}}
+ else if(warn)feedback(tx(warn),'warn');
+ setCount(it.done,'/ '+it.target,it.done/it.target);}
+function doHold(it,f,now,dt,warn){const p=it.p;
+ if(p.ok(f,it.prm)){it.held+=dt;if(Math.floor(it.held)>Math.floor(it.held-dt)){addScore(10);beep(660,50);}
+  feedback(warn?tx(warn):t('holding'),warn?'warn':'good');
+  if(p.sides&&!it.said&&it.held>=it.target/2){it.said=true;say(t('switchSide'));feedback(t('switchSide'),'good');}}
+ else feedback(p.hint?tx(p.hint):t('beatMiss'),'warn');
+ setCount(Math.floor(it.held),'/ '+it.target+' '+t('sec'),it.held/it.target);
+ if(it.held>=it.target)finishItem(now);}
+function doHoldReps(it,f,now,dt){const p=it.p,pr=it.prm;
+ if(it.state==='wait'){if(p.off(f,pr))it.state='rest';else feedback(t('returnStart'),'warn');}
+ else if(it.state==='rest'){if(p.ok(f,pr)){it.state='hold';it.hc=0;}else feedback(t('beatMiss'));}
+ else if(it.state==='hold'){if(p.ok(f,pr)){it.hc+=dt;feedback(t('holdFor',{s:Math.max(1,Math.ceil(pr.hold-it.hc))}),'good');
+   if(it.hc>=pr.hold){repDone(it,true);it.state='release';feedback(t('switchSide'),'good');if(it.done>=it.target){finishItem(now);return;}}}
+  else{it.state='rest';feedback(t('holdFor',{s:Math.ceil(pr.hold)}),'warn');}}
+ else if(it.state==='release'&&p.off(f,pr))it.state='rest';
+ setCount(it.done,'/ '+it.target,(it.done+(it.state==='hold'?it.hc/pr.hold:0))/it.target);}
+function doFollow(it,f,now){const p=it.p,per=it.prm.per;
+ if(!it.bt){it.bt=now;it.fr=0;it.okf=0;it.beats=0;}
+ it.fr++;if(p.check(f,it.prm))it.okf++;
+ if(now-it.bt>=per){if(it.okf/it.fr>=.5){it.done++;it.good++;addScore(80);beep(880,90);feedback(t('beatOk'),'good');const left=it.target-it.done;if(left>0&&(TIERS[tk()].i>0||left<=3))say(String(it.done));}
+  else{feedback(t('beatMiss'),'warn');beep(330,60);}
+  it.beats++;it.bt=now;it.fr=it.okf=0;
+  if(it.done>=it.target||it.beats>=Math.ceil(it.target*1.6)){finishItem(now);return;}}
+ setCount(it.done,'/ '+it.target,(it.done+(now-it.bt)/per*.999)/it.target);}
+const COLL='#2F80ED',COLR='#FF5A5F';
+function doStroop(it,f,now){const g=it.g||(it.g={n:0,st:'ready'});const p=it.p;
+ if(g.st==='ready'){feedback(t('handsDown'));cue(null);
+  if(bothLow(f)){g.w=Math.random()<.5?'L':'R';const incong=Math.random()<.7;g.c=incong?(g.w==='L'?'R':'L'):g.w;g.exp=p.rule==='follow'?g.w:(g.w==='L'?'R':'L');
+   cue(`<div class="cueword" style="color:${g.c==='L'?COLL:COLR}">${t(g.w==='L'?'wL':'wR')}</div><div>${t(p.rule==='follow'?'ruleFollow':'ruleOpp')}</div>`);g.st='cue';g.t0=now;beep(700,60);}}
+ else if(g.st==='cue'){const s=armState(f);
+  if(s==='L'||s==='R'){const rt=now-g.t0;g.n++;
+   if(s===g.exp){it.done++;it.good++;S.rts.push(rt);addScore(100+Math.max(0,Math.round((it.prm.tmo*1000-rt)/40)));beep(990,120);feedback(t('correct')+' '+(rt/1000).toFixed(1)+' '+t('sec'),'good');}
+   else{beep(300,200);feedback(t('wrong'),'warn');}
+   g.st='fb';g.until=now+900;cue(null);}
+  else if(now-g.t0>it.prm.tmo*1000){g.n++;feedback(t('tooSlow'),'warn');g.st='fb';g.until=now+900;cue(null);}}
+ else if(g.st==='fb'&&now>g.until){g.st='ready';if(g.n>=it.target){finishItem(now);return;}}
+ setCount(it.done,'/ '+it.target,g.n/it.target);}
+function memCue(mv,label){cue(`<canvas data-pose="mv:${mv}"></canvas><div style="font-family:Mitr,sans-serif;font-size:28px">${label}</div>`);}
+function doMemory(it,f,now){const g=it.g||(it.g={round:0,st:'new'});const len=it.prm.len,dur=[1300,1500,1900][TIERS[tk()].i];
+ if(g.st==='new'){g.seq=[];const mv=['L','R','B','T'];while(g.seq.length<len){const m=mv[Math.floor(Math.random()*4)];if(m!==g.seq[g.seq.length-1])g.seq.push(m);}
+  g.k=0;g.st='show';g.until=now+dur;memCue(g.seq[0],`1. ${t('mv'+g.seq[0])}`);feedback(t('memWatch'));say(t('memWatch'));}
+ else if(g.st==='show'){if(now>g.until){g.k++;if(g.k<len){g.until=now+dur;memCue(g.seq[g.k],`${g.k+1}. ${t('mv'+g.seq[g.k])}`);beep(600,50);}
+   else{g.st='do';g.idx=0;g.needRest=true;g.cand=null;cue(`<div class="cueword" style="font-size:44px">${t('memYour')}</div><div>${'○ '.repeat(len)}</div>`);say(t('memYour'));}}}
+ else if(g.st==='do'){const s=armState(f);
+  if(g.needRest){if(s==='rest')g.needRest=false;else feedback(t('handsDown'));}
+  else if(s&&s!=='rest'){if(s===g.cand){if(now-g.candT>350){
+     if(s===g.seq[g.idx]){g.idx++;beep(900,80);g.needRest=true;g.cand=null;
+      cue(`<div class="cueword" style="font-size:44px">${t('memYour')}</div><div style="font-size:24px">${'● '.repeat(g.idx)+'○ '.repeat(len-g.idx)}</div>`);feedback(`✓ ${g.idx}/${len}`,'good');
+      if(g.idx>=len){it.done++;it.good++;addScore(150+len*25);g.round++;g.st='fb';g.until=now+1600;feedback(t('memOk'),'good');say(t('memOk'));cue(null);}}
+     else{g.round++;g.st='fb';g.until=now+2800;beep(300,200);feedback(t('memFail')+g.seq.map(m=>t('mv'+m)).join(' → '),'warn');cue(null);}}}
+   else{g.cand=s;g.candT=now;}}}
+ else if(g.st==='fb'&&now>g.until){if(g.round>=it.target){finishItem(now);return;}g.st='new';}
+ setCount(it.done,'/ '+it.target,(g.round||0)/it.target);}
+function work(f,now,dt){const it=S.items[S.i],p=it.p;
+ if(!visible(f,p.need)){feedback(p.need==='upper'?t('needUpper'):t('needLegs'),'warn');return;}
+ const warn=p.form?p.form(f,it.prm):null;
+ if(p.mode==='reps')doReps(it,f,now,warn);else if(p.mode==='hold')doHold(it,f,now,dt,warn);else if(p.mode==='holdreps')doHoldReps(it,f,now,dt);
+ else if(p.mode==='follow')doFollow(it,f,now);else if(p.mode==='stroop')doStroop(it,f,now);else if(p.mode==='memory')doMemory(it,f,now);}
+
+/* ---------- drawing ---------- */
+const BONES=[[11,12],[11,13],[13,15],[12,14],[14,16],[11,23],[12,24],[23,24],[23,25],[25,27],[24,26],[26,28]];
+function draw(lm){const W=cv.width,H=cv.height;ctx.save();ctx.translate(W,0);ctx.scale(-1,1);ctx.drawImage(video,0,0,W,H);ctx.restore();if(!lm)return;
+ const X=i=>(1-lm[i].x)*W,Y=i=>lm[i].y*H,vis=i=>(lm[i].visibility??1)>.4;
+ const it=S&&S.items[S.i],active=S&&S.phase==='work'&&it&&(it.state==='active'||it.state==='hold');
+ if(S&&S.phase==='work'&&it&&it.p.guide){const f=feats(lm),g=it.p.guide(f,it.prm),gy=g.y*H,label=tx(g.label);
+  ctx.setLineDash([18,12]);ctx.lineWidth=Math.max(3,W/300);ctx.strokeStyle='#FFC83D';ctx.beginPath();ctx.moveTo(0,gy);ctx.lineTo(W,gy);ctx.stroke();ctx.setLineDash([]);
+  const fs=Math.round(W/32);ctx.font=`600 ${fs}px Mitr,Sarabun,sans-serif`;const tw=ctx.measureText(label).width;ctx.fillStyle='rgba(20,22,43,.8)';ctx.fillRect(14,gy-fs*1.6,tw+24,fs*1.4);ctx.fillStyle='#FFC83D';ctx.fillText(label,26,gy-fs*.55);}
+ const col=active?'#FFC83D':'#ffffff';ctx.lineCap='round';ctx.lineWidth=Math.max(5,W/160);
+ for(const [a,b] of BONES){if(!vis(a)||!vis(b))continue;ctx.strokeStyle=(a%2&&b%2)?(active?'#FFC83D':'#7FB2FF'):(!(a%2)&&!(b%2))?(active?'#FFC83D':'#FF8A8D'):col;ctx.beginPath();ctx.moveTo(X(a),Y(a));ctx.lineTo(X(b),Y(b));ctx.stroke();}
+ for(const i of [0,11,12,13,14,15,16,23,24,25,26,27,28]){if(!vis(i))continue;ctx.fillStyle=i%2?'#2F80ED':'#FF5A5F';if(i===0)ctx.fillStyle='#8B5CF6';ctx.beginPath();ctx.arc(X(i),Y(i),Math.max(6,W/140),0,7);ctx.fill();}}
+
+/* ---------- loop ---------- */
+function smooth(lm){if(!S.sm||S.sm.length!==lm.length){S.sm=lm.map(p=>({...p}));return S.sm;}
+ const a=.5;S.sm=lm.map((p,i)=>({x:a*p.x+(1-a)*S.sm[i].x,y:a*p.y+(1-a)*S.sm[i].y,z:a*(p.z||0)+(1-a)*(S.sm[i].z||0),visibility:p.visibility}));return S.sm;}
+function loop(){raf=requestAnimationFrame(loop);if(video.readyState<2)return;
+ const now=performance.now(),dt=Math.min((now-S.lastT)/1000,.25);S.lastT=now;
+ let lm=null;try{const r=landmarker.detectForVideo(video,now);if(r.landmarks&&r.landmarks[0])lm=smooth(r.landmarks[0]);}catch(e){}
+ draw(lm);
+ if(S.paused){overlay('II',t('paused'),t('resumeHint'));return;}
+ if(S.phase==='calib'){if(lm)calibStep(feats(lm),now);else{overlay(null,t('stepIn'),t('faceCam'));feedback(t('noPerson'),'warn');}return;}
+ if(S.phase==='posture'){if(now>=S.phaseEnd)startIntro(now);return;}
+ const it=S.items[S.i];
+ if(S.phase==='intro'){const s=Math.ceil((S.phaseEnd-now)/1000);overlay(s>0?s:t('go'),tx(it.p.name),it.introSub,it.p.id);if(now>=S.phaseEnd)beginWork(now);return;}
+ if(S.phase==='rest'){const s=Math.ceil((S.phaseEnd-now)/1000);overlay(s,t('rest'),t('nextUp')+tx(it.p.name),it.p.id);if(now>=S.phaseEnd)startIntro(now);return;}
+ if(S.phase==='work'){if(lm)work(feats(lm),now,dt);else feedback(t('lost'),'warn');}}
+
+/* ---------- end ---------- */
+function endGame(){
+ S.phase='end';stopCamera();try{speechSynthesis.cancel();}catch(e){}cue(null);
+ const items=S.items,frac=i=>Math.min(1,(i.p.mode==='hold'?i.held:i.done)/i.target);
+ const pct=items.reduce((s,i)=>s+frac(i),0)/items.length;
+ const counted=items.filter(i=>['reps','holdreps'].includes(i.p.mode)),done=counted.reduce((s,i)=>s+i.done,0),good=counted.reduce((s,i)=>s+i.good,0);
+ const fp=done?good/done:0,stars=pct>=.9&&fp>=.7?3:pct>=.6?2:pct>=.25?1:0;
+ $('sScore').textContent=S.score;$('sStars').textContent='★'.repeat(stars)+'☆'.repeat(3-stars);
+ $('sPosture').textContent=S.posture?S.posture.score:'–';$('sForm').textContent=done?Math.round(fp*100)+'%':'–';
+ $('sRt').textContent=S.rts.length?(S.rts.reduce((a,b)=>a+b,0)/S.rts.length/1000).toFixed(2)+' '+t('sec'):'–';
+ $('sRows').innerHTML=items.map(i=>{const h=i.p.mode==='hold',fc=['reps','holdreps'].includes(i.p.mode);
+  return `<tr><td><span class="chip soft" style="--c:${CATC[i.p.cat]}">${t('cat_'+i.p.cat)}</span> ${tx(i.p.name)}</td><td class="n">${h?Math.floor(i.held)+' '+t('sec'):i.done}</td><td class="n">${targetTxt(i.p,i.target)}</td><td class="n">${fc&&i.done?Math.round(i.good/i.done*100)+'%':'–'}</td></tr>`;}).join('');
+ const played=items.filter(i=>i.done>0||i.held>0),mus=[...new Set(played.flatMap(i=>tx(i.p.mus)))];
+ $('sMus').innerHTML=mus.map(m=>`<span class="chip soft" style="--c:var(--grape)">${m}</span>`).join('')||'–';
+ const cats=[...new Set(played.map(i=>i.p.cat))];
+ $('sBens').innerHTML=BENEFITS.filter(b=>cats.includes(b.cat)).map(b=>`<div class="ben" style="--c:${CATC[b.cat]}"><h3>${tx(b.t)}</h3><p>${tx(b.d)}</p></div>`).join('');
+ const tips=[];if(S.posture&&S.posture.tips.length)tips.push(t('watch')+S.posture.tips.join(', ')+'.');
+ const worst=counted.filter(i=>i.done).sort((a,b)=>a.good/a.done-b.good/b.done)[0];
+ if(worst&&worst.good/worst.done<.8)tips.push(t('tipForm',{x:tx(worst.p.name)}));
+ $('sTips').textContent=tips.join(' ')||t('tipOk');
+ $('doneTitle').textContent=stars===3?t('great'):stars===2?t('greatS'):t('goodStart');
+ if(pct>=.3){const dm=doneMap();dm[S.abs]=Math.max(dm[S.abs]||0,S.score);store.set('pp2-done',dm);}
+ $('game').classList.add('hide');$('done').classList.remove('hide');window.scrollTo(0,0);say(t('sessionDone',{s:S.score}));
+}
+
+/* ---------- flow ---------- */
+async function begin(){
+ $('err').textContent='';$('home').classList.add('hide');$('done').classList.add('hide');$('game').classList.remove('hide');window.scrollTo(0,0);
+ try{audio=audio||new (window.AudioContext||window.webkitAudioContext)();}catch(e){}
+ newSession();overlay(null,t('loading'),t('loadingSub'));applyLang();
+ try{await startCamera();}catch(e){backHome();$('err').textContent=t('camErr',{e:e.name||e.message});return;}
+ try{await loadModel();}catch(e){backHome();$('err').textContent=t('modelErr');return;}
+ overlay(null,t('stepIn'),t('faceCam'));say(t('postureHow'));S.lastT=performance.now();loop();
+}
+function backHome(){stopCamera();try{speechSynthesis.cancel();}catch(e){}$('game').classList.add('hide');$('done').classList.add('hide');$('home').classList.remove('hide');S=null;renderDay();}
+
+/* ---------- wiring ---------- */
+document.querySelectorAll('.lang button').forEach(b=>b.addEventListener('click',()=>{lang=b.dataset.lang;store.set('pp2-lang',lang);renderAll();}));
+$('tiers').addEventListener('click',e=>{const b=e.target.closest('.tier');if(b)pick(b.dataset.k);});
+$('age').addEventListener('input',e=>{const a=+e.target.value;if(!a)return;pick(a<55?'a':a<=65?'b':'c');});
+for(const id of ['c1','c2','c3'])$(id).addEventListener('change',validate);
+$('prevDay').addEventListener('click',()=>{if(viewAbs>0){viewAbs--;renderDay();}});
+$('nextDay').addEventListener('click',()=>{viewAbs++;renderDay();});
+$('todayBtn').addEventListener('click',()=>{viewAbs=todayAbs();renderDay();});
+$('year').addEventListener('click',e=>{const d=e.target.closest('.dot');if(d){viewAbs=+d.dataset.abs;renderDay();$('today').scrollIntoView({behavior:'smooth'});}});
+$('restartBtn').addEventListener('click',()=>{start=mid();store.set('pp2-start',start);store.set('pp2-done',{});viewAbs=0;renderDay();});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-detail]');if(b)openDetail(b.dataset.detail);});
+$('mClose').addEventListener('click',closeDetail);$('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeDetail();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDetail();});
+$('startBtn').addEventListener('click',begin);
+$('pauseBtn').addEventListener('click',()=>{if(!S||S.phase==='end')return;S.paused=!S.paused;applyLang();if(!S.paused){overlay(null,null);S.lastT=performance.now();if(S.phase==='rest'||S.phase==='intro')S.phaseEnd=performance.now()+3000;}});
+$('skipBtn').addEventListener('click',()=>{if(!S)return;const now=performance.now();
+ if(S.phase==='calib'||S.phase==='posture')startIntro(now);else if(S.phase==='rest')startIntro(now);
+ else if(S.phase==='work'||S.phase==='intro'){cue(null);S.i++;renderQueue();if(S.i>=S.items.length)endGame();else startIntro(now);}});
+$('soundBtn').addEventListener('click',()=>{soundOn=!soundOn;applyLang();if(!soundOn)try{speechSynthesis.cancel();}catch(e){}});
+$('endBtn').addEventListener('click',()=>{if(S&&S.phase!=='end')endGame();});
+$('againBtn').addEventListener('click',begin);$('homeBtn').addEventListener('click',backHome);
+renderAll();
+}
+</script>
+</body>
+</html>
