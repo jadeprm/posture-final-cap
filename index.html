@@ -103,6 +103,8 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-of
 .cue{position:absolute;left:50%;top:10%;transform:translateX(-50%);background:rgba(255,255,255,.95);color:#1B1F3B;border-radius:24px;padding:14px 26px;text-align:center;min-width:240px}
 .cueword{font-family:Mitr,sans-serif;font-size:clamp(54px,9vw,110px);line-height:1}
 .cue canvas{width:150px;height:170px}
+.cuerule{font-size:18px;margin-top:8px;max-width:30ch;margin-inline:auto;line-height:1.35}.cuearrows{letter-spacing:.06em;white-space:nowrap}.cuearrows b{color:var(--pink)}
+.cuepair{display:flex;gap:26px;justify-content:center;font-family:Mitr,sans-serif;font-size:clamp(44px,8vw,92px);line-height:1.1}.cuepair span{background:#FFF1C9;border-radius:18px;padding:6px 20px;min-width:2.2em}
 .hud{position:absolute;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;gap:8px;pointer-events:none}
 .pill{background:rgba(20,22,43,.75);color:#fff;border-radius:999px;padding:5px 14px;font-weight:600;font-size:16px}
 .panel{display:flex;flex-direction:column;gap:12px}
@@ -280,6 +282,9 @@ const U={
  mode_reps:{th:'กล้องนับครั้ง',en:'Camera counts reps'}, mode_hold:{th:'กล้องจับเวลาค้าง',en:'Camera times the hold'}, mode_holdreps:{th:'ค้าง + นับครั้ง',en:'Hold + count'}, mode_follow:{th:'ทำตามจังหวะ',en:'Follow the beat'}, mode_stroop:{th:'เกมสมอง',en:'Brain game'}, mode_memory:{th:'เกมสมอง',en:'Brain game'},
  cat_stretch:{th:'ยืดเหยียด',en:'Stretch'}, cat_cardio:{th:'คาร์ดิโอ',en:'Cardio'}, cat_thai:{th:'รำไทยบนเก้าอี้',en:'Thai chair dance'}, cat_brain:{th:'บริหารสมอง',en:'Brain'},
  camErr:{th:'เปิดกล้องไม่ได้: {e} กรุณาอนุญาตกล้องในเบราว์เซอร์ ถ้าเปิดไฟล์โดยตรงแล้วกล้องถูกบล็อก ให้เปิดด้วย Chrome หรือรันเว็บเซิร์ฟเวอร์ในเครื่อง (python3 -m http.server) แล้วเข้า http://localhost:8000',en:'Camera not available: {e}. Allow camera access. If the file was opened directly and the camera is blocked, use Chrome or serve the folder locally (python3 -m http.server) and open http://localhost:8000.'},
+ insecure:{th:'เบราว์เซอร์บล็อกกล้อง เพราะหน้านี้ไม่ได้เปิดผ่าน https:// หรือเปิดในแอป LINE/Facebook/Instagram ให้เปิดลิงก์ที่ขึ้นต้นด้วย https:// ใน Chrome หรือ Safari',en:'The browser blocked the camera because this page is not on https:// or is open inside LINE/Facebook/Instagram. Open the https:// link in Chrome or Safari.'},
+ mode_choice:{th:'เกมสมอง',en:'Brain game'},
+ nogoOk:{th:'ดีมาก ไม่ขยับ!',en:'Nice, you held still!'}, moved:{th:'ข้อนี้ต้องอยู่นิ่ง',en:'That one was stay-still'},
  modelErr:{th:'โหลดโมเดลท่าทางไม่สำเร็จ ตรวจสอบอินเทอร์เน็ตแล้วลองใหม่',en:'Could not load the pose model. Check the internet connection and try again.'},
  sessionDone:{th:'จบเซสชัน ได้ {s} คะแนน',en:'Session complete. You scored {s} points.'},
  tipForm:{th:'ครั้งหน้าลองเน้นท่าให้ถูกใน {x}',en:'Next time focus on form in {x}.'},
@@ -396,6 +401,22 @@ function armState(f){
  return null;
 }
 
+
+const CH={L:'#2F80ED',R:'#FF5A5F'};
+const pick=(a,r)=>a[Math.floor(r()*a.length)];
+const HAND={L:{th:'มือซ้าย',en:'left hand'},R:{th:'มือขวา',en:'right hand'},B:{th:'สองมือ',en:'both hands'},none:{th:'อยู่นิ่ง',en:'stay still'}};
+const RULE={flanker:{th:'ยกมือตามลูกศร "ตรงกลาง" เท่านั้น',en:'Follow only the MIDDLE arrow'},bigger:{th:'ยกมือฝั่งที่ตัวเลข "มากกว่า"',en:'Raise the hand on the BIGGER side'},
+ simon:{th:'ไซมอนบอก',en:'Simon says'},memo1:{th:'จำรูปนี้ไว้',en:'Remember this shape'},oneback:{th:'เหมือนรูปที่แล้ว → มือซ้าย · ไม่เหมือน → มือขวา',en:'Same as last → left hand · Different → right hand'}};
+const NB3=[['circle','#2F80ED'],['square','#FF5A5F'],['tri','#FFC83D']];
+const NB6=[['circle','#2F80ED'],['circle','#FF5A5F'],['square','#2F80ED'],['square','#FF5A5F'],['tri','#8B5CF6'],['star','#FFC83D']];
+function shapeSVG(s,c){const P={circle:'<circle cx="50" cy="50" r="40"/>',square:'<rect x="12" y="12" width="76" height="76" rx="10"/>',tri:'<polygon points="50,8 94,90 6,90"/>',star:'<polygon points="50,5 61,38 96,38 68,59 79,92 50,72 21,92 32,59 4,38 39,38"/>',x:'<path d="M20 20 L80 80 M80 20 L20 80" stroke="'+c+'" stroke-width="16" stroke-linecap="round"/>'};
+ return `<svg viewBox="0 0 100 100" width="120" height="120" fill="${c}" aria-hidden="true">${P[s]}</svg>`;}
+const CATS=[
+ {a:{th:'ผลไม้',en:'Fruit'},b:{th:'สัตว์',en:'Animal'},A:[['กล้วย','Banana'],['มะม่วง','Mango'],['ส้ม','Orange'],['ทุเรียน','Durian'],['มังคุด','Mangosteen'],['แตงโม','Watermelon'],['สับปะรด','Pineapple'],['ลำไย','Longan']],B:[['ช้าง','Elephant'],['แมว','Cat'],['สุนัข','Dog'],['ไก่','Chicken'],['ม้า','Horse'],['เสือ','Tiger'],['กระต่าย','Rabbit'],['ควาย','Buffalo']]},
+ {a:{th:'ของร้อน',en:'Hot'},b:{th:'ของเย็น',en:'Cold'},A:[['ไฟ','Fire'],['ดวงอาทิตย์','Sun'],['กาแฟร้อน','Hot coffee'],['เตารีด','Iron'],['ต้มยำ','Tom yum'],['เตาถ่าน','Charcoal stove']],B:[['น้ำแข็ง','Ice'],['ไอศกรีม','Ice cream'],['ตู้เย็น','Fridge'],['หิมะ','Snow'],['น้ำเย็น','Cold water'],['แอร์','Air conditioner']]},
+ {a:{th:'อยู่บนฟ้า',en:'In the sky'},b:{th:'อยู่ในน้ำ',en:'In the water'},A:[['นก','Bird'],['เครื่องบิน','Plane'],['เมฆ','Cloud'],['ว่าว','Kite'],['ดวงจันทร์','Moon'],['ผีเสื้อ','Butterfly']],B:[['ปลา','Fish'],['เรือ','Boat'],['กุ้ง','Shrimp'],['ปลาหมึก','Squid'],['ปู','Crab'],['เต่าทะเล','Sea turtle']]},
+ {a:{th:'ของกิน',en:'Food'},b:{th:'ของใช้',en:'Household item'},A:[['ข้าวผัด','Fried rice'],['ผัดไทย','Pad thai'],['ส้มตำ','Papaya salad'],['ไข่เจียว','Omelette'],['ขนมปัง','Bread'],['ก๋วยเตี๋ยว','Noodles']],B:[['ไม้กวาด','Broom'],['ร่ม','Umbrella'],['กรรไกร','Scissors'],['แปรงสีฟัน','Toothbrush'],['ปากกา','Pen'],['หวี','Comb']]}
+];
 /* ---------- poses ---------- */
 const S2=(th,en)=>({th,en});
 const POSES=[
@@ -672,18 +693,76 @@ const POSES=[
  steps:S2(['มือขวาแตะจมูก มือซ้ายกางออกด้านข้าง','สลับมือเร็วๆ ให้ตรงจังหวะ','ระดับยาก: หลับตาแล้วทำ'],['Right hand touches your nose, left arm reaches out to the side.','Swap hands quickly on the rhythm.','Harder: try it with eyes closed.']),
  mus:S2(['ไหล่','แขน'],['Shoulders','Arms']),
  ben:S2('ฝึกการรับรู้ตำแหน่งร่างกายและการสลับคำสั่งอย่างรวดเร็ว','Trains body-position sense and fast switching between commands.')},
-{id:'stroop',cat:'brain',grp:['brain'],chair:true,mode:'stroop',rule:'follow',reps:[12,10,8],tmo:[3.5,4.5,6],need:'upper',
+{id:'stroop',cat:'brain',grp:['brain'],chair:true,mode:'choice',reps:[12,10,8],tmo:[3.5,4.5,6],need:'upper',
  keys:[K(SEAT,{aL:A.up}),SEAT,K(SEAT,{aR:A.up}),SEAT],ap:4,
+ gen:c=>{const w=c.rnd()<.5?'L':'R',col=c.rnd()<.7?(w==='L'?'R':'L'):w;return {exp:w,html:`<div class="cueword" style="color:${CH[col]}">${c.tx(U[w==='L'?'wL':'wR'])}</div><div class="cuerule">${c.tx(U.ruleFollow)}</div>`};},
  name:S2('เกมสั่งซ้าย-ขวา','Left-right word game'),
  steps:S2(['ลดมือลงทั้งสองข้าง รอคำบนจอ','คำว่า "ซ้าย" หรือ "ขวา" จะขึ้นในสีที่หลอกตา','ยกมือตามคำ ไม่ใช่ตามสี ให้เร็วที่สุด'],['Lower both hands and wait for the word.','LEFT or RIGHT appears in a tricky colour.','Raise the hand the word says, not the colour, as fast as you can.']),
  mus:S2(['ไหล่','แขน'],['Shoulders','Arms']),
  ben:S2('ฝึกสมาธิ การยับยั้งชั่งใจ และความเร็วในการตอบสนอง','Trains attention, inhibition and reaction speed.')},
-{id:'stroopOpp',cat:'brain',grp:['brain'],chair:true,mode:'stroop',rule:'opp',reps:[12,10,8],tmo:[3.5,4.5,6],need:'upper',
+{id:'stroopOpp',cat:'brain',grp:['brain'],chair:true,mode:'choice',reps:[12,10,8],tmo:[3.5,4.5,6],need:'upper',
  keys:[K(SEAT,{aR:A.up}),SEAT,K(SEAT,{aL:A.up}),SEAT],ap:4,
+ gen:c=>{const w=c.rnd()<.5?'L':'R',col=c.rnd()<.7?(w==='L'?'R':'L'):w;return {exp:w==='L'?'R':'L',html:`<div class="cueword" style="color:${CH[col]}">${c.tx(U[w==='L'?'wL':'wR'])}</div><div class="cuerule">${c.tx(U.ruleOpp)}</div>`};},
  name:S2('เกมทำตรงข้าม','Do-the-opposite game'),
  steps:S2(['ลดมือลงทั้งสองข้าง','เห็นคำว่า "ซ้าย" ให้ยกมือขวา เห็น "ขวา" ให้ยกมือซ้าย','ตอบให้ถูกและเร็ว'],['Lower both hands.','See LEFT, raise your right hand. See RIGHT, raise your left.','Be quick and correct.']),
  mus:S2(['ไหล่','แขน'],['Shoulders','Arms']),
  ben:S2('ฝึกการสลับความคิดและการยับยั้งการตอบสนองอัตโนมัติ ซึ่งเป็นทักษะสมองส่วนหน้า','Trains mental switching and holding back automatic responses, both frontal-lobe skills.')},
+{id:'flanker',cat:'brain',grp:['brain'],chair:true,mode:'choice',reps:[12,10,8],tmo:[3.5,4.5,6],need:'upper',
+ keys:[K(SEAT,{aL:A.up}),SEAT,K(SEAT,{aR:A.up}),SEAT],ap:4,
+ gen:c=>{const d=c.rnd()<.5?'L':'R',o=d==='L'?'R':'L',cong=c.rnd()<.5,n=c.prm.tier===2?3:5,m=(n-1)/2;
+  const arr=Array.from({length:n},(_,i)=>{const x=(i===m?d:(cong?d:o))==='L'?'←':'→';return i===m&&c.prm.tier===2?`<b>${x}</b>`:x;});
+  return {exp:d,html:`<div class="cueword cuearrows">${arr.join(' ')}</div><div class="cuerule">${c.tx(RULE.flanker)}</div>`};},
+ name:S2('เกมลูกศรตรงกลาง','Middle-arrow game'),
+ steps:S2(['ลดมือลง รอลูกศรบนจอ','ดูเฉพาะลูกศรตัวกลาง ไม่สนใจตัวข้างๆ','ลูกศรชี้ซ้ายยกมือซ้าย ชี้ขวายกมือขวา'],['Lower your hands and wait for the arrows.','Look only at the middle arrow and ignore the others.','Middle arrow points left: left hand. Points right: right hand.']),
+ mus:S2(['ไหล่','แขน'],['Shoulders','Arms']),
+ ben:S2('ฝึกความใส่ใจแบบเลือกสรร กรองสิ่งรบกวนออก ซึ่งเป็นทักษะที่ลดลงตามวัย','Trains selective attention, filtering out distractions, a skill that tends to decline with age.')},
+{id:'gonogo',cat:'brain',grp:['brain'],chair:true,mode:'choice',reps:[14,12,10],tmo:[3.5,4.5,6],need:'upper',
+ keys:[K(SEAT,{aL:A.up}),SEAT,K(SEAT,{aR:A.up}),SEAT,SEAT],ap:5,
+ gen:c=>{const e=pick(c.prm.tier===2?['L','R','L','R','none']:['L','R','B','L','R','none','none'],c.rnd);
+  const sh={L:shapeSVG('circle',CH.L),R:shapeSVG('square',CH.R),B:shapeSVG('star','#FFC83D'),none:shapeSVG('x','#8A8FA8')}[e];
+  const lg=`<span style="color:${CH.L}">●</span> ${c.tx(HAND.L)} · <span style="color:${CH.R}">■</span> ${c.tx(HAND.R)}`+(c.prm.tier===2?'':` · <span style="color:#E0A800">★</span> ${c.tx(HAND.B)}`)+` · ✕ ${c.tx(HAND.none)}`;
+  return {exp:e,html:sh+`<div class="cuerule">${lg}</div>`};},
+ name:S2('เกมสีสั่งมือ (ไป/หยุด)','Colour go / no-go'),
+ steps:S2(['วงกลมสีน้ำเงิน ยกมือซ้าย · สี่เหลี่ยมสีแดง ยกมือขวา','ดาวสีเหลือง ยกสองมือ (กลุ่มอายุต่ำกว่า 65)','เห็นกากบาท ✕ ห้ามขยับ รอข้อต่อไป'],['Blue circle: left hand. Red square: right hand.','Yellow star: both hands (under-65 groups).','Grey ✕: do not move, wait for the next one.']),
+ mus:S2(['ไหล่','แขน'],['Shoulders','Arms']),
+ ben:S2('ฝึกการยับยั้งชั่งใจและการจับคู่กฎ ช่วยลดการตัดสินใจแบบหุนหัน','Trains holding back and rule matching to reduce impulsive responses.')},
+{id:'bigger',cat:'brain',grp:['brain'],chair:true,mode:'choice',reps:[12,10,8],tmo:[4,5,7],need:'upper',
+ keys:[K(SEAT,{aL:A.up}),SEAT,K(SEAT,{aR:A.up}),SEAT],ap:4,
+ gen:c=>{const hard=(c.prm.tier<2&&c.prm.phase>=2)||c.prm.phase>=4,ri=n=>1+Math.floor(c.rnd()*n);
+  const mk=()=>{if(hard){const a=ri(9),b=ri(9);return {t:`${a}+${b}`,v:a+b};}const v=ri(20);return {t:String(v),v};};
+  const P=mk();let Q=mk();while(Q.v===P.v)Q=mk();
+  return {exp:P.v>Q.v?'L':'R',html:`<div class="cuepair"><span>${P.t}</span><span>${Q.t}</span></div><div class="cuerule">${c.tx(RULE.bigger)}</div>`};},
+ name:S2('เกมเลขไหนมากกว่า','Bigger number'),
+ steps:S2(['ตัวเลขขึ้นสองฝั่ง ซ้ายและขวา','ยกมือข้างเดียวกับตัวเลขที่มากกว่า','ช่วงหลังของแผนจะเป็นโจทย์บวก เช่น 3+5 กับ 9'],['Two numbers appear, one on each side.','Raise the hand on the side of the bigger number.','Later in the plan they become sums, like 3+5 vs 9.']),
+ mus:S2(['ไหล่','แขน'],['Shoulders','Arms']),
+ ben:S2('ฝึกคิดเลขเร็วและการเปรียบเทียบ ใช้สมองด้านตัวเลขไปพร้อมกับขยับร่างกาย','Practises quick arithmetic and comparison while moving.')},
+{id:'simon',cat:'brain',grp:['brain'],chair:true,mode:'choice',reps:[12,10,8],tmo:[4,5,6.5],need:'upper',
+ keys:[K(SEAT,{aL:A.up}),SEAT,K(SEAT,{aR:A.up,aL:A.up}),SEAT,SEAT],ap:5,
+ gen:c=>{const e=pick(c.prm.tier===2?['L','R','B']:['L','R','B','T'],c.rnd),simon=c.rnd()<.7,cmd=c.tx(U['mv'+e]);
+  return {exp:simon?e:'none',speak:(simon?c.tx(RULE.simon)+' ':'')+cmd,html:`<div class="cuerule" style="font-size:24px;min-height:1.4em">${simon?c.tx(RULE.simon):''}</div><div class="cueword" style="font-size:clamp(36px,6vw,64px)">${cmd}</div>`};},
+ name:S2('เกมไซมอนบอก','Simon says'),
+ steps:S2(['ฟังและดูคำสั่งบนจอ','ถ้าขึ้นต้นด้วย "ไซมอนบอก" ให้ทำตาม','ถ้าไม่มีคำว่า "ไซมอนบอก" ห้ามขยับ'],['Listen to and read the command.','If it starts with "Simon says", do it.','If there is no "Simon says", do not move.']),
+ mus:S2(['ไหล่','แขน','หลังส่วนบน'],['Shoulders','Arms','Upper back']),
+ ben:S2('ฝึกการฟัง ความใส่ใจ และการยับยั้งการตอบสนอง','Trains listening, attention and holding back a response.')},
+{id:'category',cat:'brain',grp:['brain'],chair:true,mode:'choice',reps:[12,10,8],tmo:[4,5,7],need:'upper',
+ keys:[K(SEAT,{aL:A.up}),SEAT,K(SEAT,{aR:A.up}),SEAT],ap:4,
+ gen:c=>{const C=CATS[c.prm.day%CATS.length],side=c.rnd()<.5?'L':'R';let w;do{w=pick(side==='L'?C.A:C.B,c.rnd);}while(w===c.g.last);c.g.last=w;
+  const word=c.lang==='th'?w[0]:w[1];
+  return {exp:side,speak:c.prm.tier===2?word:null,html:`<div class="cueword" style="font-size:clamp(40px,7vw,80px)">${word}</div><div class="cuerule">${c.tx(C.a)} → ${c.tx(HAND.L)} · ${c.tx(C.b)} → ${c.tx(HAND.R)}</div>`};},
+ name:S2('เกมจัดหมวดคำ','Word sort'),
+ steps:S2(['อ่านกฎบนจอ เช่น ผลไม้ = มือซ้าย สัตว์ = มือขวา','คำจะขึ้นทีละคำ','ยกมือให้ตรงหมวด หมวดคำเปลี่ยนทุกวัน'],['Read the rule, e.g. Fruit = left hand, Animal = right hand.','Words appear one at a time.','Raise the matching hand. The categories change every day.']),
+ mus:S2(['ไหล่','แขน'],['Shoulders','Arms']),
+ ben:S2('กระตุ้นความจำด้านความหมายและภาษา ซึ่งควรฝึกต่อเนื่องเมื่ออายุมากขึ้น','Exercises word meaning and language memory, worth practising as we age.')},
+{id:'oneback',cat:'brain',grp:['brain'],chair:true,mode:'choice',reps:[12,10,8],tmo:[4,5,7],need:'upper',
+ keys:[K(SEAT,{aL:A.up}),SEAT,K(SEAT,{aR:A.up}),SEAT],ap:4,
+ gen:c=>{const pool=c.prm.tier===2?NB3:NB6,g=c.g;
+  if(!g.prev){g.prev=pick(pool,c.rnd);return {memo:true,memoMs:c.prm.tier===2?2400:1800,html:shapeSVG(...g.prev)+`<div class="cuerule">${c.tx(RULE.memo1)}</div>`};}
+  let cur,exp;if(c.rnd()<.4){cur=g.prev;exp='L';}else{do{cur=pick(pool,c.rnd);}while(cur===g.prev);exp='R';}
+  g.prev=cur;return {exp,html:shapeSVG(...cur)+`<div class="cuerule">${c.tx(RULE.oneback)}</div>`};},
+ name:S2('เกมเหมือนหรือไม่เหมือน','Same or different'),
+ steps:S2(['จำรูปแรกไว้','รูปใหม่ขึ้นมา: เหมือนรูปที่แล้ว ยกมือซ้าย · ไม่เหมือน ยกมือขวา','จำรูปล่าสุดไว้เทียบกับรูปต่อไปเรื่อยๆ'],['Remember the first shape.','New shape: same as the last one, left hand. Different, right hand.','Keep the latest shape in mind for the next one.']),
+ mus:S2(['ไหล่','แขน'],['Shoulders','Arms']),
+ ben:S2('ฝึกความจำใช้งาน (working memory) และการอัปเดตข้อมูลในสมอง','Trains working memory and keeping information up to date.')},
 {id:'memory',cat:'brain',grp:['brain'],chair:true,mode:'memory',reps:[4,4,3],len:[4,4,3],need:'upper',
  keys:[K(SEAT,{aL:A.up}),K(SEAT,{aR:A.up}),K(SEAT,{aR:A.up,aL:A.up}),K(SEAT,{aR:A.side,aL:A.side})],ap:5,
  name:S2('เกมจำท่า','Memory moves'),
@@ -717,7 +796,7 @@ function dayPlan(d,tk){
  }
  const tgt=(id)=>{const p=POSE[id];let v=p.reps[ti];
   if(p.mode==='memory') return v;
-  if(p.mode==='stroop') return Math.max(6,Math.round(v*Math.min(info.mult,1.2)));
+  if(p.mode==='choice') return Math.max(6,Math.round(v*Math.min(info.mult,1.2)));
   v=Math.round(v*info.mult); return p.mode==='hold'?Math.max(8,v):Math.max(4,v);};
  const items=[...stretch.map(id=>({id,block:'stretch',target:tgt(id)})),...cardio.map(id=>({id,block:'cardio',target:tgt(id)}))];
  return {...info,items};
@@ -726,7 +805,7 @@ function itemSecs(it,tk){const p=POSE[it.id], sl=TIERS[tk].slow;
  if(p.mode==='hold') return it.target+6;
  if(p.mode==='holdreps') return it.target*((p.hold[TIERS[tk].i])+2.5);
  if(p.mode==='follow') return it.target*p.per*sl;
- if(p.mode==='stroop') return it.target*4;
+ if(p.mode==='choice') return it.target*4.5;
  if(p.mode==='memory') return it.target*16;
  return it.target*3.5*sl;}
 function planMinutes(plan,tk){let s=60;for(const it of plan.items) s+=itemSecs(it,tk)+(it.block==='stretch'?6:TIERS[tk].rest)+4; return Math.round(s/60);}
@@ -814,7 +893,7 @@ let viewAbs=todayAbs();
 const doneMap=()=>store.get('pp2-done')||{};
 const tk=()=>tierKey||'b';
 const fmtDate=abs=>new Date(start+abs*DAY).toLocaleDateString(lang==='th'?'th-TH':'en-GB',{weekday:'short',day:'numeric',month:'short'});
-const targetTxt=(p,n)=>p.mode==='hold'?`${n} ${t('sec')}`:p.mode==='stroop'?`${n} ${t('trials')}`:p.mode==='memory'?`${n} ${t('rounds')}`:`${n} ${t('reps')}`;
+const targetTxt=(p,n)=>p.mode==='hold'?`${n} ${t('sec')}`:p.mode==='choice'?`${n} ${t('trials')}`:p.mode==='memory'?`${n} ${t('rounds')}`:`${n} ${t('reps')}`;
 
 /* ---------- static text ---------- */
 function applyLang(){
@@ -915,7 +994,7 @@ async function loadModel(){if(landmarker)return;
  const o=d=>({baseOptions:{modelAssetPath:MODEL,delegate:d},runningMode:'VIDEO',numPoses:1,minPoseDetectionConfidence:.5,minTrackingConfidence:.5});
  try{landmarker=await PoseLandmarker.createFromOptions(fs,o('GPU'));}catch(e){landmarker=await PoseLandmarker.createFromOptions(fs,o('CPU'));}}
 const video=$('vid'),cv=$('cv'),ctx=cv.getContext('2d');
-async function startCamera(){stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:1280},height:{ideal:720}},audio:false});
+async function startCamera(){if(!window.isSecureContext||!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw {name:'insecure'};stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:1280},height:{ideal:720}},audio:false});
  video.srcObject=stream;await video.play();cv.width=video.videoWidth;cv.height=video.videoHeight;AR=cv.width/cv.height;$('stage').style.aspectRatio=`${cv.width}/${cv.height}`;}
 function stopCamera(){cancelAnimationFrame(raf);if(stream)stream.getTracks().forEach(x=>x.stop());stream=null;}
 
@@ -943,7 +1022,7 @@ function setCoach(it,stepTxt){
 function newSession(){
  const T=TIERS[tk()], ti=T.i;
  S={phase:'calib',i:0,score:0,streak:0,paused:false,calib:[],posture:null,phaseEnd:0,lastT:performance.now(),sm:null,rts:[],abs:viewAbs,
-  items:plan.items.map(it=>{const p=POSE[it.id];return {...it,p,prm:{th:p.th?p.th[Math.min(ti,p.th.length-1)]:null,hold:p.hold?p.hold[ti]:0,tmo:p.tmo?p.tmo[ti]:0,len:p.len?p.len[ti]+(plan.phase>=4?1:0):0,per:(p.per||3)*T.slow*1000},done:0,good:0,held:0,state:'wait',flag:false,g:null,said:false};})};
+  items:plan.items.map(it=>{const p=POSE[it.id];return {...it,p,prm:{tier:ti,day:plan.d,phase:plan.phase,th:p.th?p.th[Math.min(ti,p.th.length-1)]:null,hold:p.hold?p.hold[ti]:0,tmo:p.tmo?p.tmo[ti]:0,len:p.len?p.len[ti]+(plan.phase>=4?1:0):0,per:(p.per||3)*T.slow*1000},done:0,good:0,held:0,state:'wait',flag:false,g:null,said:false};})};
  $('hudTier').textContent=`${tx(T.age)} · ${tx(plan.theme.name)}`; addScore(0); renderQueue(); setCoach(null,t('setup')); setCount('–','',0); cue(null);
 }
 function calibStep(f,now){
@@ -1009,17 +1088,18 @@ function doFollow(it,f,now){const p=it.p,per=it.prm.per;
   it.beats++;it.bt=now;it.fr=it.okf=0;
   if(it.done>=it.target||it.beats>=Math.ceil(it.target*1.6)){finishItem(now);return;}}
  setCount(it.done,'/ '+it.target,(it.done+(now-it.bt)/per*.999)/it.target);}
-const COLL='#2F80ED',COLR='#FF5A5F';
-function doStroop(it,f,now){const g=it.g||(it.g={n:0,st:'ready'});const p=it.p;
+function doChoice(it,f,now){const g=it.g||(it.g={n:0,st:'ready'});const p=it.p;
  if(g.st==='ready'){feedback(t('handsDown'));cue(null);
-  if(bothLow(f)){g.w=Math.random()<.5?'L':'R';const incong=Math.random()<.7;g.c=incong?(g.w==='L'?'R':'L'):g.w;g.exp=p.rule==='follow'?g.w:(g.w==='L'?'R':'L');
-   cue(`<div class="cueword" style="color:${g.c==='L'?COLL:COLR}">${t(g.w==='L'?'wL':'wR')}</div><div>${t(p.rule==='follow'?'ruleFollow':'ruleOpp')}</div>`);g.st='cue';g.t0=now;beep(700,60);}}
- else if(g.st==='cue'){const s=armState(f);
-  if(s==='L'||s==='R'){const rt=now-g.t0;g.n++;
-   if(s===g.exp){it.done++;it.good++;S.rts.push(rt);addScore(100+Math.max(0,Math.round((it.prm.tmo*1000-rt)/40)));beep(990,120);feedback(t('correct')+' '+(rt/1000).toFixed(1)+' '+t('sec'),'good');}
-   else{beep(300,200);feedback(t('wrong'),'warn');}
-   g.st='fb';g.until=now+900;cue(null);}
-  else if(now-g.t0>it.prm.tmo*1000){g.n++;feedback(t('tooSlow'),'warn');g.st='fb';g.until=now+900;cue(null);}}
+  if(bothLow(f)){g.tr=p.gen({tx,lang,rnd:Math.random,prm:it.prm,g});cue(g.tr.html);if(g.tr.speak)say(g.tr.speak);g.st=g.tr.memo?'memo':'cue';g.t0=now;g.cand=null;beep(700,60);}}
+ else if(g.st==='memo'){feedback(t('memWatch'));if(now-g.t0>g.tr.memoMs){g.st='ready';cue(null);}}
+ else if(g.st==='cue'){const s=armState(f),resp=['L','R','B','T'].includes(s)?s:null,exp=g.tr.exp,lim=it.prm.tmo*1000*(exp==='none'?.75:1);
+  const judge=ok=>{g.n++;if(ok){it.done++;it.good++;}g.st='fb';g.until=now+(ok?900:1300);cue(null);};
+  if(resp){if(resp!==g.cand){g.cand=resp;g.candT=now;}
+   else if(now-g.candT>250){const rt=g.candT-g.t0;
+    if(exp==='none'){beep(300,200);feedback(t('moved'),'warn');judge(false);}
+    else if(resp===exp){S.rts.push(rt);addScore(100+Math.max(0,Math.round((it.prm.tmo*1000-rt)/40)));beep(990,120);feedback(t('correct')+' '+(rt/1000).toFixed(1)+' '+t('sec'),'good');judge(true);}
+    else{beep(300,200);feedback(t('wrong'),'warn');judge(false);}}}
+  else{g.cand=null;if(now-g.t0>lim){if(exp==='none'){addScore(100);beep(990,120);feedback(t('nogoOk'),'good');judge(true);}else{feedback(t('tooSlow'),'warn');judge(false);}}}}
  else if(g.st==='fb'&&now>g.until){g.st='ready';if(g.n>=it.target){finishItem(now);return;}}
  setCount(it.done,'/ '+it.target,g.n/it.target);}
 function memCue(mv,label){cue(`<canvas data-pose="mv:${mv}"></canvas><div style="font-family:Mitr,sans-serif;font-size:28px">${label}</div>`);}
@@ -1042,7 +1122,7 @@ function work(f,now,dt){const it=S.items[S.i],p=it.p;
  if(!visible(f,p.need)){feedback(p.need==='upper'?t('needUpper'):t('needLegs'),'warn');return;}
  const warn=p.form?p.form(f,it.prm):null;
  if(p.mode==='reps')doReps(it,f,now,warn);else if(p.mode==='hold')doHold(it,f,now,dt,warn);else if(p.mode==='holdreps')doHoldReps(it,f,now,dt);
- else if(p.mode==='follow')doFollow(it,f,now);else if(p.mode==='stroop')doStroop(it,f,now);else if(p.mode==='memory')doMemory(it,f,now);}
+ else if(p.mode==='follow')doFollow(it,f,now);else if(p.mode==='choice')doChoice(it,f,now);else if(p.mode==='memory')doMemory(it,f,now);}
 
 /* ---------- drawing ---------- */
 const BONES=[[11,12],[11,13],[13,15],[12,14],[14,16],[11,23],[12,24],[23,24],[23,25],[25,27],[24,26],[26,28]];
@@ -1101,7 +1181,7 @@ async function begin(){
  $('err').textContent='';$('home').classList.add('hide');$('done').classList.add('hide');$('game').classList.remove('hide');window.scrollTo(0,0);
  try{audio=audio||new (window.AudioContext||window.webkitAudioContext)();}catch(e){}
  newSession();overlay(null,t('loading'),t('loadingSub'));applyLang();
- try{await startCamera();}catch(e){backHome();$('err').textContent=t('camErr',{e:e.name||e.message});return;}
+ try{await startCamera();}catch(e){backHome();$('err').textContent=e&&e.name==='insecure'?t('insecure'):t('camErr',{e:e.name||e.message});return;}
  try{await loadModel();}catch(e){backHome();$('err').textContent=t('modelErr');return;}
  overlay(null,t('stepIn'),t('faceCam'));say(t('postureHow'));S.lastT=performance.now();loop();
 }
