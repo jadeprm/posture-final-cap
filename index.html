@@ -3,181 +3,314 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Posture Play · ขยับกาย สบายสมอง</title>
+<title>โรงพยาบาลพหุภพ · ต้นแบบกิจกรรมออกกำลังกายและบริหารสมอง</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Mitr:wght@500;600&family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@500;600;700&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* VOICE: cheerful community-centre coach; warm, bright, very readable for older adults
-   IDEA: a Thai temple-fair activity board: colourful day cards, a year of dots, a dancing coach figure
-   PICTURE: animated coach figure for every move, live mirror camera with skeleton in game
-   COLOUR and TYPE: sunshine yellow, coral, sky blue, grape, pink, teal on white; Mitr headings + Sarabun body (Thai + Latin)
-   LAYOUT: yellow hero with age picker; today's plan in two parts (stretch then cardio); year ribbon; benefits; game = mirror + coach panel */
-:root{color-scheme:light dark;--sun:#FFC83D;--coral:#FF5A5F;--sky:#2F80ED;--grape:#8B5CF6;--pink:#F0468C;--teal:#0EA5B7;--orange:#FF8A1F;
---bg:light-dark(#FFFFFF,#14162B);--ink:light-dark(#1B1F3B,#F2F3FA);--mute:light-dark(#555B7A,#B6BBD6);--soft:light-dark(#FFF6DC,#22254A);--line:light-dark(#E7E9F3,#363A63);--card:light-dark(#FFFFFF,#1C1F3D)}
+/* Multiverse Hospital for Cognitive Health of Thai Older Adults — Activity 8 Exercise Prototype
+   Principles: Reassuring & Non-Medicalized, Thai-Rooted, High-Contrast Elderly-Centric UI, Routine as Progression */
+:root{
+ color-scheme:light dark;
+ --brand:#16685B;--brand-h:#105248;--brand-soft:light-dark(#E6F2EF,#16312D);
+ --rose:#B83B64;--sky:#2563EB;--grape:#6348B5;--teal:#0F766E;--coral:#C84B31;--gold:#B87D14;--orange:#C26A18;--sun:#EAB308;
+ --bg:light-dark(#F5F7F4,#101521);
+ --card:light-dark(#FFFFFF,#171F30);
+ --soft:light-dark(#ECF1EE,#1E283D);
+ --warm:light-dark(#FBF6EA,#25231D);
+ --ink:light-dark(#16243D,#F1F5F9);
+ --mute:light-dark(#4D5C73,#A8B6CC);
+ --line:light-dark(#CFD8E2,#2E3B55);
+ --shadow:0 2px 10px rgba(22,36,61,.06),0 1px 2px rgba(22,36,61,.04);
+ --radius:20px;
+}
 :root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
 *{box-sizing:border-box;min-width:0}
-body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.6 Sarabun,"Noto Sans Thai",system-ui,sans-serif;overflow-x:clip}
-body.big{font-size:21px}
-h1,h2,h3{font-family:Mitr,Sarabun,sans-serif;font-weight:600;line-height:1.15;text-wrap:balance;margin:0}
-h1{font-size:clamp(36px,6vw,54px)}h2{font-size:clamp(26px,3.4vw,36px)}h3{font-size:21px}
-.wrap{max-width:1240px;margin:0 auto;padding:clamp(24px,4vw,52px) max(4vw,16px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.65 Sarabun,"IBM Plex Sans Thai","Noto Sans Thai",system-ui,sans-serif;overflow-x:clip;-webkit-font-smoothing:antialiased}
+body.big{font-size:21px;line-height:1.7}
+h1,h2,h3,h4{font-family:"IBM Plex Sans Thai",Sarabun,sans-serif;font-weight:700;line-height:1.25;text-wrap:balance;margin:0;letter-spacing:-.01em}
+h1{font-size:clamp(30px,4.2vw,44px)}
+h2{font-size:clamp(24px,3vw,32px)}
+h3{font-size:20px}
+.wrap{max-width:1200px;margin:0 auto;padding:clamp(24px,4vw,44px) max(4vw,16px)}
 .hide{display:none!important}
 button,input{font:inherit;color:inherit}
-button{min-height:48px;border-radius:14px;border:2px solid var(--line);background:var(--card);padding:8px 18px;cursor:pointer;font-weight:600}
+button{min-height:48px;border-radius:14px;border:2px solid var(--line);background:var(--card);padding:8px 18px;cursor:pointer;font-weight:600;transition:border-color .15s,background-color .15s,transform .1s}
+button:hover:not(:disabled){border-color:var(--brand)}
+button:active:not(:disabled){transform:translateY(1px)}
+button:disabled{opacity:.48;cursor:not-allowed}
 button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-offset:2px}
-.primary{background:var(--coral);border-color:var(--coral);color:#fff;font-size:21px;padding:12px 32px}
-.primary:disabled{opacity:.45;cursor:not-allowed}
-.chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:3px 12px;font-size:15px;font-weight:700;color:#fff;background:var(--c,var(--grape));white-space:nowrap}
-.chip.soft{background:color-mix(in srgb,var(--c) 16%,transparent);color:var(--ink)}
-/* header + hero */
-.top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px max(4vw,16px);background:var(--sun);color:#1B1F3B}
-.logo{font-family:Mitr,sans-serif;font-size:20px;display:flex;align-items:center;gap:10px}
-.logo i{width:30px;height:30px;border-radius:50%;background:conic-gradient(var(--coral) 0 25%,var(--sky) 0 50%,var(--grape) 0 75%,var(--pink) 0)}
-.lang{display:flex;gap:6px}.lang button{min-height:44px;background:#fff;border-color:#fff;color:#1B1F3B}.lang button[aria-pressed=true]{background:#1B1F3B;color:#fff;border-color:#1B1F3B}
-.hero{background:var(--sun);color:#1B1F3B}
-.hero .wrap{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:clamp(20px,4vw,48px);align-items:center;padding-top:16px}
-.hero p{font-size:19px;max-width:56ch;margin:14px 0 0}
-.agebox{background:#fff;border-radius:24px;padding:20px;box-shadow:0 10px 0 rgba(27,31,59,.12)}
-.agebox label{display:block;font-weight:700;margin-bottom:8px;color:#1B1F3B}
-.agebox input{width:100%;font-size:28px;padding:8px 14px;border-radius:14px;border:2px solid #E7E9F3;background:#fff;color:#1B1F3B}
+.primary{background:var(--brand);border-color:var(--brand);color:#fff;font-size:20px;padding:14px 30px;min-height:56px;box-shadow:0 4px 14px rgba(22,104,91,.22)}
+.primary:hover:not(:disabled){background:var(--brand-h);border-color:var(--brand-h)}
+.primary:disabled{box-shadow:none}
+.chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:4px 13px;font-size:14px;font-weight:700;color:#fff;background:var(--c,var(--brand));white-space:nowrap}
+.chip.soft{background:color-mix(in srgb,var(--c,var(--brand)) 13%,var(--card));color:var(--ink);border:1.5px solid color-mix(in srgb,var(--c,var(--brand)) 32%,transparent)}
+.stepBadge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:999px;font-size:14px;font-weight:700;background:var(--brand-soft);color:var(--brand);border:1.5px solid color-mix(in srgb,var(--brand) 28%,transparent)}
+/* Institutional Top Header */
+.top{position:sticky;top:0;z-index:8;background:color-mix(in srgb,var(--card) 94%,transparent);backdrop-filter:blur(10px);border-bottom:1.5px solid var(--line)}
+.topin{max-width:1200px;margin:0 auto;padding:12px max(4vw,16px);display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+.ident{display:flex;align-items:center;gap:12px;min-width:0}
+.emblem{width:44px;height:44px;flex:none;border-radius:14px;background:var(--brand-soft);border:1.5px solid color-mix(in srgb,var(--brand) 30%,transparent);display:grid;place-items:center;color:var(--brand)}
+.idtxt{min-width:0}
+.idrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.idtitle{font-family:"IBM Plex Sans Thai",Sarabun,sans-serif;font-weight:700;font-size:19px;line-height:1.2;color:var(--ink)}
+.protoTag{font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px;background:var(--warm);color:var(--gold);border:1.5px solid color-mix(in srgb,var(--gold) 40%,transparent);white-space:nowrap}
+.idsub{font-size:13.5px;color:var(--mute);line-height:1.3;margin-top:2px}
+.controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.seg{display:inline-flex;background:var(--soft);padding:3px;border-radius:12px;border:1.5px solid var(--line);gap:3px}
+.seg button{min-height:40px;padding:4px 13px;border-radius:9px;border:1.5px solid transparent;background:transparent;font-size:15px;color:var(--ink)}
+.seg button[aria-pressed=true]{background:var(--ink);color:var(--card);border-color:var(--ink)}
+.sizeBtn{min-height:44px;padding:6px 14px;font-size:15px;border-radius:12px;background:var(--card)}
+.sizeBtn[aria-pressed=true]{background:var(--brand);border-color:var(--brand);color:#fff}
+/* Hero */
+.hero{background:linear-gradient(180deg,var(--brand-soft) 0%,var(--bg) 100%);border-bottom:1.5px solid var(--line)}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.95fr);gap:clamp(22px,4vw,42px);align-items:start;padding-top:clamp(24px,3.5vw,40px);padding-bottom:clamp(28px,4vw,46px)}
+.kicker{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:var(--brand);background:var(--card);border:1.5px solid color-mix(in srgb,var(--brand) 28%,transparent);padding:5px 14px;border-radius:999px;margin-bottom:14px}
+.kicker::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--brand)}
+.hero p.lede{font-size:19px;color:var(--mute);max-width:54ch;margin:14px 0 0}
+.trust{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.trust span{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:12px;background:var(--card);border:1.5px solid var(--line);font-size:14.5px;font-weight:600;color:var(--ink)}
+.trust span::before{content:"✓";color:var(--brand);font-weight:700}
+.heroFig{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:22px}
+.heroTile{background:var(--card);border:1.5px solid var(--line);border-radius:18px;padding:8px 6px 6px;text-align:center;box-shadow:var(--shadow)}
+.heroTile canvas{width:100%;height:102px;display:block;background:var(--soft);border-radius:12px}
+.heroTile span{display:block;font-size:12.5px;font-weight:600;color:var(--mute);margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* Step 1 Age / Level Card */
+.agebox{background:var(--card);border:2px solid var(--line);border-radius:24px;padding:24px;box-shadow:var(--shadow)}
+.agebox h2{font-size:22px;margin-top:10px}
+.agebox .hint{font-size:15px;color:var(--mute);margin:6px 0 14px}
+.agebox label{display:block;font-weight:700;margin-bottom:6px;font-size:16px}
+.agebox input{width:100%;font-size:24px;font-weight:600;padding:10px 16px;border-radius:14px;border:2px solid var(--line);background:var(--bg);color:var(--ink)}
+.agebox input:focus{border-color:var(--brand);background:var(--card)}
 .tiers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
-.tier{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:12px;border-radius:16px;border:3px solid var(--c);background:#fff;color:#1B1F3B;text-align:left;min-height:84px}
-.tier b{font-family:Mitr,sans-serif;font-size:20px;color:var(--c)}.tier span{font-size:15px}
-.tier[aria-pressed=true]{background:var(--c);color:#fff}.tier[aria-pressed=true] b{color:#fff}
-.heroFig{display:flex;gap:8px;margin-top:18px}.heroFig canvas{width:92px;height:110px;background:rgba(255,255,255,.55);border-radius:16px}
-/* today */
-.dayhead{display:flex;justify-content:space-between;gap:16px;align-items:flex-end;flex-wrap:wrap}
-.meta{color:var(--mute);margin:6px 0 0}
+.tier{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:13px 12px;border-radius:16px;border:2px solid var(--line);background:var(--bg);color:var(--ink);text-align:left;min-height:92px;position:relative}
+.tier:hover{border-color:var(--c)}
+.tier b{font-family:"IBM Plex Sans Thai",Sarabun,sans-serif;font-size:18px;color:var(--c);line-height:1.2}
+.tier span{font-size:14.5px;color:var(--mute);font-weight:600}
+.tier[aria-pressed=true]{background:var(--c);border-color:var(--c);color:#fff;box-shadow:0 4px 12px color-mix(in srgb,var(--c) 30%,transparent)}
+.tier[aria-pressed=true] b,.tier[aria-pressed=true] span{color:#fff}
+.tier[aria-pressed=true]::after{content:"✓";position:absolute;top:8px;right:10px;font-size:15px;font-weight:700}
+/* Today Routine */
+.dayhead{display:flex;justify-content:space-between;gap:16px;align-items:flex-end;flex-wrap:wrap;padding-bottom:18px;border-bottom:1.5px solid var(--line)}
+.meta{color:var(--mute);margin:6px 0 0;font-size:16px}
 .daynav{display:flex;gap:8px;flex-wrap:wrap}
-.parts{display:grid;gap:14px;margin-top:22px}
-.part{border-radius:24px;padding:16px;background:color-mix(in srgb,var(--c) 10%,var(--card));border:2px solid color-mix(in srgb,var(--c) 35%,transparent)}
-.part h3{color:var(--c);margin:2px 4px 10px}
-.moves{list-style:none;margin:0;padding:0;display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(min(100%,430px),1fr))}
-.mv{display:grid;grid-template-columns:84px minmax(0,1fr) auto;gap:12px;align-items:center;background:var(--card);border-radius:18px;padding:8px 10px;border-left:8px solid var(--c)}
-.mv canvas,.mv img.ph{width:84px;height:96px;border-radius:12px;background:var(--soft);object-fit:cover}
-.mv b{display:block;font-size:18px;line-height:1.3}.mv small{display:block;color:var(--mute);font-size:15px}
-.mv button{min-height:44px;padding:6px 12px;font-size:15px}
-.arrow{text-align:center;color:var(--coral);font-family:Mitr,sans-serif;font-size:26px;line-height:1}
-.setup{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:22px}
-.check{display:flex;gap:12px;align-items:flex-start;padding:14px;border-radius:16px;background:var(--soft);cursor:pointer}
-.check input{width:26px;height:26px;flex:none;margin-top:2px;accent-color:var(--coral)}
-.safety{margin:18px 0 0;padding:14px 18px;border-left:6px solid var(--coral);background:var(--soft);border-radius:0 16px 16px 0;font-size:16px}
+.daynav button{min-height:46px;font-size:16px}
+.parts{display:grid;gap:18px;margin-top:22px}
+.part{border-radius:22px;padding:18px;background:var(--card);border:1.5px solid var(--line);border-top:5px solid var(--c);box-shadow:var(--shadow)}
+.parthead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 2px 14px;flex-wrap:wrap}
+.part h3{color:var(--ink);font-size:20px;display:flex;align-items:center;gap:10px}
+.part h3::before{content:"";width:11px;height:11px;border-radius:50%;background:var(--c);flex:none}
+.moves{list-style:none;margin:0;padding:0;display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(min(100%,440px),1fr))}
+.mv{display:grid;grid-template-columns:86px minmax(0,1fr) auto;gap:14px;align-items:center;background:var(--bg);border:1.5px solid var(--line);border-radius:16px;padding:10px 12px;transition:border-color .15s}
+.mv:hover{border-color:var(--c)}
+.mv canvas,.mv img.ph{width:86px;height:98px;border-radius:12px;background:var(--card);border:1px solid var(--line);object-fit:cover}
+.mv b{display:block;font-family:"IBM Plex Sans Thai",Sarabun,sans-serif;font-size:17.5px;line-height:1.3;margin-bottom:3px}
+.mv small{display:block;color:var(--mute);font-size:14.5px;line-height:1.45}
+.mv button{min-height:44px;padding:6px 14px;font-size:15px;border-color:color-mix(in srgb,var(--c) 45%,var(--line));color:var(--ink)}
+.mv button:hover{background:var(--c);border-color:var(--c);color:#fff}
+/* Step 3 Readiness & Start Panel */
+.readyBox{margin-top:24px;background:var(--card);border:2px solid var(--line);border-radius:24px;padding:24px;box-shadow:var(--shadow)}
+.readyBox h3{margin-top:10px;font-size:22px}
+.setup{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin-top:16px}
+.check{display:flex;gap:12px;align-items:flex-start;padding:15px;border-radius:16px;background:var(--bg);border:2px solid var(--line);cursor:pointer;transition:border-color .15s,background-color .15s}
+.check:has(input:checked){border-color:var(--brand);background:var(--brand-soft)}
+.check input{width:26px;height:26px;flex:none;margin-top:2px;accent-color:var(--brand);cursor:pointer}
+.safety{margin:16px 0 0;padding:15px 18px;border-left:5px solid var(--rose);background:var(--warm);border-radius:0 16px 16px 0;font-size:15.5px;line-height:1.6}
 .go{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:20px}
-.err{color:#C0392B;font-weight:600}
-/* plan */
-.plan{background:var(--soft)}
-.phasebar{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;margin:20px 0 10px}
-.phasebar div{background:var(--c);color:#fff;border-radius:12px;padding:8px 10px;font-size:15px;line-height:1.3}.phasebar b{display:block;font-family:Mitr,sans-serif;font-weight:500}
-.phasebar div.now{outline:4px solid var(--ink);outline-offset:2px}
-.year{display:grid;gap:6px;margin-top:8px}
-.mrow{display:grid;grid-template-columns:64px minmax(0,1fr);gap:8px;align-items:center}
-.mrow span{font-size:14px;color:var(--mute);font-weight:600}
-.dots{display:flex;flex-wrap:wrap;gap:4px}
-.dot{width:20px;height:20px;min-height:0;padding:0;border-radius:50%;border:2px solid var(--c);background:transparent}
-.dot.done{background:var(--c)}.dot.today{box-shadow:0 0 0 3px var(--ink)}.dot.view{transform:scale(1.35)}.dot.easy{border-style:dashed}
+.readyHint{font-size:15px;color:var(--mute);font-weight:600}
+.readyHint.ok{color:var(--brand)}
+.err{color:#B91C1C;font-weight:700;margin:10px 0 0}
+/* 365-Day Routine & Progression */
+.plan{background:var(--soft);border-top:1.5px solid var(--line);border-bottom:1.5px solid var(--line)}
+.routineBar{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:18px 0 20px}
+.rstat{background:var(--card);border:1.5px solid var(--line);border-radius:18px;padding:14px 16px}
+.rstat span{display:block;font-size:14px;color:var(--mute);font-weight:600}
+.rstat b{display:block;font-family:"IBM Plex Sans Thai",Sarabun,sans-serif;font-size:28px;color:var(--ink);margin-top:2px;font-variant-numeric:tabular-nums}
+.phasebar{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin:16px 0 12px}
+.phasebar div{background:var(--card);color:var(--ink);border:1.5px solid var(--line);border-top:5px solid var(--c);border-radius:14px;padding:10px 12px;font-size:14.5px;line-height:1.35}
+.phasebar b{display:block;font-family:"IBM Plex Sans Thai",Sarabun,sans-serif;font-weight:700;color:var(--c)}
+.phasebar div.now{border-color:var(--c);background:color-mix(in srgb,var(--c) 10%,var(--card));box-shadow:0 0 0 2px var(--c)}
+.yearCard{background:var(--card);border:1.5px solid var(--line);border-radius:20px;padding:18px;margin-top:12px}
+.year{display:grid;gap:7px}
+.mrow{display:grid;grid-template-columns:72px minmax(0,1fr);gap:8px;align-items:center}
+.mrow span{font-size:14px;color:var(--mute);font-weight:700}
+.dots{display:flex;flex-wrap:wrap;gap:5px}
+.dot{width:21px;height:21px;min-height:0;padding:0;border-radius:50%;border:2px solid var(--c);background:transparent}
+.dot.done{background:var(--c)}.dot.today{box-shadow:0 0 0 3px var(--ink)}.dot.view{transform:scale(1.3)}.dot.easy{border-style:dashed}
 .week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;margin-top:12px}
-.week div{background:var(--c);color:#fff;border-radius:14px;padding:10px;font-size:15px;line-height:1.3;font-weight:600}
-.week small{display:block;opacity:.9;font-weight:400}
-/* benefits */
+.week div{background:var(--card);color:var(--ink);border:1.5px solid var(--line);border-left:5px solid var(--c);border-radius:14px;padding:10px 12px;font-size:14.5px;line-height:1.35;font-weight:700}
+.week small{display:block;color:var(--mute);font-weight:500;margin-top:2px}
+/* Benefits */
 .bens{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:18px}
-.ben{background:var(--c);color:#fff;border-radius:22px;padding:18px}.ben h3{margin-bottom:6px}.ben p{margin:0;font-size:16px}
-.who{color:var(--mute);margin-top:16px;font-size:16px}
-/* modal */
-.modal{position:fixed;inset:0;background:rgba(20,22,43,.55);display:flex;align-items:center;justify-content:center;padding:16px;z-index:10}
-.sheet{background:var(--card);border-radius:26px;max-width:960px;width:100%;max-height:92vh;overflow:auto;padding:22px;position:relative}
-.mgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:22px}
-.mgrid canvas{width:100%;aspect-ratio:5/6;border-radius:20px;background:var(--soft)}
-.photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;margin-top:10px}.photos figure{margin:0}.photos img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:14px;display:block}.photos figcaption{font-size:14px;color:var(--mute);margin-top:4px;text-align:center}
-.sheet ol{padding-left:1.3em;margin:8px 0}.sheet li{margin-bottom:6px}
+.ben{background:var(--card);color:var(--ink);border:1.5px solid var(--line);border-top:5px solid var(--c);border-radius:20px;padding:20px;box-shadow:var(--shadow)}
+.ben h3{margin-bottom:8px;color:var(--c);font-size:19px}
+.ben p{margin:0;font-size:15.5px;color:var(--mute);line-height:1.6}
+.who{margin-top:18px;padding:14px 18px;border-radius:16px;background:var(--soft);border:1.5px solid var(--line);color:var(--mute);font-size:15.5px}
+/* Institutional Footer */
+.foot{background:var(--card);border-top:2px solid var(--line);margin-top:20px}
+.footin{max-width:1200px;margin:0 auto;padding:28px max(4vw,16px) 36px;display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:24px;align-items:start}
+.foot h3{font-size:18px;color:var(--ink);margin-bottom:6px}
+.foot p{margin:4px 0;font-size:14.5px;color:var(--mute);line-height:1.6}
+.footCard{background:var(--soft);border:1.5px solid var(--line);border-radius:16px;padding:16px 18px}
+.footCard b{display:block;font-size:15px;color:var(--ink);margin-bottom:4px}
+/* Modal */
+.modal{position:fixed;inset:0;background:rgba(16,21,33,.6);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:16px;z-index:20}
+.sheet{background:var(--card);border:2px solid var(--line);border-radius:24px;max-width:960px;width:100%;max-height:92vh;overflow:auto;padding:24px;position:relative;box-shadow:0 20px 50px rgba(0,0,0,.22)}
+.mgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:24px}
+.mgrid canvas{width:100%;aspect-ratio:5/6;border-radius:18px;background:var(--soft);border:1.5px solid var(--line)}
+.photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;margin-top:10px}.photos figure{margin:0}.photos img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:14px;border:1.5px solid var(--line);display:block}.photos figcaption{font-size:14px;color:var(--mute);margin-top:4px;text-align:center}
+.sheet ol{padding-left:1.3em;margin:8px 0}.sheet li{margin-bottom:8px}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 12px}
 .legend{font-size:14px;color:var(--mute);margin-top:8px}
-.mbar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:8px}
-.mphase{font-size:14px;font-weight:600;color:var(--pink)}
-.mbar button{min-height:36px;padding:4px 12px;font-size:14px;border-radius:10px}
+.mbar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:10px}
+.mphase{font-size:14.5px;font-weight:700;color:var(--brand)}
+.mbar button{min-height:38px;padding:5px 13px;font-size:14px;border-radius:10px}
 .mbar button[aria-pressed=true]{background:var(--sky);border-color:var(--sky);color:#fff}
 .mudras{display:grid;gap:8px;margin-top:10px}
-.mudra{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:14px;background:var(--soft);font-size:14px;line-height:1.35}
+.mudra{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:14px;background:var(--soft);border:1px solid var(--line);font-size:14px;line-height:1.4}
 .mgrid .mudra canvas{width:44px;height:44px;aspect-ratio:1/1;margin:0;flex:none;border-radius:10px;background:var(--card);border:1px solid var(--line)}
 .mudra b{display:block;font-size:15px}
 .mudra small{display:block;color:var(--mute);font-size:13px}
-.xbtn{position:absolute;top:12px;right:12px}
-/* game */
-.game{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(320px,1fr);gap:18px;padding:14px max(2vw,12px);max-width:1500px;margin:0 auto;align-items:start}
-.stage{position:relative;border-radius:24px;overflow:hidden;background:#0b0f1c;aspect-ratio:16/9}
+.xbtn{position:absolute;top:14px;right:14px;min-height:42px;padding:6px 14px}
+/* Active Camera Session */
+.game{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(330px,1fr);gap:18px;padding:18px max(2.5vw,14px);max-width:1460px;margin:0 auto;align-items:start}
+.stage{position:relative;border-radius:24px;overflow:hidden;background:#0f172a;border:2px solid var(--line);aspect-ratio:16/9;box-shadow:var(--shadow)}
 .stage>canvas{position:absolute;inset:0;width:100%;height:100%}
-.overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fff;background:rgba(20,22,43,.66);padding:20px;gap:8px}
-#ovDemo{width:min(26vh,200px);height:min(30vh,230px);background:rgba(255,255,255,.92);border-radius:20px}.ovpics{display:flex;gap:12px;align-items:stretch}#ovPhoto{width:min(24vh,180px);height:min(30vh,230px);object-fit:cover;border-radius:20px}
-.ovbig{font-family:Mitr,sans-serif;font-size:clamp(44px,8vw,100px);line-height:1;color:var(--sun)}
-.ovmsg{font-family:Mitr,sans-serif;font-size:clamp(22px,2.8vw,32px);max-width:26ch}
-.ovsub{font-size:18px;opacity:.9;max-width:46ch}
-.cue{position:absolute;left:50%;top:10%;transform:translateX(-50%);background:rgba(255,255,255,.95);color:#1B1F3B;border-radius:24px;padding:14px 26px;text-align:center;min-width:240px}
-.cueword{font-family:Mitr,sans-serif;font-size:clamp(54px,9vw,110px);line-height:1}
+.overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fff;background:rgba(15,23,42,.74);backdrop-filter:blur(3px);padding:20px;gap:10px}
+#ovDemo{width:min(26vh,200px);height:min(30vh,230px);background:rgba(255,255,255,.95);border-radius:18px}.ovpics{display:flex;gap:12px;align-items:stretch}#ovPhoto{width:min(24vh,180px);height:min(30vh,230px);object-fit:cover;border-radius:18px}
+.ovbig{font-family:"IBM Plex Sans Thai",Sarabun,sans-serif;font-weight:700;font-size:clamp(44px,8vw,96px);line-height:1;color:#FDE047}
+.ovmsg{font-family:"IBM Plex Sans Thai",Sarabun,sans-serif;font-weight:700;font-size:clamp(22px,2.8vw,32px);max-width:26ch}
+.ovsub{font-size:18px;opacity:.92;max-width:46ch}
+.cue{position:absolute;left:50%;top:10%;transform:translateX(-50%);background:rgba(255,255,255,.97);color:#16243D;border-radius:22px;padding:16px 28px;text-align:center;min-width:250px;box-shadow:0 12px 32px rgba(0,0,0,.25)}
+.cueword{font-family:"IBM Plex Sans Thai",Sarabun,sans-serif;font-weight:700;font-size:clamp(52px,8.5vw,104px);line-height:1}
 .cue canvas{width:150px;height:170px}
-.cuerule{font-size:18px;margin-top:8px;max-width:30ch;margin-inline:auto;line-height:1.35}.cuearrows{letter-spacing:.06em;white-space:nowrap}.cuearrows b{color:var(--pink)}
-.cuepair{display:flex;gap:26px;justify-content:center;font-family:Mitr,sans-serif;font-size:clamp(44px,8vw,92px);line-height:1.1}.cuepair span{background:#FFF1C9;border-radius:18px;padding:6px 20px;min-width:2.2em}
-.hud{position:absolute;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;gap:8px;pointer-events:none}
-.pill{background:rgba(20,22,43,.75);color:#fff;border-radius:999px;padding:5px 14px;font-weight:600;font-size:16px}
+.cuerule{font-size:18px;margin-top:8px;max-width:30ch;margin-inline:auto;line-height:1.35;font-weight:600}.cuearrows{letter-spacing:.06em;white-space:nowrap}.cuearrows b{color:var(--rose)}
+.cuepair{display:flex;gap:24px;justify-content:center;font-family:"IBM Plex Sans Thai",Sarabun,sans-serif;font-weight:700;font-size:clamp(44px,8vw,88px);line-height:1.1}.cuepair span{background:#F3ECE0;border-radius:16px;padding:6px 20px;min-width:2.2em}
+.hud{position:absolute;top:14px;left:14px;right:14px;display:flex;justify-content:space-between;gap:8px;pointer-events:none}
+.pill{background:rgba(15,23,42,.82);color:#fff;border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:6px 16px;font-weight:700;font-size:16px}
 .panel{display:flex;flex-direction:column;gap:12px}
-.card{border:2px solid var(--line);border-radius:22px;padding:16px;background:var(--card)}
+.card{border:2px solid var(--line);border-radius:20px;padding:16px;background:var(--card);box-shadow:var(--shadow)}
 .coach{display:grid;grid-template-columns:130px minmax(0,1fr);gap:14px;align-items:start}
-.coach canvas{width:130px;height:150px;border-radius:16px;background:var(--soft)}.coachpics{display:flex;flex-direction:column;gap:8px}.coachpics img{width:130px;height:170px;object-fit:cover;border-radius:16px}
-.step{font-size:15px;color:var(--mute);font-weight:600}
-.count{font-family:Mitr,sans-serif;font-size:clamp(54px,6.5vw,84px);line-height:1;color:var(--c,var(--coral));font-variant-numeric:tabular-nums}
+.coach canvas{width:130px;height:150px;border-radius:14px;background:var(--soft);border:1px solid var(--line)}.coachpics{display:flex;flex-direction:column;gap:8px}.coachpics img{width:130px;height:170px;object-fit:cover;border-radius:14px;border:1px solid var(--line)}
+.step{font-size:14.5px;color:var(--brand);font-weight:700}
+.count{font-family:"IBM Plex Sans Thai",Sarabun,sans-serif;font-weight:700;font-size:clamp(52px,6vw,78px);line-height:1;color:var(--c,var(--brand));font-variant-numeric:tabular-nums}
 .count small{font-size:.38em;color:var(--mute)}
-.count.pulse{animation:pulse .35s ease-out}@keyframes pulse{from{transform:scale(1.12)}to{transform:scale(1)}}
-.bar{height:16px;border-radius:99px;background:var(--soft);overflow:hidden;margin-top:12px}.bar i{display:block;height:100%;width:0;background:var(--c,var(--coral));transition:width .25s}
-.fb{font-size:20px;font-weight:600;padding:14px 16px;border-radius:16px;background:var(--soft);min-height:62px}
-.fb.good{background:#DDF7EA;color:#0B5B3B}.fb.warn{background:#FFE6DA;color:#8A2D0A}
+.count.pulse{animation:pulse .35s ease-out}@keyframes pulse{from{transform:scale(1.1)}to{transform:scale(1)}}
+.bar{height:14px;border-radius:99px;background:var(--soft);overflow:hidden;margin-top:12px}.bar i{display:block;height:100%;width:0;background:var(--c,var(--brand));transition:width .25s}
+.fb{font-size:19px;font-weight:700;padding:14px 16px;border-radius:16px;background:var(--soft);border:1.5px solid var(--line);min-height:62px}
+.fb.good{background:#E3F5ED;border-color:#86D3B0;color:#0F5132}.fb.warn{background:#FEF2E8;border-color:#F3BA8F;color:#8A3B12}
 .btns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.queue{list-style:none;margin:0;padding:0;display:grid;gap:4px;font-size:15px}
-.queue li{display:flex;justify-content:space-between;gap:8px;padding:6px 10px;border-radius:10px;border-left:6px solid var(--c)}
-.queue li.now{background:var(--soft);font-weight:700}.queue li.did{opacity:.55;text-decoration:line-through}
-/* summary */
-.sumtop{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin:22px 0}
-.stat{border-radius:22px;padding:16px;background:var(--c);color:#fff}.stat b{display:block;font-family:Mitr,sans-serif;font-size:44px;line-height:1.1}
-.stars{font-size:40px;letter-spacing:4px;color:#fff}
-table{width:100%;border-collapse:collapse}th,td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left}
+.queue{list-style:none;margin:0;padding:0;display:grid;gap:5px;font-size:15px}
+.queue li{display:flex;justify-content:space-between;gap:8px;padding:7px 11px;border-radius:12px;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--c)}
+.queue li.now{background:var(--brand-soft);border-color:var(--brand);font-weight:700}.queue li.did{opacity:.55;text-decoration:line-through}
+/* Summary */
+.sumtop{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:14px;margin:22px 0}
+.stat{border-radius:20px;padding:18px;background:var(--card);border:1.5px solid var(--line);border-top:5px solid var(--c);color:var(--ink);box-shadow:var(--shadow)}
+.stat span{font-size:14.5px;color:var(--mute);font-weight:600}
+.stat b{display:block;font-family:"IBM Plex Sans Thai",Sarabun,sans-serif;font-size:40px;line-height:1.15;color:var(--c);margin-top:4px;font-variant-numeric:tabular-nums}
+.stars{font-size:34px;letter-spacing:3px;color:var(--gold);margin-top:4px}
+.tableWrap{background:var(--card);border:1.5px solid var(--line);border-radius:20px;padding:8px 16px;overflow-x:auto;box-shadow:var(--shadow)}
+table{width:100%;border-collapse:collapse}th,td{padding:12px 10px;border-bottom:1px solid var(--line);text-align:left}
+tbody tr:last-child td{border-bottom:none}
 td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
-@media(max-width:980px){.game{grid-template-columns:minmax(0,1fr)}.bens{grid-template-columns:repeat(2,minmax(0,1fr))}.parts{grid-template-columns:minmax(0,1fr)}}
-@media(max-width:760px){.hero .wrap{grid-template-columns:minmax(0,1fr)}.week{grid-template-columns:repeat(2,minmax(0,1fr))}.phasebar{grid-template-columns:repeat(2,minmax(0,1fr))}.mgrid{grid-template-columns:minmax(0,1fr)}.mgrid canvas{max-width:320px;margin:0 auto}}
-@media(max-width:600px){.tiers{grid-template-columns:minmax(0,1fr)}.tier{min-height:0}.bens{grid-template-columns:minmax(0,1fr)}.stage{aspect-ratio:3/4}.mv{grid-template-columns:64px minmax(0,1fr)}.mv canvas{width:64px;height:76px}.mv button{grid-column:1/-1}.coach{grid-template-columns:96px minmax(0,1fr)}.coach canvas{width:96px;height:112px}table{font-size:14px}.mrow{grid-template-columns:minmax(0,1fr)}.dot{width:18px;height:18px}}
+@media(max-width:980px){.game{grid-template-columns:minmax(0,1fr)}.bens{grid-template-columns:repeat(2,minmax(0,1fr))}.footin{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:820px){.hero .wrap{grid-template-columns:minmax(0,1fr)}.week{grid-template-columns:repeat(2,minmax(0,1fr))}.phasebar{grid-template-columns:repeat(2,minmax(0,1fr))}.mgrid{grid-template-columns:minmax(0,1fr)}.mgrid canvas{max-width:340px;margin:0 auto}}
+@media(max-width:600px){.tiers{grid-template-columns:minmax(0,1fr)}.tier{min-height:0}.bens{grid-template-columns:minmax(0,1fr)}.heroFig{grid-template-columns:repeat(2,minmax(0,1fr))}.stage{aspect-ratio:3/4}.mv{grid-template-columns:68px minmax(0,1fr)}.mv canvas{width:68px;height:78px}.mv button{grid-column:1/-1}.coach{grid-template-columns:96px minmax(0,1fr)}.coach canvas{width:96px;height:112px}table{font-size:14px}.mrow{grid-template-columns:minmax(0,1fr)}.dot{width:19px;height:19px}}
 @media(prefers-reduced-motion:reduce){.bar i{transition:none}.count.pulse{animation:none}}
 </style>
 </head>
 <body>
-<header class="top"><span class="logo"><i></i><span id="brand">Posture Play</span></span>
- <div class="lang" role="group" aria-label="Language"><button data-lang="th">ไทย</button><button data-lang="en">EN</button></div></header>
+<header class="top"><div class="topin">
+ <div class="ident">
+  <div class="emblem" aria-hidden="true">
+   <svg viewBox="0 0 36 36" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M18 6c-3.8 4.4-5.2 8.2-5.2 12a5.2 5.2 0 0 0 10.4 0c0-3.8-1.4-7.6-5.2-12Z" fill="currentColor" fill-opacity=".14"/>
+    <path d="M12.8 18.2C8.6 17.5 5.6 15.2 5 11.4c3.6-.3 6.8 1 8.8 3.6"/>
+    <path d="M23.2 18.2c4.2-.7 7.2-3 7.8-6.8-3.6-.3-6.8 1-8.8 3.6"/>
+    <path d="M9 27.5h18" stroke="#B87D14" stroke-width="2.4"/>
+    <path d="M13 23.5h10" stroke="#B83B64" stroke-width="2"/>
+   </svg>
+  </div>
+  <div class="idtxt">
+   <div class="idrow"><span class="idtitle" id="brand" data-t="brand"></span><span class="protoTag" data-t="protoBadge"></span></div>
+   <div class="idsub" data-t="orgSub"></div>
+  </div>
+ </div>
+ <div class="controls">
+  <button type="button" class="sizeBtn" id="bigBtn" aria-pressed="false" data-t="textSize"></button>
+  <div class="seg lang" role="group" aria-label="Language"><button type="button" data-lang="th">ไทย</button><button type="button" data-lang="en">EN</button></div>
+ </div>
+</div></header>
 
 <main id="home">
  <section class="hero"><div class="wrap">
-  <div><h1 data-t="title"></h1><p data-t="lede"></p><div class="heroFig"><canvas data-pose="t7"></canvas><canvas data-pose="crosscrawl"></canvas><canvas data-pose="t5"></canvas><canvas data-pose="sidereach"></canvas></div></div>
-  <div class="agebox"><label for="age" data-t="ageLabel"></label><input id="age" type="number" inputmode="numeric" min="10" max="110"><div class="tiers" id="tiers"></div></div>
+  <div>
+   <span class="kicker" data-t="heroKicker"></span>
+   <h1 data-t="title"></h1>
+   <p class="lede" data-t="lede"></p>
+   <div class="trust">
+    <span data-t="trust1"></span>
+    <span data-t="trust2"></span>
+    <span data-t="trust3"></span>
+   </div>
+   <div class="heroFig">
+    <div class="heroTile"><canvas data-pose="t7"></canvas><span data-t="heroTile1"></span></div>
+    <div class="heroTile"><canvas data-pose="t5"></canvas><span data-t="heroTile2"></span></div>
+    <div class="heroTile"><canvas data-pose="t1"></canvas><span data-t="heroTile3"></span></div>
+    <div class="heroTile"><canvas data-pose="crosscrawl"></canvas><span data-t="heroTile4"></span></div>
+   </div>
+  </div>
+  <div class="agebox">
+   <span class="stepBadge" data-t="step1Badge"></span>
+   <h2 data-t="step1Title"></h2>
+   <p class="hint" data-t="step1Hint"></p>
+   <label for="age" data-t="ageLabel"></label>
+   <input id="age" type="number" inputmode="numeric" min="10" max="110">
+   <div class="tiers" id="tiers"></div>
+  </div>
  </div></section>
 
  <section class="wrap" id="today">
   <div class="dayhead">
-   <div><span class="chip" id="dayChip"></span> <span class="chip" id="phaseChip"></span> <span class="chip hide" id="easyChip" style="--c:#0EA5B7"></span><h2 id="dayTitle" style="margin-top:10px"></h2><p class="meta" id="dayMeta"></p></div>
+   <div>
+    <span class="stepBadge" data-t="step2Badge" style="margin-bottom:10px"></span>
+    <div><span class="chip" id="dayChip"></span> <span class="chip" id="phaseChip"></span> <span class="chip hide" id="easyChip" style="--c:var(--teal)"></span></div>
+    <h2 id="dayTitle" style="margin-top:10px"></h2>
+    <p class="meta" id="dayMeta"></p>
+   </div>
    <div class="daynav"><button id="prevDay" data-t="prev"></button><button id="todayBtn" data-t="backToday"></button><button id="nextDay" data-t="next"></button></div>
   </div>
   <div class="parts">
-   <div class="part" style="--c:var(--teal)"><h3 data-t="part1"></h3><ol class="moves" id="list1"></ol></div>
-   <div class="arrow" aria-hidden="true">▼</div>
-   <div class="part" style="--c:var(--coral)"><h3 data-t="part2"></h3><ol class="moves" id="list2"></ol></div>
+   <div class="part" style="--c:var(--teal)"><div class="parthead"><h3 data-t="part1"></h3></div><ol class="moves" id="list1"></ol></div>
+   <div class="part" style="--c:var(--rose)"><div class="parthead"><h3 data-t="part2"></h3></div><ol class="moves" id="list2"></ol></div>
   </div>
-  <div class="setup">
-   <label class="check"><input type="checkbox" id="c1"><span data-t="c1"></span></label>
-   <label class="check"><input type="checkbox" id="c2"><span data-t="c2"></span></label>
-   <label class="check"><input type="checkbox" id="c3"><span data-t="c3"></span></label>
+  <div class="readyBox">
+   <span class="stepBadge" data-t="step3Badge"></span>
+   <h3 data-t="step3Title"></h3>
+   <div class="setup">
+    <label class="check"><input type="checkbox" id="c1"><span data-t="c1"></span></label>
+    <label class="check"><input type="checkbox" id="c2"><span data-t="c2"></span></label>
+    <label class="check"><input type="checkbox" id="c3"><span data-t="c3"></span></label>
+   </div>
+   <p class="safety" data-th="safety"></p>
+   <div class="go">
+    <button class="primary" id="startBtn" data-t="start" disabled></button>
+    <div><div class="readyHint" id="readyHint"></div><div class="meta" id="doneLine"></div></div>
+   </div>
+   <p class="err" id="err"></p>
   </div>
-  <p class="safety" data-th="safety"></p>
-  <div class="go"><button class="primary" id="startBtn" data-t="start" disabled></button><span class="meta" id="doneLine"></span></div>
-  <p class="err" id="err"></p>
  </section>
 
  <section class="plan"><div class="wrap">
-  <h2 data-t="planTitle"></h2><p class="meta" data-t="planLede"></p>
+  <h2 data-t="planTitle"></h2>
+  <p class="meta" data-t="planLede"></p>
+  <div class="routineBar">
+   <div class="rstat"><span data-t="statDays"></span><b id="rDays">0</b></div>
+   <div class="rstat"><span data-t="statStreak"></span><b id="rStreak">0</b></div>
+   <div class="rstat"><span data-t="statPhase"></span><b id="rPhase">–</b></div>
+  </div>
   <div class="phasebar" id="phaseBar"></div>
-  <div class="year" id="year"></div>
+  <div class="yearCard"><div class="year" id="year"></div></div>
   <h3 data-t="weekTitle" style="margin-top:26px"></h3>
   <div class="week" id="week"></div>
   <div class="go"><button id="restartBtn" data-t="restart"></button></div>
@@ -188,6 +321,19 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
   <div class="bens" id="bens"></div>
   <p class="who" data-t="who"></p>
  </section>
+
+ <footer class="foot"><div class="footin">
+  <div>
+   <h3 data-t="footProject"></h3>
+   <p data-t="footProjectEn"></p>
+   <p data-t="footUnit"></p>
+   <p data-t="footFund"></p>
+  </div>
+  <div class="footCard">
+   <b data-t="footNoticeTitle"></b>
+   <p data-t="footNoticeBody"></p>
+  </div>
+ </div></footer>
 </main>
 
 <div class="modal hide" id="modal" role="dialog" aria-modal="true" aria-labelledby="mName"><div class="sheet">
@@ -214,126 +360,158 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 </section>
 
 <section id="done" class="wrap hide">
+ <span class="stepBadge" data-t="doneBadge" style="margin-bottom:10px"></span>
  <h2 id="doneTitle"></h2>
  <div class="sumtop">
-  <div class="stat" style="--c:var(--coral)"><span data-t="totalScore"></span><b id="sScore">0</b></div>
-  <div class="stat" style="--c:var(--orange)"><span data-t="rating"></span><div class="stars" id="sStars"></div></div>
+  <div class="stat" style="--c:var(--brand)"><span data-t="totalScore"></span><b id="sScore">0</b></div>
+  <div class="stat" style="--c:var(--gold)"><span data-t="rating"></span><div class="stars" id="sStars"></div></div>
   <div class="stat" style="--c:var(--sky)"><span data-t="posture"></span><b id="sPosture">–</b></div>
   <div class="stat" style="--c:var(--teal)"><span data-t="goodForm"></span><b id="sForm">–</b></div>
   <div class="stat" style="--c:var(--grape)"><span data-t="reaction"></span><b id="sRt">–</b></div>
  </div>
- <table><thead><tr><th data-t="exercise"></th><th class="n" data-t="doneCol"></th><th class="n" data-t="target"></th><th class="n" data-t="formCol"></th></tr></thead><tbody id="sRows"></tbody></table>
+ <div class="tableWrap"><table><thead><tr><th data-t="exercise"></th><th class="n" data-t="doneCol"></th><th class="n" data-t="target"></th><th class="n" data-t="formCol"></th></tr></thead><tbody id="sRows"></tbody></table></div>
  <h3 style="margin-top:24px" data-t="musclesToday"></h3><div class="chips" id="sMus"></div>
- <h3 style="margin-top:12px" data-t="benefitsToday"></h3><div class="bens" id="sBens"></div>
- <p class="meta" id="sTips"></p>
+ <h3 style="margin-top:16px" data-t="benefitsToday"></h3><div class="bens" id="sBens"></div>
+ <p class="who" id="sTips"></p>
  <div class="go"><button class="primary" id="againBtn" data-t="again"></button><button id="homeBtn" data-t="home"></button></div>
 </section>
 
 <script>/* ===== DATA: i18n, tiers, phases, themes, poses ===== */
 const U={
- brand:{th:'Posture Play',en:'Posture Play'},
- title:{th:'ขยับกาย สบายสมอง',en:'Move body, bright mind'},
- lede:{th:'เกมออกกำลังกายผ่านกล้อง แผน 365 วัน ท่าเปลี่ยนทุกวัน เริ่มด้วยการยืดเหยียด ต่อด้วยคาร์ดิโอ รำไทยบนเก้าอี้ และเกมบริหารสมอง',en:'A camera exercise game with a 365-day plan that changes every day. Stretch first, then cardio, Thai dance on a chair and brain games.'},
- ageLabel:{th:'กรอกอายุเพื่อเลือกกลุ่ม',en:'Enter age to pick a group'},
- agePh:{th:'เช่น 62',en:'e.g. 62'},
+ pageTitle:{th:'โรงพยาบาลพหุภพ · ต้นแบบกิจกรรมออกกำลังกายและบริหารสมอง',en:'Multiverse Hospital · Exercise & Cognitive Movement Prototype'},
+ brand:{th:'โรงพยาบาลพหุภพ',en:'Multiverse Hospital'},
+ protoBadge:{th:'ต้นแบบ · กิจกรรมที่ 8',en:'Prototype · Activity 8'},
+ orgSub:{th:'ต้นแบบกิจกรรมออกกำลังกายเพื่อสุขภาพด้านการรู้คิดของผู้สูงอายุไทย · คณะแพทยศาสตร์ จุฬาลงกรณ์มหาวิทยาลัย',en:'Exercise Prototype for Cognitive Health of Thai Older Adults · Faculty of Medicine, Chulalongkorn University'},
+ textSize:{th:'ตัวอักษรใหญ่ ก+',en:'Large Text A+'},
+ heroKicker:{th:'โครงการโรงพยาบาลพหุภพเพื่อสุขภาพด้านการรู้คิดของผู้สูงอายุไทย',en:'Multiverse Hospital for Cognitive Health of Thai Older Adults'},
+ title:{th:'ออกกำลังกายอย่างปลอดภัย ดูแลทั้งร่างกายและสมอง',en:'Safe daily movement for body & brain health'},
+ lede:{th:'ต้นแบบกิจกรรมออกกำลังกายผ่านกล้องสำหรับผู้สูงอายุ ผสานท่ารำไทยประยุกต์บนเก้าอี้ การยืดเหยียด ฝึกทรงตัวลดเสี่ยงหกล้ม และกิจกรรมบริหารสมองแบบทำได้เองที่บ้าน',en:'A camera-guided exercise prototype for Thai older adults combining seated Applied Thai Dance, gentle stretching, fall-prevention balance and dual-task brain activities.'},
+ trust1:{th:'ประมวลผลบนเครื่อง ไม่บันทึกใบหน้า (PDPA)',en:'On-device pose tracking · No video stored (PDPA)'},
+ trust2:{th:'ทำบนเก้าอี้ได้ แรงกระแทกต่ำ',en:'Chair-supported & low impact'},
+ trust3:{th:'ปรับระดับตามช่วงวัยอย่างอ่อนโยน',en:'Gentle age-adaptive pacing'},
+ heroTile1:{th:'พรหมสี่หน้า',en:'Prom Si Na'},
+ heroTile2:{th:'จ่อเพลิงกาฬ',en:'Jor Pleangkul'},
+ heroTile3:{th:'ขัดจางนาง',en:'Khad Jang Nang'},
+ heroTile4:{th:'ฝึกสมอง-กาย',en:'Brain-Body'},
+ step1Badge:{th:'ขั้นที่ 1 จาก 3',en:'Step 1 of 3'},
+ step1Title:{th:'เลือกระดับที่เหมาะกับคุณ',en:'Choose your comfort level'},
+ step1Hint:{th:'กรอกอายุหรือแตะเลือกกลุ่มด้านล่าง เพื่อปรับจังหวะและจำนวนครั้งให้พอดี',en:'Enter your age or tap a group below to adjust pace and repetitions.'},
+ step2Badge:{th:'ขั้นที่ 2 จาก 3',en:'Step 2 of 3'},
+ step3Badge:{th:'ขั้นที่ 3 จาก 3',en:'Step 3 of 3'},
+ step3Title:{th:'ตรวจสอบความพร้อมก่อนเปิดกล้อง',en:'Quick safety check before starting'},
+ readyNeedAge:{th:'กรุณาเลือกกลุ่มอายุในขั้นที่ 1 และติ๊กความพร้อมครบทั้ง 3 ข้อ',en:'Please pick an age group in Step 1 and check all 3 safety items.'},
+ readyNeedCheck:{th:'ติ๊กตรวจสอบความพร้อมให้ครบทั้ง 3 ข้อเพื่อเปิดปุ่มเริ่มกิจกรรม',en:'Check all 3 safety items above to enable Start.'},
+ readyOk:{th:'พร้อมแล้ว กดปุ่มเริ่มกิจกรรมได้เลย',en:'All set — press Start when you are ready.'},
+ statDays:{th:'จำนวนวันที่ฝึกสะสม',en:'Total days practiced'},
+ statStreak:{th:'ฝึกต่อเนื่องปัจจุบัน',en:'Current routine streak'},
+ statPhase:{th:'ระยะปัจจุบันของแผน',en:'Current plan phase'},
+ doneBadge:{th:'สรุปผลการดูแลสุขภาพวันนี้',en:"Today's wellness summary"},
+ footProject:{th:'โครงการโรงพยาบาลพหุภพเพื่อสุขภาพด้านการรู้คิดของผู้สูงอายุไทย',en:'Multiverse Hospital for Cognitive Health of Thai Older Adults'},
+ footProjectEn:{th:'กิจกรรมที่ 8 ต้นแบบกิจกรรมออกกำลังกาย (เชื่อมโยงกิจกรรมที่ 7 ต้นแบบระบบประเมินความเสี่ยงหกล้ม)',en:'Activity 8: Prototype Exercise Program (integrated with Activity 7: Fall Risk Assessment Prototype)'},
+ footUnit:{th:'หน่วยงานดำเนินงาน: คณะแพทยศาสตร์ จุฬาลงกรณ์มหาวิทยาลัย · ศูนย์ดูแลภาวะสมองเสื่อม โรงพยาบาลจุฬาลงกรณ์ สภากาชาดไทย',en:'Operated by Faculty of Medicine, Chulalongkorn University · Dementia Care Center, King Chulalongkorn Memorial Hospital, Thai Red Cross Society'},
+ footFund:{th:'ได้รับทุนอุดหนุนจาก กองทุนวิจัยและพัฒนากิจการกระจายเสียง กิจการโทรทัศน์ และกิจการโทรคมนาคม เพื่อประโยชน์สาธารณะ (กทปส.) สำนักงาน กสทช. · สัญญาเลขที่ A67-1-(2)-011',en:'Supported by the Broadcasting and Telecommunications Research and Development Fund for the Public Interest (BTFP), Office of the NBTC · Grant No. A67-1-(2)-011'},
+ footNoticeTitle:{th:'หมายเหตุต้นแบบวิจัยและความเป็นส่วนตัว (PDPA)',en:'Research Prototype & Privacy Notice (PDPA)'},
+ footNoticeBody:{th:'ระบบนี้เป็นต้นแบบเพื่อการส่งเสริมสุขภาวะและการศึกษาวิจัย ไม่ใช่เครื่องมือวินิจฉัยหรือรักษาทางการแพทย์ ภาพจากกล้องใช้เพื่อประมาณจุดโครงร่างร่างกายภายในอุปกรณ์ของคุณเท่านั้น ไม่มีการบันทึกหรือส่งภาพใบหน้าออกนอกเครื่อง',en:'This is a research prototype for preventive wellness and is not a medical diagnostic or treatment device. Camera frames are processed locally on your device for skeletal pose estimation only — no facial images or video are recorded or uploaded.'},
+ ageLabel:{th:'อายุ (ปี)',en:'Age (years)'},
+ agePh:{th:'เช่น 65',en:'e.g. 65'},
  dayOf:{th:'วันที่ {d} จาก 365',en:'Day {d} of 365'},
  year:{th:'ปีที่ {y}',en:'Year {y}'},
  todayTag:{th:'วันนี้',en:'Today'},
  phase:{th:'ช่วง',en:'Phase'},
  recovery:{th:'สัปดาห์ผ่อนเบา',en:'Easy week'},
- part1:{th:'ส่วนที่ 1 · ยืดเหยียด',en:'Part 1 · Stretch'},
- part2:{th:'ส่วนที่ 2 · คาร์ดิโอ',en:'Part 2 · Cardio'},
+ part1:{th:'ส่วนที่ 1 · อบอุ่นร่างกายและยืดเหยียด',en:'Part 1 · Warm-up & Stretch'},
+ part2:{th:'ส่วนที่ 2 · รำไทยบนเก้าอี้ ทรงตัว และบริหารสมอง',en:'Part 2 · Thai Chair Dance, Balance & Brain'},
  mins:{th:'ประมาณ {m} นาที',en:'About {m} min'},
  reps:{th:'ครั้ง',en:'reps'}, sec:{th:'วินาที',en:'s'}, trials:{th:'ข้อ',en:'cues'}, rounds:{th:'รอบ',en:'rounds'},
- view:{th:'ดูท่า',en:'See move'},
- start:{th:'เริ่มเล่นด้วยกล้อง',en:'Start with camera'},
- prev:{th:'‹ วันก่อน',en:'‹ Previous'}, next:{th:'วันถัดไป ›',en:'Next ›'}, backToday:{th:'กลับวันนี้',en:'Back to today'},
- c1:{th:'วางมือถือหรือโน้ตบุ๊กห่าง 2–3 เมตร เห็นทั้งตัว แสงสว่างพอ',en:'Device 2–3 m away, whole body visible, good light'},
- c2:{th:'พื้นโล่ง ไม่มีพรมหรือของที่ทำให้สะดุด',en:'Clear floor, no rugs or trip hazards'},
- c3:{th:'มีเก้าอี้มั่นคง ไม่มีล้อ วางชิดผนัง',en:'Sturdy chair without wheels, against a wall'},
- safety:{th:'<b>ความปลอดภัย</b> หยุดทันทีหากเจ็บ เวียนศีรษะ แน่นหน้าอก หรือหายใจไม่ทัน ผู้มีโรคหัวใจ ปัญหาข้อ หรือการทรงตัว ควรปรึกษาแพทย์ก่อน เกมนี้เป็นการออกกำลังกายทั่วไป ไม่ใช่การรักษา',en:'<b>Safety.</b> Stop right away if you feel pain, dizziness, chest pressure or shortness of breath. People with heart, joint or balance conditions should ask their doctor first. This game is general exercise, not medical treatment.'},
- planTitle:{th:'แผนออกกำลังกาย 1 ปี',en:'One-year plan'},
- planLede:{th:'6 ช่วง ช่วงละ 2 เดือน จำนวนครั้งค่อยๆ เพิ่มขึ้น ทุกสัปดาห์ที่ 4 เป็นสัปดาห์ผ่อนเบา ธีมเปลี่ยนทุกวัน และท่าสุ่มใหม่ทุกวัน แตะจุดเพื่อดูแผนวันนั้น',en:'Six 2-month phases with reps rising step by step. Every 4th week is an easy week. The theme rotates daily and moves are re-drawn every day. Tap a dot to see that day.'},
- weekTitle:{th:'ธีมประจำวันในแต่ละสัปดาห์',en:'Daily themes each week'},
- restart:{th:'เริ่มแผนใหม่นับจากวันนี้',en:'Restart plan from today'},
- doneDays:{th:'เล่นแล้ว {n} วัน · ต่อเนื่อง {s} วัน',en:'{n} days done · {s}-day streak'},
- benefitsTitle:{th:'ประโยชน์โดยรวมของโปรแกรม',en:'Overall benefits of the programme'},
- who:{th:'องค์การอนามัยโลก (WHO, 2020) แนะนำให้ผู้ใหญ่ขยับร่างกายระดับปานกลาง 150–300 นาทีต่อสัปดาห์ และผู้สูงอายุควรฝึกการทรงตัวร่วมกับความแข็งแรงอย่างน้อย 3 วันต่อสัปดาห์',en:'WHO (2020) recommends 150–300 minutes of moderate activity a week for adults, and balance plus strength training on at least 3 days a week for older adults.'},
- loading:{th:'กำลังโหลดโมเดลท่าทาง…',en:'Loading pose model…'}, loadingSub:{th:'ครั้งแรกต้องใช้อินเทอร์เน็ต ประมาณ 5 MB',en:'First load needs internet, about 5 MB'},
- stepIn:{th:'เข้ามาในกรอบกล้อง',en:'Step into view'}, faceCam:{th:'หันหน้าเข้ากล้อง ให้เห็นตั้งแต่ศีรษะถึงสะโพก',en:'Face the camera, head to hips in view'},
- postureCheck:{th:'ตรวจท่าทาง',en:'Posture check'}, postureHow:{th:'นั่งหรือยืนตัวตรง หันหน้าเข้ากล้อง วางแขนสบายๆ',en:'Sit or stand tall facing the camera, arms relaxed.'},
- setup:{th:'เตรียมพร้อม',en:'Setup'}, holdStill:{th:'อยู่นิ่งๆ ตัวตรง',en:'Hold still, sit or stand tall'}, measuring:{th:'กำลังวัดท่าทาง…',en:'Measuring posture…'},
- straight:{th:'นั่งหรือยืนให้ตัวตรง',en:'Sit or stand up straight'},
- postureScore:{th:'คะแนนท่าทาง',en:'Posture score'}, postureGood:{th:'ไหล่ ลำตัว และศีรษะอยู่ในแนวดี',en:'Shoulders, trunk and head are well aligned.'},
- watch:{th:'ระวัง: ',en:'Watch out: '}, tipTilt:{th:'ไหล่สองข้างสูงไม่เท่ากัน',en:'one shoulder sits higher'}, tipLean:{th:'ลำตัวเอียงไปข้างหนึ่ง',en:'your trunk leans to one side'}, tipHead:{th:'ศีรษะเอียงออกจากแนวกลาง',en:'your head is off center'},
- standEven:{th:'พยายามนั่ง/ยืนให้สมดุลตลอดเกม',en:'Try to stay even through the game'}, niceAlign:{th:'แนวลำตัวดีมาก!',en:'Nice alignment!'},
- getReady:{th:'เตรียมตัว',en:'Get ready'}, go:{th:'เริ่ม!',en:'Go!'}, rest:{th:'พัก',en:'Rest'}, restHow:{th:'หายใจเข้าออกช้าๆ สะบัดมือเบาๆ',en:'Breathe slowly, shake out your hands'},
- nextUp:{th:'ถัดไป: ',en:'Next: '}, paused:{th:'หยุดชั่วคราว',en:'Paused'}, resumeHint:{th:'กด "เล่นต่อ" เมื่อพร้อม',en:'Press Resume when ready'},
- pause:{th:'หยุด',en:'Pause'}, resume:{th:'เล่นต่อ',en:'Resume'}, skip:{th:'ข้ามท่า',en:'Skip'}, voiceOn:{th:'เสียง: เปิด',en:'Voice: on'}, voiceOff:{th:'เสียง: ปิด',en:'Voice: off'}, end:{th:'จบเกม',en:'End game'},
- noPerson:{th:'ยังไม่พบผู้เล่น',en:'No person detected'}, lost:{th:'มองไม่เห็นตัว ขยับเข้ามาในกรอบ',en:'Lost you, step back into view'},
- needUpper:{th:'ขยับให้กล้องเห็นไหล่และสะโพก',en:'Move so shoulders and hips are in view'}, needLegs:{th:'ถอยออกไปให้เห็นขาและเท้า',en:'Step back so legs and feet are in view'},
- returnStart:{th:'กลับสู่ท่าเริ่มต้น',en:'Return to the start position'}, goodReturn:{th:'ดีมาก กลับท่าเดิม',en:'Good, now return'}, goodRep:{th:'ดีมาก!',en:'Good rep!'}, perfect:{th:'ท่าสวย ×{n}',en:'Perfect form ×{n}'}, repWarn:{th:'นับแล้ว ระวังท่าทาง',en:'Counted, watch your form'},
- holding:{th:'ค้างไว้ ดีมาก!',en:'Holding, great!'}, switchSide:{th:'เปลี่ยนข้าง',en:'Switch sides'}, follow:{th:'ทำตามตัวอย่างให้ตรงจังหวะ',en:'Follow the example on the beat'}, beatOk:{th:'ตรงจังหวะ!',en:'On the beat!'}, beatMiss:{th:'ทำตามท่าตัวอย่าง',en:'Copy the example move'},
+ view:{th:'ดูตัวอย่างท่า',en:'Preview move'},
+ start:{th:'เริ่มกิจกรรมด้วยกล้อง',en:'Start camera session'},
+ prev:{th:'‹ วันก่อน',en:'‹ Previous'}, next:{th:'วันถัดไป ›',en:'Next ›'}, backToday:{th:'กลับวันนี้',en:'Today'},
+ c1:{th:'วางแท็บเล็ต มือถือ หรือโน้ตบุ๊กห่าง 2–3 เมตร เห็นทั้งตัว แสงสว่างพอ',en:'Tablet, phone or laptop 2–3 m away, full body visible, good light'},
+ c2:{th:'พื้นโล่ง ไม่มีพรมลื่นหรือสิ่งกีดขวางที่ทำให้สะดุด',en:'Clear floor, no loose rugs or trip hazards'},
+ c3:{th:'มีเก้าอี้มั่นคง ไม่มีล้อ วางชิดผนังสำหรับนั่งหรือพยุงตัว',en:'Sturdy chair without wheels against a wall for sitting or support'},
+ safety:{th:'<b>ข้อแนะนำด้านความปลอดภัย</b> ทำเท่าที่สบายตัวและหยุดพักทันทีหากรู้สึกเจ็บ เวียนศีรษะ แน่นหน้าอก หรือเหนื่อยหอบ ผู้มีโรคหัวใจ ปัญหาข้อเข่า หรือการทรงตัวควรปรึกษาแพทย์ก่อนเริ่มกิจกรรม ระบบนี้เป็นต้นแบบเพื่อส่งเสริมสุขภาพทั่วไป ไม่ใช่การวินิจฉัยหรือรักษาโรค',en:'<b>Safety guidance.</b> Move comfortably and pause right away if you feel pain, dizziness, chest pressure or shortness of breath. If you have heart, joint or balance conditions, consult your doctor first. This prototype supports general preventive exercise and is not a medical diagnosis or treatment.'},
+ planTitle:{th:'ความสม่ำเสมอและแผนฝึก 1 ปี',en:'Daily routine & one-year plan'},
+ planLede:{th:'ความก้าวหน้าหลักเกิดจากการกลับมาดูแลร่างกายอย่างสม่ำเสมอ แผนแบ่งเป็น 6 ช่วง ค่อยๆ ปรับระดับอย่างอ่อนโยน มีสัปดาห์ผ่อนเบาทุกสัปดาห์ที่ 4 แตะจุดเพื่อดูแผนแต่ละวัน',en:'Routine is the main goal: six gentle 2-month phases with an easy recovery week every 4th week and fresh daily themes. Tap any day dot to inspect its plan.'},
+ weekTitle:{th:'ธีมกิจกรรมประจำสัปดาห์',en:'Weekly activity themes'},
+ restart:{th:'เริ่มนับแผนใหม่จากวันนี้',en:'Restart plan from today'},
+ doneDays:{th:'ฝึกสะสมแล้ว {n} วัน · ต่อเนื่อง {s} วัน',en:'{n} days practiced · {s}-day streak'},
+ benefitsTitle:{th:'ประโยชน์ของการดูแลกายและสมองควบคู่กัน',en:'Benefits of combined body & brain movement'},
+ who:{th:'องค์การอนามัยโลก (WHO, 2020) แนะนำให้ผู้ใหญ่ขยับร่างกายระดับปานกลาง 150–300 นาทีต่อสัปดาห์ และผู้สูงอายุควรฝึกการทรงตัวร่วมกับความแข็งแรงของกล้ามเนื้ออย่างน้อย 3 วันต่อสัปดาห์เพื่อลดความเสี่ยงการหกล้ม',en:'WHO (2020) recommends 150–300 minutes of moderate activity per week for adults, and multicomponent balance and strength training on at least 3 days a week for older adults to help prevent falls.'},
+ loading:{th:'กำลังเตรียมระบบตรวจจับท่าทาง…',en:'Preparing pose tracking…'}, loadingSub:{th:'ครั้งแรกต้องใช้อินเทอร์เน็ต ประมาณ 5 MB (ประมวลผลบนเครื่อง)',en:'First load needs internet (~5 MB); processed locally on your device'},
+ stepIn:{th:'เข้ามาในกรอบกล้อง',en:'Step into view'}, faceCam:{th:'นั่งหรือยืนหันหน้าเข้ากล้อง ให้เห็นตั้งแต่ศีรษะถึงสะโพก',en:'Sit or stand facing the camera, head to hips in view'},
+ postureCheck:{th:'ตรวจแนวลำตัวเบื้องต้น',en:'Initial alignment check'}, postureHow:{th:'นั่งหรือยืนตัวตรงสบายๆ หันหน้าเข้ากล้อง วางแขนผ่อนคลาย',en:'Sit or stand comfortably tall facing the camera, arms relaxed.'},
+ setup:{th:'เตรียมพร้อม',en:'Setup'}, holdStill:{th:'อยู่นิ่งๆ ตัวตรงสบายๆ',en:'Hold still, comfortably tall'}, measuring:{th:'กำลังวัดแนวลำตัว…',en:'Checking alignment…'},
+ straight:{th:'ปรับตัวให้นั่งหรือยืนตรงสบายๆ',en:'Sit or stand comfortably upright'},
+ postureScore:{th:'คะแนนแนวลำตัว',en:'Alignment score'}, postureGood:{th:'ไหล่ ลำตัว และศีรษะอยู่ในแนวสมดุลดี',en:'Shoulders, trunk and head are well aligned.'},
+ watch:{th:'ข้อแนะนำเพิ่มเติม: ',en:'Gentle note: '}, tipTilt:{th:'ไหล่สองข้างสูงไม่เท่ากันเล็กน้อย',en:'one shoulder sits slightly higher'}, tipLean:{th:'ลำตัวเอียงไปข้างหนึ่งเล็กน้อย',en:'trunk leans slightly to one side'}, tipHead:{th:'ศีรษะเอียงออกจากแนวกลางเล็กน้อย',en:'head is slightly off center'},
+ standEven:{th:'ค่อยๆ ปรับลำตัวให้สมดุลตลอดกิจกรรม',en:'Keep your balance even and comfortable'}, niceAlign:{th:'แนวลำตัวสมดุลดีมาก!',en:'Great balanced alignment!'},
+ getReady:{th:'เตรียมตัว',en:'Get ready'}, go:{th:'เริ่มได้เลย!',en:'Go!'}, rest:{th:'พักหายใจ',en:'Rest'}, restHow:{th:'หายใจเข้าออกช้าๆ ผ่อนคลายไหล่และมือ',en:'Breathe slowly and relax your shoulders and hands'},
+ nextUp:{th:'ท่าถัดไป: ',en:'Next: '}, paused:{th:'หยุดพักชั่วคราว',en:'Paused'}, resumeHint:{th:'กด "ทำต่อ" เมื่อพร้อม',en:'Press Resume when ready'},
+ pause:{th:'พักชั่วคราว',en:'Pause'}, resume:{th:'ทำต่อ',en:'Resume'}, skip:{th:'ข้ามท่านี้',en:'Skip'}, voiceOn:{th:'เสียงนำ: เปิด',en:'Voice: on'}, voiceOff:{th:'เสียงนำ: ปิด',en:'Voice: off'}, end:{th:'จบกิจกรรม',en:'Finish'},
+ noPerson:{th:'ยังไม่พบผู้ใช้งานในกรอบกล้อง',en:'No person in view yet'}, lost:{th:'มองไม่เห็นตัว กรุณาขยับเข้ามาในกรอบ',en:'Please step back into the frame'},
+ needUpper:{th:'ขยับให้กล้องเห็นช่วงไหล่และสะโพก',en:'Adjust so shoulders and hips are visible'}, needLegs:{th:'ถอยออกเล็กน้อยให้เห็นเข่าและขา',en:'Step back slightly so knees and legs are visible'},
+ returnStart:{th:'กลับสู่ท่าเริ่มต้น',en:'Return to start position'}, goodReturn:{th:'ดีมาก ค่อยๆ กลับท่าเดิม',en:'Great, smoothly return'}, goodRep:{th:'ดีมาก!',en:'Great!'}, perfect:{th:'ท่าสวยมาก ×{n}',en:'Smooth form ×{n}'}, repWarn:{th:'นับแล้ว ค่อยๆ ปรับท่าให้สมดุล',en:'Counted — adjust posture gently'},
+ holding:{th:'ค้างไว้ได้ดีมาก!',en:'Holding steadily!'}, switchSide:{th:'สลับอีกข้าง',en:'Switch sides'}, follow:{th:'ขยับตามตัวแบบอย่างสบายๆ',en:'Follow the guide smoothly'}, beatOk:{th:'ตรงจังหวะดีมาก!',en:'Nice rhythm!'}, beatMiss:{th:'ลองขยับตามท่าตัวอย่าง',en:'Follow along with the example'},
  holdFor:{th:'ค้างไว้ {s}…',en:'Hold {s}…'},
- welldone:{th:'เก่งมาก',en:'Well done'}, exOf:{th:'ท่าที่ {i} จาก {n}',en:'Move {i} of {n}'},
+ welldone:{th:'เยี่ยมมาก',en:'Well done'}, exOf:{th:'ท่าที่ {i} จาก {n}',en:'Move {i} of {n}'},
  ruleFollow:{th:'ยกมือตาม "คำ" ที่เห็น ไม่ใช่ตามสี',en:'Raise the hand the WORD says, not the colour'},
  ruleOpp:{th:'ยกมือ "ตรงข้าม" กับคำที่เห็น',en:'Raise the OPPOSITE hand to the word'},
  wL:{th:'ซ้าย',en:'LEFT'}, wR:{th:'ขวา',en:'RIGHT'},
- correct:{th:'ถูกต้อง!',en:'Correct!'}, wrong:{th:'ยังไม่ถูก',en:'Not quite'}, tooSlow:{th:'ช้าไปนิด ข้อต่อไป',en:'Too slow, next one'}, handsDown:{th:'ลดมือลงทั้งสองข้าง',en:'Lower both hands'},
- memWatch:{th:'จำลำดับท่านี้',en:'Remember this order'}, memYour:{th:'ถึงตาคุณ! ทำตามลำดับ',en:'Your turn! Repeat the order'}, memOk:{th:'จำได้ครบ!',en:'All correct!'}, memFail:{th:'ลำดับที่ถูก: ',en:'Correct order: '},
+ correct:{th:'ถูกต้อง!',en:'Correct!'}, wrong:{th:'ไม่เป็นไร ลองข้อต่อไป',en:'No worries, try the next one'}, tooSlow:{th:'ไม่เป็นไร ไปข้อต่อไปกันเลย',en:'All good — moving to the next one'}, handsDown:{th:'วางมือลงทั้งสองข้างเพื่อเตรียมพร้อม',en:'Lower both hands to get ready'},
+ memWatch:{th:'สังเกตและจำลำดับท่านี้',en:'Watch and remember this order'}, memYour:{th:'ถึงตาคุณ ทำตามลำดับได้เลย',en:'Your turn — repeat the sequence'}, memOk:{th:'จำได้ครบทุกท่า เก่งมาก!',en:'All remembered — great job!'}, memFail:{th:'ลำดับที่ถูกคือ: ',en:'Sequence was: '},
  mvL:{th:'ยกมือซ้าย',en:'Left hand up'}, mvR:{th:'ยกมือขวา',en:'Right hand up'}, mvB:{th:'ยกสองมือ',en:'Both hands up'}, mvT:{th:'กางแขน',en:'Arms out'},
- great:{th:'ยอดเยี่ยม!',en:'Excellent session'}, greatS:{th:'เก่งมาก!',en:'Great session'}, goodStart:{th:'เริ่มต้นได้ดี',en:'Good start'},
- totalScore:{th:'คะแนนรวม',en:'Total score'}, rating:{th:'ระดับดาว',en:'Rating'}, posture:{th:'ท่าทาง',en:'Posture check'}, goodForm:{th:'ท่าถูกต้อง',en:'Good-form reps'}, reaction:{th:'เวลาตอบสนองเฉลี่ย',en:'Avg reaction time'},
- musclesToday:{th:'กล้ามเนื้อที่ใช้วันนี้',en:'Muscles worked today'}, benefitsToday:{th:'ประโยชน์ของเซสชันวันนี้',en:"Today's benefits"},
- exercise:{th:'ท่า',en:'Move'}, doneCol:{th:'ทำได้',en:'Done'}, target:{th:'เป้าหมาย',en:'Target'}, formCol:{th:'ท่าถูก',en:'Good form'},
- again:{th:'เล่นอีกครั้ง',en:'Play again'}, home:{th:'กลับหน้าหลัก',en:'Back home'},
- steps:{th:'วิธีทำ',en:'How to'}, muscles:{th:'กล้ามเนื้อที่ใช้',en:'Muscles used'}, benefit:{th:'ประโยชน์',en:'Benefit'}, close:{th:'ปิด',en:'Close'},
- legend:{th:'สีแดง = ข้างขวา · สีน้ำเงิน = ข้างซ้าย · จุดเหลือง = จีบ · ฝ่ามือกรอบเหลือง = ตั้งวง',en:'Red = right side · Blue = left side · Yellow dot = jeeb (pinch) · Palm with yellow rim = wong (flat hand)'},
- mode_reps:{th:'กล้องนับครั้ง',en:'Camera counts reps'}, mode_hold:{th:'กล้องจับเวลาค้าง',en:'Camera times the hold'}, mode_holdreps:{th:'ค้าง + นับครั้ง',en:'Hold + count'}, mode_follow:{th:'ทำตามจังหวะ',en:'Follow the beat'}, mode_stroop:{th:'เกมสมอง',en:'Brain game'}, mode_memory:{th:'เกมสมอง',en:'Brain game'},
- cat_stretch:{th:'ยืดเหยียด',en:'Stretch'}, cat_cardio:{th:'คาร์ดิโอ',en:'Cardio'}, cat_thai:{th:'รำไทยบนเก้าอี้',en:'Thai chair dance'}, cat_brain:{th:'บริหารสมอง',en:'Brain'},
- camErr:{th:'เปิดกล้องไม่ได้: {e} กรุณาอนุญาตกล้องในเบราว์เซอร์ ถ้าเปิดไฟล์โดยตรงแล้วกล้องถูกบล็อก ให้เปิดด้วย Chrome หรือรันเว็บเซิร์ฟเวอร์ในเครื่อง (python3 -m http.server) แล้วเข้า http://localhost:8000',en:'Camera not available: {e}. Allow camera access. If the file was opened directly and the camera is blocked, use Chrome or serve the folder locally (python3 -m http.server) and open http://localhost:8000.'},
- insecure:{th:'เบราว์เซอร์บล็อกกล้อง เพราะหน้านี้ไม่ได้เปิดผ่าน https:// หรือเปิดในแอป LINE/Facebook/Instagram ให้เปิดลิงก์ที่ขึ้นต้นด้วย https:// ใน Chrome หรือ Safari',en:'The browser blocked the camera because this page is not on https:// or is open inside LINE/Facebook/Instagram. Open the https:// link in Chrome or Safari.'},
- realPhotos:{th:'ภาพท่าจริง',en:'Real demonstration'}, stepN:{th:'ขั้นที่ {n}',en:'Step {n}'},
+ great:{th:'ยอดเยี่ยมมาก วันนี้คุณดูแลร่างกายและสมองครบถ้วน',en:'Wonderful session for your body & mind'}, greatS:{th:'เก่งมาก ขอบคุณที่กลับมาดูแลสุขภาพวันนี้',en:'Great job showing up for your health today'}, goodStart:{th:'เริ่มต้นได้ดีมาก ค่อยๆ ฝึกต่อเนื่องทุกวัน',en:'A great start — consistency builds strength'},
+ totalScore:{th:'คะแนนกิจกรรม',en:'Activity points'}, rating:{th:'ระดับการมีส่วนร่วม',en:'Completion'}, posture:{th:'แนวลำตัวเบื้องต้น',en:'Alignment check'}, goodForm:{th:'ความสม่ำเสมอของท่า',en:'Form consistency'}, reaction:{th:'เวลาตอบสนองเฉลี่ย',en:'Avg response time'},
+ musclesToday:{th:'กล้ามเนื้อที่ได้บริหารวันนี้',en:'Muscles worked today'}, benefitsToday:{th:'ประโยชน์ที่ได้รับจากกิจกรรมวันนี้',en:"Benefits from today's session"},
+ exercise:{th:'กิจกรรม / ท่า',en:'Activity / Move'}, doneCol:{th:'ทำได้',en:'Done'}, target:{th:'เป้าหมาย',en:'Goal'}, formCol:{th:'ความสม่ำเสมอ',en:'Form'},
+ again:{th:'ทำกิจกรรมอีกครั้ง',en:'Practice again'}, home:{th:'กลับหน้าหลัก',en:'Back to overview'},
+ steps:{th:'ขั้นตอนการปฏิบัติ',en:'Step-by-step guide'}, muscles:{th:'กล้ามเนื้อที่ใช้',en:'Muscles used'}, benefit:{th:'ประโยชน์ต่อสุขภาพ',en:'Health benefit'}, close:{th:'ปิดหน้าต่าง',en:'Close'},
+ legend:{th:'สีแดง = ข้างขวา · สีน้ำเงิน = ข้างซ้าย · จุดเหลือง = จีบ · ฝ่ามือกรอบเหลือง = ตั้งวง',en:'Red = right side · Blue = left side · Yellow dot = jeeb · Palm with yellow rim = wong'},
+ mode_reps:{th:'นับครั้งอัตโนมัติ',en:'Auto rep count'}, mode_hold:{th:'จับเวลาค้างอัตโนมัติ',en:'Auto hold timer'}, mode_holdreps:{th:'ค้าง + นับครั้ง',en:'Hold + count'}, mode_follow:{th:'ฝึกตามจังหวะ',en:'Rhythm follow'}, mode_stroop:{th:'บริหารสมอง',en:'Cognitive'}, mode_memory:{th:'บริหารสมอง',en:'Cognitive'},
+ cat_stretch:{th:'ยืดเหยียด',en:'Stretch'}, cat_cardio:{th:'ความแข็งแรงและทรงตัว',en:'Strength & balance'}, cat_thai:{th:'รำไทยประยุกต์บนเก้าอี้',en:'Applied Thai chair dance'}, cat_brain:{th:'บริหารสมอง-กาย',en:'Cognitive-motor'},
+ camErr:{th:'เปิดกล้องไม่ได้: {e} กรุณาอนุญาตการใช้กล้องในเบราว์เซอร์ (Safari / Chrome) หากเปิดไฟล์โดยตรง ให้เปิดผ่านลิงก์ https://',en:'Camera not available: {e}. Please allow camera access in Safari or Chrome and open via https://.'},
+ insecure:{th:'เบราว์เซอร์บล็อกกล้องเนื่องจากไม่ได้เปิดผ่าน https:// หรือเปิดในแอป LINE/Facebook กรุณาเปิดลิงก์นี้ใน Chrome หรือ Safari',en:'Camera requires https:// in Chrome or Safari (not inside an in-app browser like LINE or Facebook).'},
+ realPhotos:{th:'ภาพท่าต้นแบบจริง',en:'Reference demonstration photos'}, stepN:{th:'ขั้นที่ {n}',en:'Step {n}'},
  mirrorView:{th:'มุมมองกระจก',en:'Mirror view'}, mudrasTitle:{th:'ท่ามือรำไทยในท่านี้',en:'Thai dance hand gestures'},
  photoCredit:{th:'ภาพจากเอกสารชุดท่ารำไทยประยุกต์บนเก้าอี้ของโครงการ',en:'Photos from the project’s Applied Thai Dance with Chair Exercise sheet'},
- mode_choice:{th:'เกมสมอง',en:'Brain game'},
- nogoOk:{th:'ดีมาก ไม่ขยับ!',en:'Nice, you held still!'}, moved:{th:'ข้อนี้ต้องอยู่นิ่ง',en:'That one was stay-still'},
- modelErr:{th:'โหลดโมเดลท่าทางไม่สำเร็จ ตรวจสอบอินเทอร์เน็ตแล้วลองใหม่',en:'Could not load the pose model. Check the internet connection and try again.'},
- sessionDone:{th:'จบเซสชัน ได้ {s} คะแนน',en:'Session complete. You scored {s} points.'},
- tipForm:{th:'ครั้งหน้าลองเน้นท่าให้ถูกใน {x}',en:'Next time focus on form in {x}.'},
- tipOk:{th:'ทำได้ดีมาก มาเล่นต่อพรุ่งนี้ ท่าจะเปลี่ยนใหม่',en:'Solid session. Come back tomorrow for a new set of moves.'},
+ mode_choice:{th:'บริหารสมอง',en:'Cognitive'},
+ nogoOk:{th:'เยี่ยมมาก ควบคุมการหยุดได้ดี!',en:'Great control staying still!'}, moved:{th:'ข้อนี้ให้อยู่นิ่งๆ นะครับ',en:'That cue was stay-still'},
+ modelErr:{th:'โหลดโมเดลตรวจจับท่าทางไม่สำเร็จ กรุณาตรวจสอบอินเทอร์เน็ตแล้วลองใหม่',en:'Could not load the pose model. Please check your internet connection and try again.'},
+ sessionDone:{th:'จบกิจกรรมแล้ว ได้ {s} คะแนน ขอบคุณที่ดูแลสุขภาพวันนี้',en:'Session complete with {s} points. Great job caring for your health today.'},
+ tipForm:{th:'ครั้งหน้าลองทำท่า {x} ช้าๆ ให้เต็มจังหวะมากขึ้น ผลการฝึกนี้ใช้เพื่อติดตามดูแลตนเองเท่านั้น ไม่ใช่การวินิจฉัยโรค',en:'Next time try moving slowly and smoothly in {x}. This summary is for personal wellness tracking, not a clinical diagnosis.'},
+ tipOk:{th:'ทำได้ดีมาก กลับมาฝึกต่อเนื่องวันละ 15–20 นาทีเพื่อเสริมความแข็งแรงและดูแลสมอง (ข้อมูลนี้เพื่อการติดตามสุขภาพตนเอง ไม่ใช่การวินิจฉัยโรค)',en:'Well done! Returning for 15–20 minutes daily builds strength and cognitive wellness (for personal tracking only, not a medical diagnosis).'},
  sideR:{th:'ขวา',en:'Right'}, sideL:{th:'ซ้าย',en:'Left'}
 };
 
 const TIERS={
- a:{i:0,age:{th:'ต่ำกว่า 55 ปี',en:'Under 55'},name:{th:'แอคทีฟ',en:'Active'},rest:10,rate:1,slow:1,big:false,c:'#FF5A5F'},
- b:{i:1,age:{th:'55–65 ปี',en:'55–65'},name:{th:'สมดุล',en:'Balanced'},rest:15,rate:.92,slow:1.12,big:false,c:'#2F80ED'},
- c:{i:2,age:{th:'65 ปีขึ้นไป',en:'65+'},name:{th:'อ่อนโยน',en:'Gentle'},rest:20,rate:.85,slow:1.25,big:true,c:'#8B5CF6'}
+ a:{i:0,age:{th:'ต่ำกว่า 55 ปี',en:'Under 55'},name:{th:'แอคทีฟ · เต็มช่วง',en:'Active · Full range'},rest:10,rate:1,slow:1,big:false,c:'#C84B31'},
+ b:{i:1,age:{th:'55–65 ปี',en:'55–65'},name:{th:'สมดุล · จังหวะพอดี',en:'Balanced · Steady pace'},rest:15,rate:.92,slow:1.12,big:false,c:'#16685B'},
+ c:{i:2,age:{th:'65 ปีขึ้นไป',en:'65+'},name:{th:'อ่อนโยน · เน้นเก้าอี้',en:'Gentle · Chair-focused'},rest:20,rate:.85,slow:1.25,big:true,c:'#6348B5'}
 };
 const PHASES=[
- {m:.7, c:'#FFC83D',name:{th:'เริ่มต้นขยับ',en:'Getting started'}},
- {m:.85,c:'#FF8A1F',name:{th:'สร้างพื้นฐาน',en:'Foundation'}},
- {m:1,  c:'#FF5A5F',name:{th:'เพิ่มความแข็งแรง',en:'Strength'}},
- {m:1.1,c:'#F0468C',name:{th:'จังหวะสนุก',en:'Rhythm'}},
- {m:1.2,c:'#8B5CF6',name:{th:'อึดทนนาน',en:'Endurance'}},
- {m:1.3,c:'#2F80ED',name:{th:'เชี่ยวชาญ',en:'Mastery'}}
+ {m:.7, c:'#B87D14',name:{th:'เริ่มต้นขยับ',en:'Getting started'}},
+ {m:.85,c:'#C26A18',name:{th:'สร้างพื้นฐาน',en:'Foundation'}},
+ {m:1,  c:'#16685B',name:{th:'เสริมความแข็งแรง',en:'Strength'}},
+ {m:1.1,c:'#B83B64',name:{th:'จังหวะรำไทย',en:'Thai Rhythm'}},
+ {m:1.2,c:'#6348B5',name:{th:'ความทนทาน',en:'Endurance'}},
+ {m:1.3,c:'#2563EB',name:{th:'ดูแลต่อเนื่อง',en:'Mastery'}}
 ];
 const THEMES=[
- {id:'thai',   c:'#F0468C',name:{th:'รำไทยบนเก้าอี้',en:'Thai chair dance'},mix:[['thai',6],['brain',2]]},
- {id:'legs',   c:'#FF5A5F',name:{th:'ขาแข็งแรง',en:'Strong legs'},mix:[['legs',4],['thai',2],['brain',1]]},
- {id:'brain',  c:'#8B5CF6',name:{th:'สมองสดใส',en:'Brain boost'},mix:[['brain',4],['thai',2],['cardio',1]]},
- {id:'balance',c:'#2F80ED',name:{th:'ทรงตัวดี',en:'Balance & posture'},mix:[['balance',4],['thai',2],['brain',1]]},
- {id:'thaimix',c:'#FF8A1F',name:{th:'รำไทย + สมอง',en:'Thai dance + brain'},mix:[['thai',5],['brain',2]]},
- {id:'heart',  c:'#E8364B',name:{th:'จังหวะหัวใจ',en:'Heart rhythm'},mix:[['cardio',5],['thai',1],['brain',2]]},
- {id:'easy',   c:'#0EA5B7',name:{th:'ผ่อนคลาย',en:'Easy recovery'},mix:[['thai',3],['brain',1]],stretchN:5}
+ {id:'thai',   c:'#B83B64',name:{th:'รำไทยประยุกต์บนเก้าอี้',en:'Applied Thai chair dance'},mix:[['thai',6],['brain',2]]},
+ {id:'legs',   c:'#C84B31',name:{th:'เสริมกำลังขาและลุก-นั่ง',en:'Leg strength & sit-to-stand'},mix:[['legs',4],['thai',2],['brain',1]]},
+ {id:'brain',  c:'#6348B5',name:{th:'ฝึกสมอง-กายประสานสัมพันธ์',en:'Brain-body coordination'},mix:[['brain',4],['thai',2],['cardio',1]]},
+ {id:'balance',c:'#2563EB',name:{th:'ฝึกการทรงตัวลดเสี่ยงหกล้ม',en:'Balance & fall prevention'},mix:[['balance',4],['thai',2],['brain',1]]},
+ {id:'thaimix',c:'#B87D14',name:{th:'รำไทย + บริหารสมอง',en:'Thai dance + cognitive'},mix:[['thai',5],['brain',2]]},
+ {id:'heart',  c:'#16685B',name:{th:'จังหวะหัวใจและความทนทาน',en:'Heart rhythm & endurance'},mix:[['cardio',5],['thai',1],['brain',2]]},
+ {id:'easy',   c:'#0F766E',name:{th:'ยืดเหยียดผ่อนคลาย',en:'Gentle recovery'},mix:[['thai',3],['brain',1]],stretchN:5}
 ];
-const CATC={stretch:'#0EA5B7',cardio:'#FF5A5F',thai:'#F0468C',brain:'#8B5CF6'};
+const CATC={stretch:'#0F766E',cardio:'#C84B31',thai:'#B83B64',brain:'#6348B5'};
 
 const BENEFITS=[
- {cat:'stretch',t:{th:'ยืดเหยียดก่อน',en:'Stretch first'},d:{th:'เพิ่มช่วงการเคลื่อนไหวของข้อ คลายคอ บ่า ไหล่ที่ตึง เตรียมกล้ามเนื้อก่อนออกแรง ลดโอกาสบาดเจ็บ',en:'Opens up joint range, eases neck and shoulder tightness, and warms muscles before effort to lower injury risk.'}},
- {cat:'cardio',t:{th:'คาร์ดิโอและขา',en:'Cardio and legs'},d:{th:'หัวใจและปอดทำงานดีขึ้น ช่วยคุมความดันและน้ำตาล ขาแข็งแรง ลุก-นั่ง-เดินได้คล่อง ลดความเสี่ยงหกล้ม',en:'Builds heart and lung fitness, helps control blood pressure and sugar, and strengthens legs for standing, walking and fewer falls.'}},
- {cat:'thai',t:{th:'รำไทยบนเก้าอี้',en:'Thai chair dance'},d:{th:'ออกกำลังกายอย่างปลอดภัยบนเก้าอี้ ฝึกนิ้วมือ ข้อมือ จังหวะ และการประสานมือ-เท้า พร้อมความเพลิดเพลินกับศิลปะไทย',en:'Safe seated exercise that trains fingers, wrists, rhythm and hand-foot coordination, with the joy of Thai classical dance.'}},
- {cat:'brain',t:{th:'บริหารสมอง',en:'Brain training'},d:{th:'ท่าที่ต้องคิดไปพร้อมขยับ (dual-task) ฝึกสมาธิ ความจำใช้งาน และการสลับความคิด การไม่ออกกำลังกายเป็นหนึ่งในปัจจัยเสี่ยงสมองเสื่อมที่ปรับเปลี่ยนได้',en:'Moving while thinking (dual-task) trains attention, working memory and switching. Physical inactivity is one of the modifiable risk factors for dementia.'}}
+ {cat:'stretch',t:{th:'อบอุ่นและยืดเหยียด',en:'Warm-up & flexibility'},d:{th:'เพิ่มช่วงการเคลื่อนไหวของข้อ คลายคอ บ่า ไหล่ที่ตึง เตรียมกล้ามเนื้อก่อนออกแรงอย่างปลอดภัย',en:'Opens up joint range, eases neck and shoulder stiffness, and prepares muscles safely before movement.'}},
+ {cat:'cardio',t:{th:'เสริมกำลังขาและลดเสี่ยงหกล้ม',en:'Leg strength & fall prevention'},d:{th:'เสริมกล้ามเนื้อร่างกายส่วนล่างและแกนกลาง ช่วยลุก-นั่ง-เดินมั่นคง เชื่อมโยงแนวคิดการป้องกันการหกล้มในผู้สูงอายุ',en:'Strengthens lower limbs and core for confident standing and walking, supporting fall-prevention goals.'}},
+ {cat:'thai',t:{th:'รำไทยประยุกต์บนเก้าอี้',en:'Applied Thai chair dance'},d:{th:'ออกกำลังกายแรงกระแทกต่ำบนเก้าอี้ที่คุ้นเคยกับวัฒนธรรมไทย ฝึกนิ้วมือ ข้อมือ จังหวะ และการประสานมือ-เท้าอย่างเพลิดเพลิน',en:'Culturally familiar low-impact seated exercise that trains fingers, wrists, rhythm and hand-foot coordination.'}},
+ {cat:'brain',t:{th:'บริหารสมองควบคู่การเคลื่อนไหว',en:'Dual-task cognitive training'},d:{th:'ฝึกความจำ ความใส่ใจ และการยับยั้งการตอบสนองไปพร้อมการขยับร่างกาย ช่วยเสริมสมรรถนะด้านการรู้คิดในชีวิตประจำวัน',en:'Combines movement with memory, attention and response control to support everyday cognitive vitality.'}}
 ];
 
 /* ---------- figure presets (x outward, y up, z forward; metres-ish) ---------- */
@@ -1421,36 +1599,49 @@ const MP="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
 const MODEL="https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task";
 const $=id=>document.getElementById(id);
 const store={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-let lang=store.get('pp2-lang')||'th', tierKey=store.get('pp2-tier'), soundOn=true, audio=null, landmarker=null, stream=null, raf=0, S=null, plan=null;
+let lang=store.get('mh-ex-lang')||store.get('pp2-lang')||'th', tierKey=store.get('mh-ex-tier')||store.get('pp2-tier'), manualBig=store.get('mh-ex-big'), soundOn=true, audio=null, landmarker=null, stream=null, raf=0, S=null, plan=null;
 const tx=o=>o==null?'':typeof o==='string'?o:(o[lang]??o.en);
 const t=(k,vars)=>{let s=tx(U[k]);if(vars)for(const [a,b] of Object.entries(vars))s=s.replace('{'+a+'}',b);return s;};
 const DAY=86400000, mid=()=>{const d=new Date();d.setHours(0,0,0,0);return d.getTime();};
-let start=store.get('pp2-start'); if(!start){start=mid();store.set('pp2-start',start);}
+let start=store.get('mh-ex-start')||store.get('pp2-start'); if(!start){start=mid();store.set('mh-ex-start',start);}
 const todayAbs=()=>Math.max(0,Math.round((mid()-start)/DAY));
 let viewAbs=todayAbs();
-const doneMap=()=>store.get('pp2-done')||{};
+const doneMap=()=>store.get('mh-ex-done')||store.get('pp2-done')||{};
 const tk=()=>tierKey||'b';
 const fmtDate=abs=>new Date(start+abs*DAY).toLocaleDateString(lang==='th'?'th-TH':'en-GB',{weekday:'short',day:'numeric',month:'short'});
 const targetTxt=(p,n)=>p.mode==='hold'?`${n} ${t('sec')}`:p.mode==='choice'?`${n} ${t('trials')}`:p.mode==='memory'?`${n} ${t('rounds')}`:`${n} ${t('reps')}`;
 
 /* ---------- static text ---------- */
+function applyTextSize(){
+ const big=manualBig!==null?!!manualBig:!!(tierKey&&TIERS[tierKey].big);
+ document.body.classList.toggle('big',big);
+ $('bigBtn').setAttribute('aria-pressed',String(big));
+}
 function applyLang(){
  document.documentElement.lang=lang;
+ document.title=t('pageTitle');
  document.querySelectorAll('[data-t]').forEach(el=>el.textContent=t(el.dataset.t));
  document.querySelectorAll('[data-th]').forEach(el=>el.innerHTML=t(el.dataset.th));
  document.querySelectorAll('.lang button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.lang===lang));
  $('age').placeholder=t('agePh'); $('soundBtn').textContent=soundOn?t('voiceOn'):t('voiceOff');
  if(S) $('pauseBtn').textContent=S.paused?t('resume'):t('pause');
+ validate();
 }
 function renderAll(){applyLang();renderTiers();renderDay();renderYear();renderBens();}
 
 /* ---------- tiers ---------- */
 function renderTiers(){
  $('tiers').innerHTML=Object.entries(TIERS).map(([k,v])=>`<button class="tier" data-k="${k}" style="--c:${v.c}" aria-pressed="${k===tierKey}"><b>${tx(v.age)}</b><span>${tx(v.name)}</span></button>`).join('');
- document.body.classList.toggle('big',!!(tierKey&&TIERS[tierKey].big)); validate();
+ applyTextSize(); validate();
 }
-function pick(k){tierKey=k;store.set('pp2-tier',k);renderTiers();renderDay();}
-function validate(){$('startBtn').disabled=!(tierKey&&$('c1').checked&&$('c2').checked&&$('c3').checked);}
+function pick(k){tierKey=k;store.set('mh-ex-tier',k);renderTiers();renderDay();}
+function validate(){
+ const checked=$('c1').checked&&$('c2').checked&&$('c3').checked;
+ const ok=!!(tierKey&&checked);
+ $('startBtn').disabled=!ok;
+ const rh=$('readyHint');
+ if(rh){rh.textContent=ok?t('readyOk'):(!tierKey?t('readyNeedAge'):t('readyNeedCheck'));rh.classList.toggle('ok',ok);}
+}
 
 /* ---------- today ---------- */
 function moveRow(it){const p=POSE[it.id],c=CATC[p.cat];
@@ -1468,6 +1659,7 @@ function renderDay(){
  $('todayBtn').disabled=viewAbs===todayAbs(); $('prevDay').disabled=viewAbs===0;
  const dm=doneMap(), n=Object.keys(dm).length; let s=0,a=todayAbs(); if(!dm[a]) a--; while(a>=0&&dm[a]){s++;a--;}
  $('doneLine').textContent=t('doneDays',{n,s})+(dm[viewAbs]?' · ✓ '+dm[viewAbs]:'');
+ if($('rDays')){$('rDays').textContent=n; $('rStreak').textContent=s; $('rPhase').textContent=`${t('phase')} ${plan.phase+1} · ${tx(ph.name)}`;}
  renderYear();
 }
 
@@ -1740,7 +1932,7 @@ function endGame(){
  if(worst&&worst.good/worst.done<.8)tips.push(t('tipForm',{x:tx(worst.p.name)}));
  $('sTips').textContent=tips.join(' ')||t('tipOk');
  $('doneTitle').textContent=stars===3?t('great'):stars===2?t('greatS'):t('goodStart');
- if(pct>=.3){const dm=doneMap();dm[S.abs]=Math.max(dm[S.abs]||0,S.score);store.set('pp2-done',dm);}
+ if(pct>=.3){const dm=doneMap();dm[S.abs]=Math.max(dm[S.abs]||0,S.score);store.set('mh-ex-done',dm);}
  $('game').classList.add('hide');$('done').classList.remove('hide');window.scrollTo(0,0);say(t('sessionDone',{s:S.score}));
 }
 
@@ -1756,7 +1948,8 @@ async function begin(){
 function backHome(){stopCamera();try{speechSynthesis.cancel();}catch(e){}$('game').classList.add('hide');$('done').classList.add('hide');$('home').classList.remove('hide');S=null;renderDay();}
 
 /* ---------- wiring ---------- */
-document.querySelectorAll('.lang button').forEach(b=>b.addEventListener('click',()=>{lang=b.dataset.lang;store.set('pp2-lang',lang);renderAll();}));
+document.querySelectorAll('.lang button').forEach(b=>b.addEventListener('click',()=>{lang=b.dataset.lang;store.set('mh-ex-lang',lang);renderAll();}));
+$('bigBtn').addEventListener('click',()=>{const cur=document.body.classList.contains('big');manualBig=!cur;store.set('mh-ex-big',manualBig);applyTextSize();});
 $('tiers').addEventListener('click',e=>{const b=e.target.closest('.tier');if(b)pick(b.dataset.k);});
 $('age').addEventListener('input',e=>{const a=+e.target.value;if(!a)return;pick(a<55?'a':a<=65?'b':'c');});
 for(const id of ['c1','c2','c3'])$(id).addEventListener('change',validate);
@@ -1764,7 +1957,7 @@ $('prevDay').addEventListener('click',()=>{if(viewAbs>0){viewAbs--;renderDay();}
 $('nextDay').addEventListener('click',()=>{viewAbs++;renderDay();});
 $('todayBtn').addEventListener('click',()=>{viewAbs=todayAbs();renderDay();});
 $('year').addEventListener('click',e=>{const d=e.target.closest('.dot');if(d){viewAbs=+d.dataset.abs;renderDay();$('today').scrollIntoView({behavior:'smooth'});}});
-$('restartBtn').addEventListener('click',()=>{start=mid();store.set('pp2-start',start);store.set('pp2-done',{});viewAbs=0;renderDay();});
+$('restartBtn').addEventListener('click',()=>{start=mid();store.set('mh-ex-start',start);store.set('mh-ex-done',{});viewAbs=0;renderDay();});
 document.addEventListener('click',e=>{const b=e.target.closest('[data-detail]');if(b)openDetail(b.dataset.detail);});
 $('mClose').addEventListener('click',closeDetail);$('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeDetail();});
 $('mMirror').addEventListener('click',()=>{modalMirror=!modalMirror;$('mMirror').setAttribute('aria-pressed',String(modalMirror));});
