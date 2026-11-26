@@ -1429,9 +1429,12 @@ const FIG=(()=>{
   s.shr=(s.shr||0)+breath;
   const P=skel(s);
 
-  const S=Math.min(H/1.18,W/0.92);
+  const showInset=!compact&&W>=360&&showGuides;
+  const insetW=showInset?Math.min(160,Math.max(132,W*0.36)):0;
+  const safeW=showInset?(W-insetW-16):W;
+  const S=Math.min(H/1.18,safeW/0.98);
   const ya=mirror?-0.24:0.24,cy=Math.cos(ya),sy=Math.sin(ya),mSign=mirror?-1:1;
-  const cx=compact?W*0.50:W*0.44,floorY=H*0.92;
+  const cx=safeW*0.50,floorY=H*0.92;
   const pr=p=>{
    const mx=p[0]*mSign,x=mx*cy+p[2]*sy,d=-mx*sy+p[2]*cy;
    return [cx+x*S,floorY-p[1]*S+d*0.14*S,d];
@@ -1535,10 +1538,7 @@ const FIG=(()=>{
     ctx.strokeStyle=sd==='R'?pal.cuffR:pal.cuffL;ctx.globalAlpha=0.25+(1-pulse)*0.32;ctx.lineWidth=compact?1.5:2;ctx.stroke();ctx.restore();
    });
   }
-  const hasThaiHand=['tang_wong','jeeb_ngai','jeeb_kwum','jeeb_lor_kaew','open_up','open_down'].includes(handMeta.R.mudra)
-   ||['tang_wong','jeeb_ngai','jeeb_kwum','jeeb_lor_kaew','open_up','open_down'].includes(handMeta.L.mudra)
-   ||id==='wrist';
-  if(!compact&&W>=215&&(hasThaiHand||showGuides)){
+  if(showInset){
    THAI_ART.drawHandInset(ctx,W,H,handMeta.R.mudra,handMeta.L.mudra,handMeta.R.ang,handMeta.L.ang,pal,lang);
   }
   ctx.restore();
@@ -1827,8 +1827,11 @@ const THAI_ANIM=(()=>{
   }
 
   const isStandingPose=poseDef.id===10;
-  const scale=Math.min(W*0.92,H*(isStandingPose?0.80:0.90));
-  const cx=compact?W*0.50:W*0.42;
+  const showInset=!compact&&W>=360;
+  const insetW=showInset?Math.min(160,Math.max(132,W*0.36)):0;
+  const safeW=showInset?(W-insetW-16):W;
+  const scale=Math.min(safeW*0.86,H*(isStandingPose?0.78:0.88));
+  const cx=safeW*0.50;
   const floorY=H*(isStandingPose?0.92:0.90);
   const mSign=mirror?-1:1;
   const toX=nx=>cx+nx*mSign*scale,toY=ny=>floorY-ny*scale;
@@ -1932,19 +1935,19 @@ const THAI_ANIM=(()=>{
      ctx.beginPath();ctx.arc(cx+dir*scale*0.12,ay+scale*0.075,3.5,0,Math.PI*2);ctx.fill();
     }
     if(poseDef.id===10){
-     const ax=cx-scale*0.26,arrowTop=toY(0.76),arrowBot=toY(0.42);
+     const ax=Math.max(16,Math.min(cx-scale*0.43,24)),arrowTop=toY(0.74),arrowBot=toY(0.40);
      ctx.globalAlpha=0.55;ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(ax,arrowBot);ctx.lineTo(ax,arrowTop);ctx.stroke();ctx.setLineDash([]);
-     const curY=lerp(arrowBot,arrowTop,s.stand);ctx.globalAlpha=0.95;ctx.beginPath();ctx.arc(ax,curY,5,0,Math.PI*2);ctx.fill();
-     ctx.font='700 11px "IBM Plex Sans Thai",Sarabun,system-ui,sans-serif';ctx.textAlign='center';ctx.fillText(s.stand>0.5?'STAND':'SIT',ax,curY-10);
+     const curY=lerp(arrowBot,arrowTop,s.stand);ctx.globalAlpha=0.95;ctx.beginPath();ctx.arc(ax,curY,4.5,0,Math.PI*2);ctx.fill();
+     ctx.font='700 10px "IBM Plex Sans Thai",Sarabun,system-ui,sans-serif';ctx.textAlign='left';ctx.fillText(s.stand>0.5?'STAND':'SIT',Math.max(6,ax-8),arrowBot+15);
     }
     ctx.restore();
    }
   }
 
   if(poseDef.id===6&&s.holdSec>0&&W>=110){
-   const ringR=compact?15:26;
-   const rx=compact?W-22:cx+(s.stepIdx===0?1:-1)*mSign*scale*0.25;
-   const ry=compact?22:toY(0.28);
+   const ringR=compact?15:24;
+   const rx=compact?W-22:Math.max(ringR+8,Math.min(safeW-ringR-8,cx+(s.stepIdx===0?1:-1)*mSign*scale*0.34));
+   const ry=compact?22:toY(0.20);
    const secDisplay=Math.min(5,Math.floor(s.holdProgress*5)+1);
    ctx.save();ctx.beginPath();ctx.arc(rx,ry,ringR,0,Math.PI*2);ctx.fillStyle=pal.card;ctx.globalAlpha=0.94;ctx.fill();
    ctx.globalAlpha=1;ctx.strokeStyle=pal.border;ctx.lineWidth=compact?2.5:4;ctx.stroke();
@@ -1956,7 +1959,7 @@ const THAI_ANIM=(()=>{
    ctx.restore();
   }
 
-  if(!compact&&W>=215)drawDetailInset(ctx,W,H,poseDef,s,pal,lang);
+  if(showInset)drawDetailInset(ctx,W,H,poseDef,s,pal,lang);
   ctx.restore();
   return s;
  }
